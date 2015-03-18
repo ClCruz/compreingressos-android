@@ -18,8 +18,13 @@ public class WebAppInterface {
     @JavascriptInterface
     public void showToast(String toast){
         Log.e("--------REturn", "-------> " + toast);
-        Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
     }
 
+    @JavascriptInterface
+    public void getLogin(String user, String password){
+        Log.e("-------- User ----", user.toString());
+        Log.e("-------- Password ----", password.toString());
+    }
 
 }

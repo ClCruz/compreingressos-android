@@ -4,5 +4,6 @@
     <string name="app_name">Compre Ingressos</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_compre_ingressos">CompreIngressosActivity</string>
 
 </resources>
