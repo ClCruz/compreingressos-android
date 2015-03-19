@@ -17,6 +17,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import br.com.compreingressos.utils.WebAppInterface;
 
@@ -24,13 +25,21 @@ import br.com.compreingressos.utils.WebAppInterface;
 public class CompreIngressosActivity extends ActionBarActivity {
 
     private static final String LOG_TAG = CompreIngressosActivity.class.getSimpleName();
-    private static final String URL_ESPETACULOS = "http://www.compreingressos.com/?app=tokecompre";
+//    private static final String URL_ESPETACULOS = "http://www.compreingressos.com/?app=tokecompre";
     WebView webView;
+    private String url;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().hasExtra("url")){
+            url = getIntent().getStringExtra("url");
+            Toast.makeText(CompreIngressosActivity.this, "" + url, Toast.LENGTH_SHORT).show();
+            Log.e(LOG_TAG, url );
+        }
+
         setContentView(R.layout.activity_compre_ingressos);
 
         webView = (WebView) findViewById(R.id.webview);
@@ -146,7 +155,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
 
         });
-        webView.loadUrl(URL_ESPETACULOS);
+        webView.loadUrl(url);
 
     }
 

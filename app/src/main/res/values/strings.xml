@@ -6,4 +6,9 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_compre_ingressos">CompreIngressosActivity</string>
 
+    <string name="message_dialog_gps">Usaremos sua localização para poder mostrar os estabelecimentos perto de você.</string>
+    <string name="title_dialog_gps">Atenção</string>
+    <string name="btn_gps_positive">Ativar GPS</string>
+    <string name="btn_gps_negative">Agora não!</string>
+
 </resources>
