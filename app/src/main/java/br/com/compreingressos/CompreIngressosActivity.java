@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -17,7 +19,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
+
 
 import br.com.compreingressos.utils.WebAppInterface;
 
@@ -26,21 +28,31 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
     private static final String LOG_TAG = CompreIngressosActivity.class.getSimpleName();
 //    private static final String URL_ESPETACULOS = "http://www.compreingressos.com/?app=tokecompre";
-    WebView webView;
+    private WebView webView;
     private String url;
+    private String genero;
 
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_compre_ingressos);
 
         if (getIntent().hasExtra("url")){
             url = getIntent().getStringExtra("url");
-            Toast.makeText(CompreIngressosActivity.this, "" + url, Toast.LENGTH_SHORT).show();
-            Log.e(LOG_TAG, url );
+            genero = getIntent().getStringExtra("genero");
+            Log.e(LOG_TAG, url);
         }
 
-        setContentView(R.layout.activity_compre_ingressos);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar !=null){
+            toolbar.setTitle(genero);
+            toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        }
 
         webView = (WebView) findViewById(R.id.webview);
 
@@ -67,8 +79,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                Log.e("onPageFinished", "Carregou????");
-                view.loadUrl("javascript:Android.showToast($(\".destaque_menor_v2\").first().find(\"h3\").text());");
+//                Log.e("onPageFinished", "Carregou????");
+//                view.loadUrl("javascript:Android.showToast($(\".destaque_menor_v2\").first().find(\"h3\").text());");
 
 
                 if (url.contains("etapa3.php")){
@@ -77,11 +89,11 @@ public class CompreIngressosActivity extends ActionBarActivity {
 //                    Log.w(LOG_TAG, "" + fulljs);
 //                    view.loadUrl(fulljs);
                 }
-                Log.e(LOG_TAG, "antes de fechar o  loading");
+//                Log.e(LOG_TAG, "antes de fechar o  loading");
                 try{
                     if (progressDialog.isShowing()) {
                         view.setVisibility(View.VISIBLE);
-                        Log.e(LOG_TAG, "fechar o  loading");
+//                        Log.e(LOG_TAG, "fechar o  loading");
                         progressDialog.dismiss();
                         progressDialog = null;
                     }
@@ -123,7 +135,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                Log.e("onPageStarted", "Iniciou");
+//                Log.e("onPageStarted", "Iniciou");
                 view.setVisibility(View.GONE);
                 if (progressDialog == null) {
                     // in standard case YourActivity.this
@@ -136,17 +148,10 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
             @Override
             public void onLoadResource(WebView view, String url) {
-                Log.e("onLoadResource", "Passou aqui");
+//                Log.e("onLoadResource", "Passou aqui");
                 view.loadUrl("javascript:$(\"#menu_topo\").hide();$('.aba' && '.fechado').hide();$(\"#footer\").hide();$(\"#selos\").hide();");
             }
 
-
-//            @Override
-//            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-//                Log.e("shoudInterceptRequest", "intercepta requests");
-//                Log.e("shoudInterceptRequest", "intercepta requests ---- > " + request.toString() );
-//                return super.shouldInterceptRequest(view, request);
-//            }
 
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
@@ -163,7 +168,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_compre_ingressos, menu);
+//        getMenuInflater().inflate(R.menu.menu_compre_ingressos, menu);
         return true;
     }
 
@@ -172,12 +177,20 @@ public class CompreIngressosActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                try {
+                    NavUtils.navigateUpFromSameTask(this);
+                }catch (Exception e){
+                    onBackPressed();
+                }
+                return true;
+            case R.id.action_settings:
+                return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }

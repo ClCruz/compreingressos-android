@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.com.compreingressos" >
+    package="br.com.compreingressos">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
@@ -14,10 +14,12 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:name=".SplashScreen"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,9 +27,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CompreIngressosActivity"
-            android:label="@string/title_activity_compre_ingressos" >
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+
         </activity>
+        <activity
+            android:name=".CompreIngressosActivity"
+            android:label="@string/title_activity_compre_ingressos"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>

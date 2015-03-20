@@ -7,12 +7,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,22 +31,47 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private Location location;
     private boolean hasLocationGPS, hasLocationWifi;
 
-    ListView lvGeneros;
+    private Toolbar toolbar;
+
+    private ListView lvGeneros;
+    private View header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar !=null){
+            toolbar.setTitle("");
+            setSupportActionBar(toolbar);
+        }
+
+
+
+        header =  getLayoutInflater().inflate(R.layout.header_generos, null);
+
         lvGeneros = (ListView) findViewById(R.id.lv_merchant_generos);
         final GeneroAdapter adapter = new GeneroAdapter(MainActivity.this, initGeneros());
+        lvGeneros.addHeaderView(header);
         lvGeneros.setAdapter(adapter);
         lvGeneros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(MainActivity.this, adapter.getItem(position).getNome().toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, adapter.getItem(position).getNome().toString(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, CompreIngressosActivity.class);
-                intent.putExtra("url", URL_ESPETACULOS + "&genero="+ adapter.getItem(position).getNome().toString());
+                try {
+                    if (adapter.getItem(position).getNome().toString().contains("Perto")){
+                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") +  "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
+                    }else{
+                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") + "&genero="+ adapter.getItem(position).getNome().toString() + "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
+                    }
+                }catch (Exception e){
+                    intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre"));
+                    Log.e(LOG_TAG, "" + e.getMessage());
+                }
+
+                intent.putExtra("genero", adapter.getItem(position).getNome().toString());
                 startActivity(intent);
             }
         });
@@ -99,6 +125,12 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         locationManager.requestLocationUpdates(locationProvider, 200, 0, this);
 
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        try {
+            Log.e(LOG_TAG, " " + location.getLatitude());
+            Log.e(LOG_TAG, "" +  location.getLongitude());
+        }catch (Exception e){
+            Log.e(LOG_TAG, "" +  e.getMessage());
+        }
     }
 
     public void getNetworkLocation() {
@@ -132,10 +164,10 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     public List<Genero> initGeneros(){
         List<Genero> generos = new ArrayList<Genero>();
-        generos.add(new Genero("Perto de mim", R.drawable.perto_de_mim));
+        generos.add(new Genero("Perto de Mim", R.drawable.perto_de_mim));
         generos.add(new Genero("Concertos Sinfônicos", R.drawable.concerto_sinfonico));
         generos.add(new Genero("Comédia",R.drawable.comedia));
-        generos.add(new Genero("Show",R.drawable.shows));
+        generos.add(new Genero("Shows",R.drawable.shows));
         generos.add(new Genero("Infantil",R.drawable.infantil));
         generos.add(new Genero("Drama", R.drawable.drama));
         generos.add(new Genero("Stand-Up Comedy", R.drawable.stand_up));

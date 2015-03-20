@@ -14,6 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
+
             android:paddingBottom="2dp"
             android:scaleType="fitXY"
             android:contentDescription="@string/app_name" />
@@ -27,7 +28,7 @@
             android:padding="5dp"
             android:textColor="@color/white"
             android:drawablePadding="5dp"
-            android:textSize="22sp" />
+            android:textSize="24sp" />
     </FrameLayout>
 
 
