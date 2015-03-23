@@ -61,17 +61,16 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 //                Toast.makeText(MainActivity.this, adapter.getItem(position).getNome().toString(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this, CompreIngressosActivity.class);
                 try {
-                    if (adapter.getItem(position).getNome().toString().contains("Perto")){
+                    if (adapter.getItem(position-1).getNome().toString().contains("Perto")){
                         intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") +  "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
                     }else{
-                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") + "&genero="+ adapter.getItem(position).getNome().toString() + "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
+                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") + "&genero="+ adapter.getItem(position-1).getNome().toString() + "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
                     }
                 }catch (Exception e){
                     intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre"));
                     Log.e(LOG_TAG, "" + e.getMessage());
                 }
-
-                intent.putExtra("genero", adapter.getItem(position).getNome().toString());
+                intent.putExtra("genero", adapter.getItem(position - 1).getNome().toString());
                 startActivity(intent);
             }
         });
