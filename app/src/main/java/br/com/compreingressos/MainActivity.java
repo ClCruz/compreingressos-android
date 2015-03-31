@@ -7,6 +7,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -19,22 +21,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
+import br.com.compreingressos.adapter.GeneroRVArapter;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.utils.Dialogs;
 
 
 public class MainActivity extends ActionBarActivity implements LocationListener{
 
-    private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    private static final String URL_ESPETACULOS = "http://www.compreingressos.com/?app=tokecompre";
+    public static final String URL_ESPETACULOS = "http://www.compreingressos.com/?app=tokecompre";
+    public static final String LOG_TAG = MainActivity.class.getSimpleName();
+
     private LocationManager locationManager;
     private Location location;
     private boolean hasLocationGPS, hasLocationWifi;
 
     private Toolbar toolbar;
 
-    private ListView lvGeneros;
-    private View header;
+    List<Genero> generos = new ArrayList<Genero>();
+
+//    private ListView lvGeneros;
+//    private View header;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,32 +59,67 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
 
 
-        header =  getLayoutInflater().inflate(R.layout.header_generos, null);
+//        header =  getLayoutInflater().inflate(R.layout.header_generos, null);
 
-        lvGeneros = (ListView) findViewById(R.id.lv_merchant_generos);
-        final GeneroAdapter adapter = new GeneroAdapter(MainActivity.this, initGeneros());
-        lvGeneros.addHeaderView(header);
-        lvGeneros.setAdapter(adapter);
-        lvGeneros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//        lvGeneros = (ListView) findViewById(R.id.lv_merchant_generos);
+
+
+
+//        final GeneroAdapter adapter = new GeneroAdapter(MainActivity.this, initGeneros());
+//        lvGeneros.addHeaderView(header);
+//        lvGeneros.setAdapter(adapter);
+//        lvGeneros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+////                Toast.makeText(MainActivity.this, adapter.getItem(position).getNome().toString(), Toast.LENGTH_SHORT).show();
+//                Intent intent = new Intent(MainActivity.this, CompreIngressosActivity.class);
+//                try {
+//                    if (adapter.getItem(position).getNome().toString().contains("Perto")){
+//                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") +  "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
+//                    }else{
+//                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") + "&genero="+ adapter.getItem(position).getNome().toString() + "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
+//                    }
+//                }catch (Exception e){
+//                    intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre"));
+//                    Log.e(LOG_TAG, "" + e.getMessage());
+//                }
+//
+//                intent.putExtra("genero", adapter.getItem(position).getNome().toString());
+//                startActivity(intent);
+//            }
+//        });
+
+        generos = initGeneros();
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        GeneroRVArapter adapter = new GeneroRVArapter(MainActivity.this, generos);
+        adapter.SetOnItemClickListener(new GeneroRVArapter.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Toast.makeText(MainActivity.this, adapter.getItem(position).getNome().toString(), Toast.LENGTH_SHORT).show();
+            public void onClickListener(View v, int position) {
                 Intent intent = new Intent(MainActivity.this, CompreIngressosActivity.class);
                 try {
-                    if (adapter.getItem(position).getNome().toString().contains("Perto")){
+                    if (generos.get(position).getNome().toString().contains("Perto")){
                         intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") +  "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
                     }else{
-                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") + "&genero="+ adapter.getItem(position).getNome().toString() + "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
+                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") + "&genero="+ generos.get(position).getNome().toString() + "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
                     }
                 }catch (Exception e){
                     intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre"));
                     Log.e(LOG_TAG, "" + e.getMessage());
                 }
 
-                intent.putExtra("genero", adapter.getItem(position).getNome().toString());
+                intent.putExtra("genero", generos.get(position).getNome().toString());
                 startActivity(intent);
             }
         });
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this));
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(adapter);
+
+
+
     }
 
     @Override

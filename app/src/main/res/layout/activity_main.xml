@@ -10,14 +10,21 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <ListView
+    <!--<ListView-->
+    <!--android:layout_below="@+id/toolbar"-->
+    <!--android:id="@+id/lv_merchant_generos"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="fill_parent"-->
+    <!--android:animationCache="false"-->
+    <!--android:divider="@drawable/img_divider_merchant_category"-->
+    <!--android:dividerHeight="1px"-->
+    <!--android:scrollbars="none"-->
+    <!--android:visibility="visible"></ListView>-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/my_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/toolbar"
-        android:id="@+id/lv_merchant_generos"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:animationCache="false"
-        android:divider="@drawable/img_divider_merchant_category"
-        android:dividerHeight="1px"
-        android:scrollbars="none"
-        android:visibility="visible"></ListView>
+        android:scrollbars="vertical" />
 </RelativeLayout>
