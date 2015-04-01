@@ -14,13 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.compreingressos.adapter.GeneroAdapter;
 import br.com.compreingressos.adapter.GeneroRVArapter;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.utils.Dialogs;
@@ -39,9 +36,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     List<Genero> generos = new ArrayList<Genero>();
 
-//    private ListView lvGeneros;
-//    private View header;
-
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -57,41 +51,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             setSupportActionBar(toolbar);
         }
 
-
-
-//        header =  getLayoutInflater().inflate(R.layout.header_generos, null);
-
-//        lvGeneros = (ListView) findViewById(R.id.lv_merchant_generos);
-
-
-
-//        final GeneroAdapter adapter = new GeneroAdapter(MainActivity.this, initGeneros());
-//        lvGeneros.addHeaderView(header);
-//        lvGeneros.setAdapter(adapter);
-//        lvGeneros.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-////                Toast.makeText(MainActivity.this, adapter.getItem(position).getNome().toString(), Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(MainActivity.this, CompreIngressosActivity.class);
-//                try {
-//                    if (adapter.getItem(position).getNome().toString().contains("Perto")){
-//                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") +  "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
-//                    }else{
-//                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") + "&genero="+ adapter.getItem(position).getNome().toString() + "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
-//                    }
-//                }catch (Exception e){
-//                    intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre"));
-//                    Log.e(LOG_TAG, "" + e.getMessage());
-//                }
-//
-//                intent.putExtra("genero", adapter.getItem(position).getNome().toString());
-//                startActivity(intent);
-//            }
-//        });
-
         generos = initGeneros();
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_generos);
         GeneroRVArapter adapter = new GeneroRVArapter(MainActivity.this, generos);
         adapter.SetOnItemClickListener(new GeneroRVArapter.OnItemClickListener() {
             @Override
@@ -209,26 +171,12 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     public List<Genero> initGeneros(){
         List<Genero> generos = new ArrayList<Genero>();
-        generos.add(new Genero("Perto de Mim", R.drawable.perto_de_mim));
-        generos.add(new Genero("Concertos Sinfônicos", R.drawable.concerto_sinfonico));
-        generos.add(new Genero("Comédia",R.drawable.comedia));
+        generos.add(new Genero("Sugestões perto de mim", R.drawable.perto_de_mim));
         generos.add(new Genero("Shows",R.drawable.shows));
-        generos.add(new Genero("Infantil",R.drawable.infantil));
-        generos.add(new Genero("Drama", R.drawable.drama));
-        generos.add(new Genero("Stand-Up Comedy", R.drawable.stand_up));
-        generos.add(new Genero("Musical", R.drawable.musical));
-        generos.add(new Genero("Ópera", R.drawable.opera));
-        generos.add(new Genero("Romance", R.drawable.romance));
-        generos.add(new Genero("Espírita",R.drawable.espirita));
-        generos.add(new Genero("Musical Infantil", R.drawable.musica_infantil));
-        generos.add(new Genero("Comédia Musical", R.drawable.comedia_musical));
-        generos.add(new Genero("Dança", R.drawable.danca));
-        generos.add(new Genero("Comédia Romântica", R.drawable.comedia_romantica));
-        generos.add(new Genero("Comédia Dramática", R.drawable.comedia_dramatica));
-        generos.add(new Genero("Suspense", R.drawable.suspense));
-        generos.add(new Genero("Comédia Perversa", R.drawable.comedia_perversa));
-        generos.add(new Genero("Música",R.drawable.musica));
-        generos.add(new Genero("Circo", R.drawable.circo));
+        generos.add(new Genero("Classicos", R.drawable.concerto_sinfonico));
+        generos.add(new Genero("Teatro",R.drawable.comedia));
+        generos.add(new Genero("Muito mais", R.drawable.circo));
+
 
         return generos;
     }

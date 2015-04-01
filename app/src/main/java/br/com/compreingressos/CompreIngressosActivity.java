@@ -33,6 +33,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private String genero;
 
     private Toolbar toolbar;
+    private boolean isFirstUrlLoading = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,28 +77,17 @@ public class CompreIngressosActivity extends ActionBarActivity {
         webView.setWebViewClient(new WebViewClient() {
 
             ProgressDialog progressDialog;
+            Intent intent = new Intent(CompreIngressosActivity.this, CompreIngressosActivity.class);
 
             @Override
             public void onPageFinished(WebView view, String url) {
-//                Log.e("onPageFinished", "Carregou????");
-//                view.loadUrl("javascript:Android.showToast($(\".destaque_menor_v2\").first().find(\"h3\").text());");
-
-
-                if (url.contains("etapa3.php")){
-//                    Log.w(LOG_TAG, "entrou para carregar o source");
-//                    String fulljs = "javascript:$('#identificacaoForm').on('submit', function(e){Android.getLogin($('#identificacaoForm').serialize());})";
-//                    Log.w(LOG_TAG, "" + fulljs);
-//                    view.loadUrl(fulljs);
-                }
-//                Log.e(LOG_TAG, "antes de fechar o  loading");
-                try{
+                try {
                     if (progressDialog.isShowing()) {
                         view.setVisibility(View.VISIBLE);
-//                        Log.e(LOG_TAG, "fechar o  loading");
                         progressDialog.dismiss();
                         progressDialog = null;
                     }
-                }catch(Exception exception){
+                } catch (Exception exception) {
                     exception.printStackTrace();
                 }
             }
@@ -112,20 +102,18 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
-
                 if (Uri.parse(url).getHost().equals("compra.compreingressos.com"))
                     url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61566&eventoDS=COSI%20FAN%20TUT%20TE";
 
-                if (Uri.parse(url).getHost().equals("www.compreingressos.com") || Uri.parse(url).getHost().equals("compra.compreingressos.com") || Uri.parse(url).getHost().equals("186.237.201.132")) {
-                    // This is my web site, so do not override; let my WebView load the page
-                    view.loadUrl(url);
+                if(!isFirstUrlLoading){
+                    intent.putExtra("url_flux_webview", url);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
                     return false;
+                }else{
+                    isFirstUrlLoading = false;
                 }
-                // Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs
-
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
-                return true;
+                return false;
             }
 
             @Override
@@ -160,7 +148,15 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
 
         });
-        webView.loadUrl(url);
+
+        if (getIntent().getStringExtra("url_flux_webview") == null){
+            webView.loadUrl(url);
+        }else{
+            Log.e("link next activity", getIntent().getStringExtra("url_flux_webview"));
+            webView.loadUrl(getIntent().getStringExtra("url_flux_webview"));
+        }
+
+
 
     }
 
