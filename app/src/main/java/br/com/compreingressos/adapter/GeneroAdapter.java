@@ -62,7 +62,7 @@ public class GeneroAdapter extends BaseAdapter {
 
         Genero genero = getItem(position);
         nomeView.setText(genero.getNome());
-        nomeView.setTypeface(CustomTypeFace.setFontLora(context));
+//        nomeView.setTypeface(CustomTypeFace.setFontLora(context));
         coverView.setBackgroundResource(genero.getCover());
         if (position == 0)
             coverView.setPadding(0,10,0,0);

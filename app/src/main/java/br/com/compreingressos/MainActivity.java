@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.compreingressos.adapter.GeneroRVArapter;
+import br.com.compreingressos.decoration.DividerItemDecoration;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.utils.Dialogs;
 
@@ -37,7 +38,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     List<Genero> generos = new ArrayList<Genero>();
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
@@ -54,38 +54,30 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         generos = initGeneros();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_generos);
-        GeneroRVArapter adapter = new GeneroRVArapter(MainActivity.this, generos);
+        GeneroRVArapter adapter = new GeneroRVArapter(this, generos);
         adapter.SetOnItemClickListener(new GeneroRVArapter.OnItemClickListener() {
             @Override
             public void onClickListener(View v, int position) {
-                Intent intent = new Intent(MainActivity.this, CompreIngressosActivity.class);
-                try {
-<<<<<<< HEAD
-                    if (adapter.getItem(position-1).getNome().toString().contains("Perto")){
-                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") +  "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
-                    }else{
-                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") + "&genero="+ adapter.getItem(position-1).getNome().toString() + "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
-=======
-                    if (generos.get(position).getNome().toString().contains("Perto")){
-                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") +  "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
-                    }else{
-                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") + "&genero="+ generos.get(position).getNome().toString() + "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
->>>>>>> 5094167da3562a57d7a50bae24fc7c0be89e10ac
-                    }
-                }catch (Exception e){
-                    intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre"));
-                    Log.e(LOG_TAG, "" + e.getMessage());
-                }
-<<<<<<< HEAD
-                intent.putExtra("genero", adapter.getItem(position - 1).getNome().toString());
-=======
+                Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
+//                try {
+//
+//                    if (generos.get(position).getNome().toString().contains("Perto")){
+//                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") +  "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
+//                    }else{
+//                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") + "&genero="+ generos.get(position).getNome().toString() + "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
+//
+//                    }
+//                }catch (Exception e){
+//                    intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre"));
+//                    Log.e(LOG_TAG, "" + e.getMessage());
+//                }
 
                 intent.putExtra("genero", generos.get(position).getNome().toString());
->>>>>>> 5094167da3562a57d7a50bae24fc7c0be89e10ac
+
                 startActivity(intent);
             }
         });
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this));
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -115,9 +107,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
 
         } else {
-            if (QMCompreIngressosAplication.getInstance().isDisplayDialogLocation) {
-                QMCompreIngressosAplication.getInstance().setDisplayDialogLocation(false);
-                Dialogs.showDialogLocation(MainActivity.this, this, getString(R.string.message_dialog_gps),
+            if (CompreIngressosAplication.getInstance().isDisplayDialogLocation) {
+                CompreIngressosAplication.getInstance().setDisplayDialogLocation(false);
+                Dialogs.showDialogLocation(this, this, getString(R.string.message_dialog_gps),
                         getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative));
             }
 

@@ -5,15 +5,15 @@ import android.app.Application;
 /**
  * Created by luiszacheu on 19/03/15.
  */
-public class QMCompreIngressosAplication extends Application{
+public class CompreIngressosAplication extends Application{
 
-    private static QMCompreIngressosAplication instance;
+    private static CompreIngressosAplication instance;
     public boolean isDisplayDialogLocation = true;
 
-    public static QMCompreIngressosAplication getInstance() {
+    public static CompreIngressosAplication getInstance() {
 
         if (instance == null){
-            instance = new QMCompreIngressosAplication();
+            instance = new CompreIngressosAplication();
         }
 
         return instance;

@@ -31,6 +31,7 @@ public class GeneroRVArapter extends RecyclerView.Adapter<GeneroRVArapter.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             nomeView = (TextView) itemView.findViewById(R.id.txt_nome);
+            nomeView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
             coverView = (ImageView) itemView.findViewById(R.id.img_cover);
             itemView.setOnClickListener(this);
         }
@@ -60,7 +61,6 @@ public class GeneroRVArapter extends RecyclerView.Adapter<GeneroRVArapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int position) {
         viewHolder.nomeView.setText(generos.get(position).getNome());
-        viewHolder.nomeView.setTypeface(CustomTypeFace.setFontLora(context));
         viewHolder.coverView.setBackgroundResource(generos.get(position).getCover());
         viewHolder.coverView.setPadding(0, 10, 0, 0);
 
