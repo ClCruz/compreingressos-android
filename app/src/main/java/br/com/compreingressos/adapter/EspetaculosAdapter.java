@@ -62,6 +62,7 @@ public class EspetaculosAdapter extends RecyclerView.Adapter<EspetaculosAdapter.
         viewHolder.tituloView.setText(espetaculo.getTitulo());
         viewHolder.teatroView.setText(espetaculo.getTeatro());
         viewHolder.localView.setText(espetaculo.getCidade() + " - " + espetaculo.getEstado());
+        viewHolder.generoView.setText(espetaculo.getGenero());
 
         Log.e(LOG_TAG, "-- " + espetaculo.getMiniatura());
 
