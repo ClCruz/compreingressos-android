@@ -18,7 +18,7 @@ import android.view.View;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.compreingressos.adapter.GeneroRVArapter;
+import br.com.compreingressos.adapter.GeneroAdapter;
 import br.com.compreingressos.decoration.DividerItemDecoration;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.utils.Dialogs;
@@ -35,7 +35,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     private Toolbar toolbar;
 
-    List<Genero> generos = new ArrayList<Genero>();
+    ArrayList<Genero> mListGeneros = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -51,11 +51,11 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             setSupportActionBar(toolbar);
         }
 
-        generos = initGeneros();
+        mListGeneros = initGeneros();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_generos);
-        GeneroRVArapter adapter = new GeneroRVArapter(this, generos);
-        adapter.SetOnItemClickListener(new GeneroRVArapter.OnItemClickListener() {
+        GeneroAdapter adapter = new GeneroAdapter(this, mListGeneros);
+        adapter.SetOnItemClickListener(new GeneroAdapter.OnItemClickListener() {
             @Override
             public void onClickListener(View v, int position) {
                 Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
@@ -72,15 +72,16 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 //                    Log.e(LOG_TAG, "" + e.getMessage());
 //                }
 
-                intent.putExtra("genero", generos.get(position).getNome().toString());
+                intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
 
                 startActivity(intent);
             }
         });
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this));
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(this));
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+
         mRecyclerView.setAdapter(adapter);
 
 
@@ -172,8 +173,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         return super.onOptionsItemSelected(item);
     }
 
-    public List<Genero> initGeneros(){
-        List<Genero> generos = new ArrayList<Genero>();
+    public ArrayList<Genero> initGeneros(){
+        ArrayList<Genero> generos = new ArrayList<>();
         generos.add(new Genero("Sugestões perto de mim", R.drawable.perto_de_mim));
         generos.add(new Genero("Shows",R.drawable.shows));
         generos.add(new Genero("Classicos", R.drawable.concerto_sinfonico));

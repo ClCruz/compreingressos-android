@@ -45,10 +45,6 @@ public class EspetaculosAdapter extends RecyclerView.Adapter<EspetaculosAdapter.
     }
 
 
-//    public void setEspetaculosList(ArrayList<Espetaculo> espetaculos){
-//        this.mListEspetaculos = espetaculos;
-//        notifyDataSetChanged();
-//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -63,8 +59,6 @@ public class EspetaculosAdapter extends RecyclerView.Adapter<EspetaculosAdapter.
         viewHolder.teatroView.setText(espetaculo.getTeatro());
         viewHolder.localView.setText(espetaculo.getCidade() + " - " + espetaculo.getEstado());
         viewHolder.generoView.setText(espetaculo.getGenero());
-
-        Log.e(LOG_TAG, "-- " + espetaculo.getMiniatura());
 
         viewHolder.miniaturaView.setImageUrl(espetaculo.getMiniatura(), VolleySingleton.getInstance(context).getImageLoader());
 
