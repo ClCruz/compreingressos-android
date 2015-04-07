@@ -1,10 +1,13 @@
-package br.com.compreingressos;
+package br.com.compreingressos.decoration;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+
+import br.com.compreingressos.R;
 
 /**
  * Created by luiszacheu on 30/03/15.
@@ -22,6 +25,10 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration{
         int right = parent.getWidth() - parent.getPaddingRight();
 
         int childCount = parent.getChildCount();
+
+
+        Log.e("---- > ", "" + childCount);
+
         for (int i = 0; i < childCount; i++) {
             View child = parent.getChildAt(i);
 
@@ -33,5 +40,10 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration{
             mDivider.setBounds(left, top, right, bottom);
             mDivider.draw(c);
         }
+    }
+
+    @Override
+    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+        super.onDraw(c, parent, state);
     }
 }

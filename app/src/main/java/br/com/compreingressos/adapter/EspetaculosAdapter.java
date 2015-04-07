@@ -2,82 +2,116 @@ package br.com.compreingressos.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.NetworkImageView;
+
+import java.util.ArrayList;
 
 import br.com.compreingressos.R;
-import br.com.compreingressos.model.Genero;
+import br.com.compreingressos.interfaces.OnItemClickListener;
+import br.com.compreingressos.model.Espetaculo;
+import br.com.compreingressos.toolbox.VolleySingleton;
 import br.com.compreingressos.utils.CustomTypeFace;
+
 
 /**
  * Created by luiszacheu on 30/03/15.
  */
 public class EspetaculosAdapter extends RecyclerView.Adapter<EspetaculosAdapter.ViewHolder> {
 
-    private List<Genero> generos;
+    private static final String LOG_TAG = "EspetaculosAdapter";
+
+    private ArrayList<Espetaculo> mListEspetaculos;
+    public static OnItemClickListener onItemClickListener;
     private Context context;
-    OnItemClickListener mItemClickListener;
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public TextView nomeView;
-        public ImageView coverView;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            nomeView = (TextView) itemView.findViewById(R.id.txt_nome);
-            coverView = (ImageView) itemView.findViewById(R.id.img_cover);
-            itemView.setOnClickListener(this);
-        }
-
-
-        @Override
-        public void onClick(View v) {
-            if (mItemClickListener != null){
-                mItemClickListener.onClickListener(v, getPosition());
-            }
-        }
-    }
-
-    public EspetaculosAdapter(Context context, List<Genero> generos) {
-        this.generos = generos;
+    public EspetaculosAdapter(Context context, ArrayList<Espetaculo> espetaculos) {
+        this.mListEspetaculos = espetaculos;
         this.context = context;
     }
 
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        EspetaculosAdapter.onItemClickListener = onItemClickListener;
+    }
+
+
+//    public void setEspetaculosList(ArrayList<Espetaculo> espetaculos){
+//        this.mListEspetaculos = espetaculos;
+//        notifyDataSetChanged();
+//    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.adapter_genero, viewGroup, false);
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_espetaculo, viewGroup, false);
+        return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, final int position) {
-        viewHolder.nomeView.setText(generos.get(position).getNome());
-        viewHolder.nomeView.setTypeface(CustomTypeFace.setFontLora(context));
-        viewHolder.coverView.setBackgroundResource(generos.get(position).getCover());
-        viewHolder.coverView.setPadding(0, 10, 0, 0);
+    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+        Espetaculo espetaculo = mListEspetaculos.get(position);
+        viewHolder.tituloView.setText(espetaculo.getTitulo());
+        viewHolder.teatroView.setText(espetaculo.getTeatro());
+        viewHolder.localView.setText(espetaculo.getCidade() + " - " + espetaculo.getEstado());
 
+        Log.e(LOG_TAG, "-- " + espetaculo.getMiniatura());
+
+        viewHolder.miniaturaView.setImageUrl(espetaculo.getMiniatura(), VolleySingleton.getInstance(context).getImageLoader());
+
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
     @Override
     public int getItemCount() {
-        return generos.size();
+        return (mListEspetaculos == null ? 0 : mListEspetaculos.size());
     }
 
-    public interface OnItemClickListener{
-        public void onClickListener(View v, int position);
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView tituloView;
+        public TextView teatroView;
+        public TextView localView;
+        public TextView generoView;
+        public NetworkImageView miniaturaView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            tituloView = (TextView) itemView.findViewById(R.id.txt_titulo);
+            tituloView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
+
+            teatroView = (TextView) itemView.findViewById(R.id.txt_teatro);
+            teatroView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
+
+            localView = (TextView) itemView.findViewById(R.id.txt_local);
+            localView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
+
+            generoView = (TextView) itemView.findViewById(R.id.txt_genero);
+            miniaturaView = (NetworkImageView) itemView.findViewById(R.id.img_miniatura);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onItemClick(v, (getPosition()));
+                }
+            });
+        }
+
+
+
+
     }
-
-    public void SetOnItemClickListener(final OnItemClickListener itemClickListener){
-        this.mItemClickListener = itemClickListener;
-    }
-
-
 }

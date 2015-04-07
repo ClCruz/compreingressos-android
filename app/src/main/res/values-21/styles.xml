@@ -4,7 +4,7 @@
     <style name="AppTheme" parent="AppTheme.Base">
         <item name="android:colorPrimary">#ff3a3a3a</item>
         <!-- colorPrimaryDark is used for the status bar -->
-        <item name="android:colorPrimaryDark">#ffdf3232</item>
+        <item name="android:colorPrimaryDark">#8d0a0c</item>
         <!-- colorAccent is used as the default value for colorControlActivated
         which is used to tint widgets -->
         <item name="android:colorAccent">#fff9b910</item>

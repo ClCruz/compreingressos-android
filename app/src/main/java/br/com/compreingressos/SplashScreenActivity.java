@@ -8,10 +8,10 @@ import android.view.Window;
 import android.view.WindowManager;
 
 
-public class SplashScreen extends Activity {
+public class SplashScreenActivity extends Activity {
 
     private static int SPLASH_TIME_OUT = 2000;
-    private static String TAG_LOG = SplashScreen.class.getSimpleName();
+    private static String TAG_LOG = SplashScreenActivity.class.getSimpleName();
 
 
     @Override
@@ -24,7 +24,7 @@ public class SplashScreen extends Activity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-            Intent i = new Intent(SplashScreen.this, MainActivity.class);
+            Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
             startActivity(i);

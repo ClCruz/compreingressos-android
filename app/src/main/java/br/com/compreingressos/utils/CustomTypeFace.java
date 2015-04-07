@@ -7,9 +7,16 @@ import android.graphics.Typeface;
  * Created by luiszacheu on 19/03/15.
  */
 public class CustomTypeFace {
-    public static Typeface setFontLora(Context context){
-        Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/Lora-Regular.ttf");
 
-        return typeface;
+
+    private static Typeface typefaceLora;
+
+
+    public static Typeface setFontLora(Context context){
+        if (typefaceLora == null){
+            typefaceLora = Typeface.createFromAsset(context.getAssets(), "fonts/Lora-Regular.ttf");
+        }
+
+        return typefaceLora;
     }
 }
