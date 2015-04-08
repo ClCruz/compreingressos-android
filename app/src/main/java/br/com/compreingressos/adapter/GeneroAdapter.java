@@ -1,8 +1,9 @@
 package br.com.compreingressos.adapter;
 
 import android.content.Context;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import br.com.compreingressos.R;
+import br.com.compreingressos.fragment.MainBannerFragment;
+import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.utils.CustomTypeFace;
 
@@ -22,22 +25,35 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private static final String LOG_TAG = "GeneroAdapter";
 
-    private ArrayList<Genero> mListGeneros;
+    private ArrayList<Genero> mListGeneros = new ArrayList<>();
+    private ArrayList<Banner> mListBanners = new ArrayList<>();
     private Context context;
     public static OnItemClickListener onItemClickListener;
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
+    private ActionBarActivity activity;
 
-
-    public GeneroAdapter(Context context, ArrayList<Genero> generos) {
+    public GeneroAdapter(Context context, ArrayList<Genero> generos, ArrayList<Banner> banners) {
         this.mListGeneros = generos;
         this.context = context;
+        this.mListBanners = banners;
+        activity  = (ActionBarActivity) context;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if (viewType == TYPE_HEADER){
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.header_generos, viewGroup, false);
+
+
+
+            MainBannerFragment  fragment = new MainBannerFragment();
+
+            FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
+
+            fragmentTransaction.add(R.id.view, fragment, "header");
+            fragmentTransaction.commit();
+
             return new ViewHolderHeader(v);
 
         }else if (viewType == TYPE_ITEM){
@@ -66,6 +82,10 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return TYPE_HEADER;
 
         return TYPE_ITEM;
+    }
+
+    public void updateBanners(ArrayList<Banner> banners){
+        ((MainBannerFragment) activity.getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(banners);
     }
 
     private boolean isPositionHeader(int position) {

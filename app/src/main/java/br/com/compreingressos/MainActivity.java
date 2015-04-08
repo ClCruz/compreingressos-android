@@ -14,18 +14,30 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
-import br.com.compreingressos.decoration.DividerItemDecoration;
+import br.com.compreingressos.model.Banner;
+import br.com.compreingressos.model.Espetaculo;
+import br.com.compreingressos.model.Espetaculos;
 import br.com.compreingressos.model.Genero;
+import br.com.compreingressos.toolbox.GsonRequest;
+import br.com.compreingressos.toolbox.VolleySingleton;
 import br.com.compreingressos.utils.Dialogs;
 
 
 public class MainActivity extends ActionBarActivity implements LocationListener{
 
+    public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/lista.json";
     public static final String URL_ESPETACULOS = "http://www.compreingressos.com/?app=tokecompre";
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -36,9 +48,14 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private Toolbar toolbar;
 
     ArrayList<Genero> mListGeneros = new ArrayList<>();
+    ArrayList<Banner> mListBanners = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    private RequestQueue requestQueue;
+
+    private GeneroAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +68,14 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             setSupportActionBar(toolbar);
         }
 
+        requestQueue = VolleySingleton.getInstance(this).getRequestQueue();
+        startRequest();
+
+
         mListGeneros = initGeneros();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_generos);
-        GeneroAdapter adapter = new GeneroAdapter(this, mListGeneros);
+        adapter = new GeneroAdapter(this, mListGeneros, mListBanners);
         adapter.SetOnItemClickListener(new GeneroAdapter.OnItemClickListener() {
             @Override
             public void onClickListener(View v, int position) {
@@ -78,12 +99,13 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             }
         });
 //        mRecyclerView.addItemDecoration(new DividerItemDecoration(this));
+
+
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mRecyclerView.setAdapter(adapter);
-
 
 
     }
@@ -108,8 +130,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
 
         } else {
-            if (CompreIngressosAplication.getInstance().isDisplayDialogLocation) {
-                CompreIngressosAplication.getInstance().setDisplayDialogLocation(false);
+            if (CompreIngressosApplication.getInstance().isDisplayDialogLocation) {
+                CompreIngressosApplication.getInstance().setDisplayDialogLocation(false);
                 Dialogs.showDialogLocation(this, this, getString(R.string.message_dialog_gps),
                         getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative));
             }
@@ -203,6 +225,45 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     @Override
     public void onProviderDisabled(String provider) {
+
+    }
+
+    private Response.Listener<Banner[]> createSuccessListener() {
+        return new Response.Listener<Banner[]>() {
+
+            @Override
+            public void onResponse(Banner[] response) {
+
+                for (int i = 0; i < response.length; i++) {
+                    Banner banner = new Banner();
+                    banner.setImagem(response[i].getImagem());
+                    banner.setUrl(response[i].getUrl());
+
+                    mListBanners.add(banner);
+
+                }
+
+                adapter.updateBanners(mListBanners);
+            }
+        };
+    }
+
+    private Response.ErrorListener createErrorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("-----> ", error.toString());
+            }
+        };
+    }
+
+    private void startRequest() {
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/json");
+
+        GsonRequest<Banner[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, URL_VISORES, Banner[].class, headers, this.createSuccessListener(), this.createErrorListener());
+        this.requestQueue.add(jsonObjRequest);
+
 
     }
 }

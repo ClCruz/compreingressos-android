@@ -96,7 +96,7 @@ public class EspetaculosActivity extends ActionBarActivity {
         super.onDestroy();
     }
 
-        private Response.Listener<Espetaculos> createSuccessListener() {
+    private Response.Listener<Espetaculos> createSuccessListener() {
         return new Response.Listener<Espetaculos>() {
 
 

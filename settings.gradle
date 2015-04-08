@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':viewpager_indicator'
+project(':viewpager_indicator').projectDir = new File('libraries/viewpager_indicator')
