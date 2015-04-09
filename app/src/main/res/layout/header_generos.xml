@@ -8,12 +8,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:background="#d1d1d1"></RelativeLayout>
 
-    <!--<fragment-->
-    <!--android:id="@+id/fragment_header"-->
-    <!--android:name="br.com.compreingressos.fragment.MainBannerFragment"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--class="br.com.compreingressos.fragment.MainBannerFragment"/>-->
+        android:background="#FFFFFF"></RelativeLayout>
+
 </LinearLayout>

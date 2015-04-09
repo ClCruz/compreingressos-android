@@ -1,5 +1,6 @@
 package br.com.compreingressos;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -33,6 +34,7 @@ import br.com.compreingressos.toolbox.VolleySingleton;
 public class EspetaculosActivity extends ActionBarActivity {
 
     public static final String URL = "http://tokecompre-ci.herokuapp.com/espetaculos.json";
+    public static final String URL_WEBVIEW = "http://www.compreingressos.com/?app=tokecompre";
 
 //    Numero de colunas a ser mostrada na recyclerView
     public static final int COLUMN_NUMBER = 2;
@@ -82,6 +84,10 @@ public class EspetaculosActivity extends ActionBarActivity {
         @Override
         public void onItemClick(View view, int position) {
             Toast.makeText(getApplicationContext(), espetaculos.get(position).getTitulo(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(EspetaculosActivity.this, CompreIngressosActivity.class);
+            intent.putExtra("url", espetaculos.get(position).getUrl());
+            startActivity(intent);
+
         }
     };
 

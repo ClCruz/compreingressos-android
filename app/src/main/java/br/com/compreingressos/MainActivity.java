@@ -38,7 +38,6 @@ import br.com.compreingressos.utils.Dialogs;
 public class MainActivity extends ActionBarActivity implements LocationListener{
 
     public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/lista.json";
-    public static final String URL_ESPETACULOS = "http://www.compreingressos.com/?app=tokecompre";
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private LocationManager locationManager;
@@ -80,26 +79,11 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             @Override
             public void onClickListener(View v, int position) {
                 Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
-//                try {
-//
-//                    if (generos.get(position).getNome().toString().contains("Perto")){
-//                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") +  "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
-//                    }else{
-//                        intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre") + "&genero="+ generos.get(position).getNome().toString() + "&latitude=" + location.getLatitude() + "&longitude=" + location.getLongitude());
-//
-//                    }
-//                }catch (Exception e){
-//                    intent.putExtra("url", URL_ESPETACULOS.replace("?app=tokecompre","espetaculos?app=tokecompre"));
-//                    Log.e(LOG_TAG, "" + e.getMessage());
-//                }
-
                 intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
 
                 startActivity(intent);
             }
         });
-//        mRecyclerView.addItemDecoration(new DividerItemDecoration(this));
-
 
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);

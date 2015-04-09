@@ -33,4 +33,6 @@ public class CompreIngressosApplication extends Application{
     public void setDisplayDialogLocation(boolean isDisplayDialogLocation) {
         this.isDisplayDialogLocation = isDisplayDialogLocation;
     }
+
+
 }

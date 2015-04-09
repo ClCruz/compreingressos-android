@@ -34,17 +34,17 @@
             android:screenOrientation="portrait">
 
         </activity>
-        <activity
-            android:name=".CompreIngressosActivity"
-            android:label="@string/title_activity_compre_ingressos"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity"></activity>
 
         <activity
             android:name=".EspetaculosActivity"
             android:label="@string/title_activity_compre_ingressos"
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".CompreIngressosActivity"
+            android:label="@string/title_activity_compre_ingressos"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".EspetaculosActivity"></activity>
     </application>
 
 </manifest>

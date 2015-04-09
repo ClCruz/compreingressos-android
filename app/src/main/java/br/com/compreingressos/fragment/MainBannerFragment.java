@@ -1,6 +1,7 @@
 package br.com.compreingressos.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -27,6 +28,10 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     ViewPager mPager;
     CirclePageIndicator mIndicator;
 
+    private Handler handler = new Handler();
+    private Runnable runnable;
+    int position = 0;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main_banner, container, false);
@@ -51,6 +56,24 @@ public class MainBannerFragment extends Fragment implements BannerListener {
         mIndicator.setViewPager(mPager);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (handler != null) {
+            handler.removeCallbacks(runnable);
+            handler = null;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (handler != null) {
+            handler.removeCallbacks(runnable);
+            handler = null;
+        }
+    }
+
     public ArrayList<Banner> initListDummy(){
         ArrayList<Banner> banners =  new ArrayList<>();
         for (int i = 0; i < 5 ; i++) {
@@ -68,6 +91,26 @@ public class MainBannerFragment extends Fragment implements BannerListener {
         mAdapter.setListBanners(listBanner);
         mAdapter.notifyDataSetChanged();
 
+        if (handler != null) {
+            slideShow();
+            handler.postDelayed(runnable, 5000);
+        }
+
         Log.e("------------- >>" , "Atualizou os banners!!!");
+    }
+
+    public void slideShow() {
+        runnable = new Runnable() {
+            public void run() {
+                if (position >= mAdapter.getCount()) {
+                    position = 0;
+                } else {
+                    position = position + 1;
+                }
+                mPager.setCurrentItem(position, true);
+                handler.postDelayed(this, 5000);
+            }
+        };
+
     }
 }

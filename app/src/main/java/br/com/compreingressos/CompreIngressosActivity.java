@@ -102,18 +102,40 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
 
+//                if (Uri.parse(url).getHost().equals("compra.compreingressos.com"))
+//                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61566&eventoDS=COSI%20FAN%20TUT%20TE";
+//
+//                if(!isFirstUrlLoading){
+//                    intent.putExtra("url_flux_webview", url);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivity(intent);
+//                    return false;
+//                }else{
+//                    isFirstUrlLoading = false;
+//                }
+//                return false;
+
+                Log.e(LOG_TAG, "url --> " + url);
+
+
                 if (Uri.parse(url).getHost().equals("compra.compreingressos.com"))
                     url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61566&eventoDS=COSI%20FAN%20TUT%20TE";
 
-                if(!isFirstUrlLoading){
-                    intent.putExtra("url_flux_webview", url);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    return false;
-                }else{
-                    isFirstUrlLoading = false;
+                if (url.contains("etapa1.php")){
+                    view.setSupportZoom(true);
                 }
-                return false;
+
+                if (Uri.parse(url).getHost().equals("www.compreingressos.com") || Uri.parse(url).getHost().equals("compra.compreingressos.com") || Uri.parse(url).getHost().equals("186.237.201.132")) {
+                    // This is my web site, so do not override; let my WebView load the page
+                    view.loadUrl(url);
+                    return false;
+                }
+                // Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs
+
+//                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//                startActivity(intent);
+                return true;
+
             }
 
             @Override
@@ -155,8 +177,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
             Log.e("link next activity", getIntent().getStringExtra("url_flux_webview"));
             webView.loadUrl(getIntent().getStringExtra("url_flux_webview"));
         }
-
-
 
     }
 
@@ -202,4 +222,55 @@ public class CompreIngressosActivity extends ActionBarActivity {
         // system behavior (probably exit the activity)
         return super.onKeyDown(keyCode, event);
     }
+
+    public void algo(){
+        String x = "var date_aux = new Array; \n" +
+                "$('.data').children().each(function(){date_aux.push($(this).html())}); \n" +
+                "var order_date = date_aux.join(' '); \n" +
+                "var spectacle_name = $('.resumo').find('.nome').html(); \n" +
+                "var address = $('.resumo').find('.endereco').html(); \n" +
+                "var theater = $('.resumo').find('.teatro').html(); \n" +
+                "var time = $('.resumo').find('.horario').html(); \n" +
+                "var order_number = $('.numero').find('a').html(); \n" +
+                "var order_total = $('.pedido_total').find('.valor').html(); \n" +
+                "var tickets = new Array; \n" +
+                "$('tr').each(function() { \n" +
+                "var qrcode = $(this).attr('data:uid'); \n" +
+                "if (typeof qrcode !== typeof undefined && qrcode !== false) { \n" +
+                "var local   = $(this).find('.local').find('td').html().replace('<br>', '').split('\\n').map(trim).join(' ').trim(); \n" +
+                "var type    = $(this).find('.tipo').html(); \n" +
+                "var aux     = $(this).find('td'); \n" +
+                "var price   = aux.eq(3).children().eq(0).html(); \n" +
+                "var service = aux.eq(4).html().replace('R$', ''); \n" +
+                "var total   = aux.eq(5).children().eq(0).html(); \n" +
+                "tickets.push({ \n" +
+                "qrcode:        qrcode, \n" +
+                "local:         local, \n" +
+                "type:          type, \n" +
+                "price:         price, \n" +
+                "service_price: service, \n" +
+                "total:         total \n" +
+                "}); \n" +
+                "} \n" +
+                "}); \n" +
+                "var payload = { \n" +
+                "order: { \n" +
+                "number: order_number, \n" +
+                "date:   order_date, \n" +
+                "total:  order_total, \n" +
+                "espetaculo: { \n" +
+                "titulo: spectacle_name, \n" +
+                "endereco: address, \n" +
+                "teatro: theater, \n" +
+                "horario: time \n" +
+                "}, \n" +
+                "ingressos: tickets \n" +
+                "} \n" +
+                "}; \n" +
+                "JSON.stringify(payload);";
+    }
+
+
+
+
 }

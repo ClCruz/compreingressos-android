@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+
     <string name="app_name">Compre Ingressos</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -10,5 +11,7 @@
     <string name="title_dialog_gps">Atenção</string>
     <string name="btn_gps_positive">Ativar GPS</string>
     <string name="btn_gps_negative">Agora não!</string>
+
+
 
 </resources>
