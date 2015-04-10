@@ -1,10 +1,12 @@
 package br.com.compreingressos;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -19,7 +21,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-
+import android.widget.Button;
 
 import br.com.compreingressos.utils.WebAppInterface;
 
@@ -33,6 +35,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private String genero;
 
     private Toolbar toolbar;
+    private Button btnAvancar;
     private boolean isFirstUrlLoading = true;
 
     @Override
@@ -54,6 +57,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         }
+
+        btnAvancar = (Button) findViewById(R.id.btn_avancar);
 
         webView = (WebView) findViewById(R.id.webview);
 
@@ -99,8 +104,9 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 return super.shouldOverrideKeyEvent(view, event);
             }
 
+            @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            public boolean shouldOverrideUrlLoading(final WebView view, String url) {
 
 //                if (Uri.parse(url).getHost().equals("compra.compreingressos.com"))
 //                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61566&eventoDS=COSI%20FAN%20TUT%20TE";
@@ -122,7 +128,21 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61566&eventoDS=COSI%20FAN%20TUT%20TE";
 
                 if (url.contains("etapa1.php")){
-                    view.setSupportZoom(true);
+                    Log.e(LOG_TAG, "Entrou aqui");
+                    view.loadUrl("javascript:$('.container_botoes_etapas').hide()");
+                    WebSettings webSettings = view.getSettings();
+                    webSettings.setBuiltInZoomControls(true);
+                    webSettings.setDisplayZoomControls(false);
+
+                    btnAvancar.setVisibility(View.VISIBLE);
+                    btnAvancar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            view.loadUrl("javascript:$('.botao_avancar').click()");
+                        }
+                    });
+
+
                 }
 
                 if (Uri.parse(url).getHost().equals("www.compreingressos.com") || Uri.parse(url).getHost().equals("compra.compreingressos.com") || Uri.parse(url).getHost().equals("186.237.201.132")) {
@@ -160,6 +180,12 @@ public class CompreIngressosActivity extends ActionBarActivity {
             public void onLoadResource(WebView view, String url) {
 //                Log.e("onLoadResource", "Passou aqui");
                 view.loadUrl("javascript:$(\"#menu_topo\").hide();$('.aba' && '.fechado').hide();$(\"#footer\").hide();$(\"#selos\").hide();");
+
+                if (url.contains("etapa1.php")){
+//                    view.loadUrl("javascript:$('.container_botoes_etapas').hide()");
+                    view.loadUrl("javascript:Android.showToast($(\".destaque_menor_v2\").first().find(\"h3\").text());");
+
+                }
             }
 
 
@@ -167,7 +193,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
                 Log.e("onReceivedSslError", "aqui");
             }
-
 
         });
 

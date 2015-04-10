@@ -12,9 +12,20 @@
 
     <WebView
         android:id="@+id/webview"
-        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true" />
+        android:layout_above="@+id/btn_avancar"
+        android:layout_below="@+id/toolbar" />
+
+    <Button
+        android:id="@+id/btn_avancar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+
+        android:layout_alignParentStart="true"
+        android:text="Avançar"
+        android:visibility="visible" />
 </RelativeLayout>
 
