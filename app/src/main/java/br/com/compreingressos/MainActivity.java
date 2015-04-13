@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
+import br.com.compreingressos.helper.OrderHelper;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Espetaculo;
 import br.com.compreingressos.model.Espetaculos;
@@ -122,6 +123,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
             getNetworkLocation();
         }
+
+        OrderHelper.loadOrderFromJSON(OrderHelper.JSON);
     }
 
 
