@@ -1,15 +1,37 @@
 package br.com.compreingressos.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
  * Created by luiszacheu on 13/04/15.
  */
+@DatabaseTable(tableName = "ingressos")
 public class Ingresso {
+
+    @DatabaseField(generatedId = true)
+    private int id;
+
+    @DatabaseField
     private String qrcode;
+
+    @DatabaseField
     private String local;
+
+    @DatabaseField
     private String type;
+
+    @DatabaseField
     private String price;
+
+    @DatabaseField
     private String service_price;
+
+    @DatabaseField
     private String total;
+
+    @DatabaseField(foreign=true, foreignAutoCreate=true, foreignAutoRefresh=true)
+    private Order order;
 
     public Ingresso() {
     }

@@ -1,4 +1,4 @@
-package br.com.compreingressos.helper;
+package br.com.compreingressos.utils;
 
 import android.util.Log;
 

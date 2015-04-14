@@ -33,6 +33,7 @@ import br.com.compreingressos.model.Espetaculos;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.toolbox.GsonRequest;
 import br.com.compreingressos.toolbox.VolleySingleton;
+import br.com.compreingressos.utils.DatabaseManager;
 import br.com.compreingressos.utils.Dialogs;
 
 
@@ -92,6 +93,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
         mRecyclerView.setAdapter(adapter);
 
+        DatabaseManager.init(this);
 
     }
 

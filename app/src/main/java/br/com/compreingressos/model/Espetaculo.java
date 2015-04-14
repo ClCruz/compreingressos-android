@@ -1,6 +1,8 @@
 package br.com.compreingressos.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -8,6 +10,7 @@ import java.util.Date;
 /**
  * Created by luiszacheu on 02/04/15.
  */
+@DatabaseTable(tableName = "espetaculo")
 public class Espetaculo implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,23 +29,53 @@ public class Espetaculo implements Serializable {
     public final static String DISTANCE = "distance";
 
 
+    @DatabaseField(generatedId = true)
+    private int id;
+
+    @DatabaseField
     private String titulo;
+
+    @DatabaseField
     private String genero;
+
+    @DatabaseField
     @SerializedName("nome_teatro")
     private String teatro;
+
+    @DatabaseField
     private String endereco;
+
+    @DatabaseField
     private String cidade;
+
+    @DatabaseField
     private String estado;
+
+    @DatabaseField
     private String miniatura;
+
+    @DatabaseField
     private String url;
+
+    @DatabaseField
     private Date data;
+
+    @DatabaseField
     private String horario;
+
+    @DatabaseField
     private int relevancia;
     //    private Date updated_at;
+
+    @DatabaseField
     @SerializedName("teatro_id")
     private int teatroId;
+
+    @DatabaseField
     private long distance;
 
+    @DatabaseField(foreign=true, foreignAutoCreate=true, foreignAutoRefresh=true)
+    private Order order;
 
     public Espetaculo() {
 
