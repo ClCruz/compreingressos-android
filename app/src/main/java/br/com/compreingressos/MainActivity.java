@@ -248,7 +248,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
 
-        GsonRequest<Banner[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, URL_VISORES, Banner[].class, headers, this.createSuccessListener(), this.createErrorListener());
+        GsonRequest<Banner[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, URL_VISORES, Banner[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
         this.requestQueue.add(jsonObjRequest);
 
 

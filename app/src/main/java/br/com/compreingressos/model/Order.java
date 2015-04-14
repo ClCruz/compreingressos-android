@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class Order {
     private String number;
-//    private Date date;
+    private Date date;
     private String total;
     private Espetaculo espetaculo;
     private List<Ingresso> ingressos;
@@ -21,13 +21,13 @@ public class Order {
         this.number = number;
     }
 
-//    public Date getDate() {
-//        return date;
-//    }
-//
-//    public void setDate(Date date) {
-//        this.date = date;
-//    }
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 
     public String getTotal() {
         return total;
@@ -57,6 +57,7 @@ public class Order {
     public String toString() {
         return "Order{" +
                 "number='" + number + '\'' +
+                ", date=" + date +
                 ", total='" + total + '\'' +
                 ", espetaculo=" + espetaculo +
                 ", ingressos=" + ingressos +

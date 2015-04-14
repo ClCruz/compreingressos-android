@@ -124,7 +124,6 @@ public class EspetaculosActivity extends ActionBarActivity {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("-----> ", error.toString());
                 Toast.makeText(EspetaculosActivity.this, "Houve um erro!", Toast.LENGTH_SHORT).show();
             }
         };
@@ -135,7 +134,7 @@ public class EspetaculosActivity extends ActionBarActivity {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
 
-        GsonRequest<Espetaculos> jsonObjRequest = new GsonRequest<>(Request.Method.GET, URL, Espetaculos.class, headers, this.createSuccessListener(), this.createErrorListener());
+        GsonRequest<Espetaculos> jsonObjRequest = new GsonRequest<>(Request.Method.GET, URL, Espetaculos.class, headers, this.createSuccessListener(), this.createErrorListener(), "yyyy-MM-dd");
         this.requestQueue.add(jsonObjRequest);
 
 

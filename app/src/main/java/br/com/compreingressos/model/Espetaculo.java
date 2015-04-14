@@ -2,22 +2,25 @@ package br.com.compreingressos.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by luiszacheu on 02/04/15.
  */
-public class Espetaculo {
+public class Espetaculo implements Serializable {
 
-    public final static String TITULO =  "titulo";
+    private static final long serialVersionUID = 1L;
+
+    public final static String TITULO = "titulo";
     public final static String GENERO = "genero";
     public final static String TEATRO = "teatro";
     public final static String CIDADE = "cidade";
     public final static String ESTADO = "estado";
-    public final static String MINIATURA =  "miniatura";
+    public final static String MINIATURA = "miniatura";
     public final static String URL = "url";
     public final static String DATA = "data";
-    public final static String RELEVANCIA  = "relevancia";
+    public final static String RELEVANCIA = "relevancia";
     public final static String UPDATED_AT = "updated_at";
     public final static String TEATRO_ID = "teatro_id";
     public final static String DISTANCE = "distance";
@@ -27,18 +30,21 @@ public class Espetaculo {
     private String genero;
     @SerializedName("nome_teatro")
     private String teatro;
+    private String endereco;
     private String cidade;
     private String estado;
     private String miniatura;
     private String url;
-//    private Date data;
+    private Date data;
+    private String horario;
     private int relevancia;
-//    private Date updated_at;
+    //    private Date updated_at;
     @SerializedName("teatro_id")
     private int teatroId;
     private long distance;
 
-    public Espetaculo(){
+
+    public Espetaculo() {
 
     }
 
@@ -50,7 +56,7 @@ public class Espetaculo {
         this.estado = estado;
         this.miniatura = miniatura;
         this.url = url;
-//        this.data = data;
+        this.data = data;
         this.relevancia = relevancia;
     }
 
@@ -76,6 +82,14 @@ public class Espetaculo {
 
     public void setTeatro(String teatro) {
         this.teatro = teatro;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
     }
 
     public String getCidade() {
@@ -110,13 +124,22 @@ public class Espetaculo {
         this.url = url;
     }
 
-//    public Date getData() {
-//        return data;
-//    }
-//
-//    public void setData(Date data) {
-//        this.data = data;
-//    }
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+
+
+    public String getHorario() {
+        return horario;
+    }
+
+    public void setHorario(String horario) {
+        this.horario = horario;
+    }
 
     public int getRelevancia() {
         return relevancia;
@@ -156,9 +179,15 @@ public class Espetaculo {
                 "titulo='" + titulo + '\'' +
                 ", genero='" + genero + '\'' +
                 ", teatro='" + teatro + '\'' +
+                ", endereco='" + endereco + '\'' +
                 ", cidade='" + cidade + '\'' +
                 ", estado='" + estado + '\'' +
                 ", miniatura='" + miniatura + '\'' +
+                ", url='" + url + '\'' +
+                ", horario='" + horario + '\'' +
+                ", relevancia=" + relevancia +
+                ", teatroId=" + teatroId +
+                ", distance=" + distance +
                 '}';
     }
 }
