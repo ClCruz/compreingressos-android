@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.sql.SQLException;
 
+import br.com.compreingressos.model.Espetaculo;
+import br.com.compreingressos.model.Ingresso;
 import br.com.compreingressos.model.Order;
 
 /**
@@ -52,6 +54,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
         try {
             TableUtils.createTable(connectionSource, Order.class);
+            TableUtils.createTable(connectionSource, Espetaculo.class);
+            TableUtils.createTable(connectionSource, Ingresso.class);
         } catch (SQLException e) {
             Log.e(LOG_TAG, "Não foi possivel criar a tabela");
             e.printStackTrace();
@@ -59,7 +63,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int oldVersion, int newVersion) {
+        try {
+            TableUtils.dropTable(connectionSource, Order.class, true);
+            TableUtils.dropTable(connectionSource, Espetaculo.class, true);
+            TableUtils.dropTable(connectionSource, Ingresso.class, true);
 
+            onCreate(sqLiteDatabase, connectionSource);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void close() {
+        super.close();
     }
 }

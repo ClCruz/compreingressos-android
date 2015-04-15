@@ -22,12 +22,17 @@ public class Order {
     private Date date;
     @DatabaseField
     private String total;
-    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+
+    @DatabaseField(foreign = true)
     private Espetaculo espetaculo;
+
     @ForeignCollectionField
     private ForeignCollection<Ingresso> ingressosCollection;
 
     private List<Ingresso> ingressos;
+
+    private long timestamp;
+
 
     public Order() {
     }

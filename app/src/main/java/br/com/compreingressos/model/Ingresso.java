@@ -45,6 +45,14 @@ public class Ingresso {
         this.total = total;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getQrcode() {
         return qrcode;
     }
@@ -91,6 +99,14 @@ public class Ingresso {
 
     public void setTotal(String total) {
         this.total = total;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     @Override

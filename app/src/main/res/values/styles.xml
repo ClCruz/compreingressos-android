@@ -23,5 +23,9 @@
         colorControlHighlight and colorSwitchThumbNormal. -->
 
     </style>
+    
+    <style name="FontHistoryOrders">
+        <item name="android:textColor">@color/font_history_orders</item>
+    </style>
 
 </resources>

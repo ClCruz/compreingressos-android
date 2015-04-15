@@ -93,6 +93,14 @@ public class Espetaculo implements Serializable {
         this.relevancia = relevancia;
     }
 
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
     public String getTitulo() {
         return titulo;
     }
@@ -204,6 +212,14 @@ public class Espetaculo implements Serializable {
 
     public void setDistance(long distance) {
         this.distance = distance;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
