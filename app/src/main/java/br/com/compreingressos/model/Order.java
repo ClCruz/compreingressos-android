@@ -31,7 +31,17 @@ public class Order {
 
     private List<Ingresso> ingressos;
 
-    private long timestamp;
+    @DatabaseField(columnName = "titulo_espetaculo")
+    private String tituloEspetaculo;
+
+    @DatabaseField(columnName = "endereco_espetaculo")
+    private String enderecoEspetaculo;
+
+    @DatabaseField(columnName = "nome_teatro_espetaculo")
+    private String nomeTeatroEspetaculo;
+
+    @DatabaseField(columnName = "horario_espetaculo")
+    private String horarioEspetaculo;
 
 
     public Order() {
@@ -94,14 +104,52 @@ public class Order {
         this.ingressosCollection = ingressosCollection;
     }
 
+    public String getTituloEspetaculo() {
+        return tituloEspetaculo;
+    }
+
+    public void setTituloEspetaculo(String tituloEspetaculo) {
+        this.tituloEspetaculo = tituloEspetaculo;
+    }
+
+    public String getEnderecoEspetaculo() {
+        return enderecoEspetaculo;
+    }
+
+    public void setEnderecoEspetaculo(String enderecoEspetaculo) {
+        this.enderecoEspetaculo = enderecoEspetaculo;
+    }
+
+    public String getNomeTeatroEspetaculo() {
+        return nomeTeatroEspetaculo;
+    }
+
+    public void setNomeTeatroEspetaculo(String nomeTeatroEspetaculo) {
+        this.nomeTeatroEspetaculo = nomeTeatroEspetaculo;
+    }
+
+    public String getHorarioEspetaculo() {
+        return horarioEspetaculo;
+    }
+
+    public void setHorarioEspetaculo(String horarioEspetaculo) {
+        this.horarioEspetaculo = horarioEspetaculo;
+    }
+
     @Override
     public String toString() {
         return "Order{" +
-                "number='" + number + '\'' +
+                "id=" + id +
+                ", number='" + number + '\'' +
                 ", date=" + date +
                 ", total='" + total + '\'' +
                 ", espetaculo=" + espetaculo +
+                ", ingressosCollection=" + ingressosCollection +
                 ", ingressos=" + ingressos +
+                ", tituloEspetaculo='" + tituloEspetaculo + '\'' +
+                ", enderecoEspetaculo='" + enderecoEspetaculo + '\'' +
+                ", nomeTeatroEspetaculo='" + nomeTeatroEspetaculo + '\'' +
+                ", horarioEspetaculo='" + horarioEspetaculo + '\'' +
                 '}';
     }
 }

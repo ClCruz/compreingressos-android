@@ -287,23 +287,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     }
 
 
-    private Dao<Order, Integer> getOrderDao() throws SQLException{
-        Dao<Order, Integer> dao = DaoManager.createDao(getConnectionSource(), Order.class);
-
-        return dao;
-    }
-
-    private Dao<Espetaculo, Integer> getEspetaculoDao() throws SQLException{
-        Dao<Espetaculo, Integer> dao = DaoManager.createDao(getConnectionSource(), Espetaculo.class);
-
-        return dao;
-    }
-
-    private Dao<Ingresso, Integer> getIngressoDao() throws SQLException{
-        Dao<Ingresso, Integer> dao = DaoManager.createDao(getConnectionSource(), Ingresso.class);
-
-        return dao;
-    }
 
     private boolean gravar(Order order) throws SQLException{
         databaseHelper =  new DatabaseHelper(this);

@@ -56,7 +56,6 @@ public class HistoryOrdersActivity extends ActionBarActivity {
 
             for (Order order : orders){
                 Log.e(LOG_TAG, "order ------ > " + order.toString());
-                Log.e(LOG_TAG, "espetaculo ------ > " + order.getEspetaculo().toString());
 
                 for (Ingresso i : order.getIngressosCollection()){
                     Log.e(LOG_TAG, "Ingresso ------ > " + i.toString());

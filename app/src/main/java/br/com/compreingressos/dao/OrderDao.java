@@ -31,14 +31,20 @@ public class OrderDao extends BaseDaoImpl<Order, Integer> {
         espetaculoDao =  new EspetaculoDao(getConnectionSource());
         ingressoDao = new IngressoDao(getConnectionSource());
 
-        int result = super.create(data);
+        Order order = data;
+        order.setTituloEspetaculo(data.getEspetaculo().getTitulo());
+        order.setEnderecoEspetaculo(data.getEspetaculo().getEndereco());
+        order.setNomeTeatroEspetaculo(data.getEspetaculo().getTeatro());
+        order.setHorarioEspetaculo(data.getEspetaculo().getHorario());
+
+
+        int result = super.create(order);
+
         if (result == 1 ){
-            Espetaculo espetaculo = data.getEspetaculo();
-            espetaculo.setOrder(data);
-
-            int espetaculoResult = espetaculoDao.create(espetaculo);
-            Log.e(LOG_TAG, "espetaculoResult - " + espetaculoResult + " title " + espetaculo.getTitulo());
-
+//            Espetaculo espetaculo = data.getEspetaculo();
+//            espetaculo.setOrder(data);
+//            int espetaculoResult = espetaculoDao.create(espetaculo);
+//            Log.e(LOG_TAG, "espetaculoResult - " + espetaculoResult + " title " + espetaculo.getTitulo());
 
             for (Ingresso ingresso : data.getIngressos()){
                 ingresso.setOrder(data);

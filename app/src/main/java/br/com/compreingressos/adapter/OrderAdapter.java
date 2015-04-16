@@ -3,6 +3,7 @@ package br.com.compreingressos.adapter;
 import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,8 +48,9 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         Order order = getItem(position);
-        ((ViewHolderItem) viewHolder).titiloView.setText(order.getEspetaculo().
-        ());
+        Log.e(LOG_TAG, "order - " + order.getTituloEspetaculo());
+
+//        ((ViewHolderItem) viewHolder).titiloView.setText(order.getTituloEspetaculo());
         ((ViewHolderItem) viewHolder).dataView.setText(order.getDate().toString());
         ((ViewHolderItem) viewHolder).numberOrderView.setText(order.getNumber());
 
