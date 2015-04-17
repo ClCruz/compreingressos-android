@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import br.com.compreingressos.R;
 import br.com.compreingressos.interfaces.OnItemClickListener;
 import br.com.compreingressos.model.Order;
+import br.com.compreingressos.utils.CustomTypeFace;
 
 /**
  * Created by luiszacheu on 30/03/15.
@@ -27,6 +29,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public static OnItemClickListener onItemClickListener;
     private static final int TYPE_ITEM = 1;
     private ActionBarActivity activity;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd MMM");
 
     public OrderAdapter(Context context, ArrayList<Order> orders) {
         this.mListOrders = orders;
@@ -47,9 +50,8 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         Order order = getItem(position);
-        ((ViewHolderItem) viewHolder).titiloView.setText(order.getEspetaculo().
-        ());
-        ((ViewHolderItem) viewHolder).dataView.setText(order.getDate().toString());
+        ((ViewHolderItem) viewHolder).tituloView.setText(order.getTituloEspetaculo());
+        ((ViewHolderItem) viewHolder).dataView.setText(sdf.format(order.getDate()));
         ((ViewHolderItem) viewHolder).numberOrderView.setText(order.getNumber());
 
     }
@@ -73,21 +75,21 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public class ViewHolderItem extends RecyclerView.ViewHolder {
-        public TextView titiloView;
+        public TextView tituloView;
         public TextView dataView;
         public TextView numberOrderView;
         public ImageView coverView;
 
         public ViewHolderItem(View itemView) {
             super(itemView);
-            titiloView = (TextView) itemView.findViewById(R.id.txt_titulo);
-//            titiloView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
+            tituloView = (TextView) itemView.findViewById(R.id.txt_espetaculo);
+            tituloView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
 
             dataView = (TextView) itemView.findViewById(R.id.txt_data);
-//            dataView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
+            dataView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
 
             numberOrderView = (TextView) itemView.findViewById(R.id.txt_order_number);
-//            numberOrderView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
+            numberOrderView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
 
             coverView = (ImageView) itemView.findViewById(R.id.img_cover);
 

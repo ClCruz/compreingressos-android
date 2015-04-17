@@ -2,12 +2,10 @@ package br.com.compreingressos;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.DatabaseUtils;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,25 +14,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
@@ -42,10 +31,7 @@ import br.com.compreingressos.dao.OrderDao;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.OrderHelper;
 import br.com.compreingressos.model.Banner;
-import br.com.compreingressos.model.Espetaculo;
-import br.com.compreingressos.model.Espetaculos;
 import br.com.compreingressos.model.Genero;
-import br.com.compreingressos.model.Ingresso;
 import br.com.compreingressos.model.Order;
 import br.com.compreingressos.toolbox.GsonRequest;
 import br.com.compreingressos.toolbox.VolleySingleton;
@@ -287,23 +273,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     }
 
 
-    private Dao<Order, Integer> getOrderDao() throws SQLException{
-        Dao<Order, Integer> dao = DaoManager.createDao(getConnectionSource(), Order.class);
-
-        return dao;
-    }
-
-    private Dao<Espetaculo, Integer> getEspetaculoDao() throws SQLException{
-        Dao<Espetaculo, Integer> dao = DaoManager.createDao(getConnectionSource(), Espetaculo.class);
-
-        return dao;
-    }
-
-    private Dao<Ingresso, Integer> getIngressoDao() throws SQLException{
-        Dao<Ingresso, Integer> dao = DaoManager.createDao(getConnectionSource(), Ingresso.class);
-
-        return dao;
-    }
 
     private boolean gravar(Order order) throws SQLException{
         databaseHelper =  new DatabaseHelper(this);
@@ -323,26 +292,4 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         return x > 0;
     }
 
-
-
-
-    public static void copyAppDbToDownloadFolder(Context context) throws IOException {
-        File backupDB = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "demo_bkp.db"); // for
-        // example
-        // "my_data_backup.db"
-        File currentDB = context.getDatabasePath("demo.db"); // databaseName=your
-        // current
-        // application
-        // database
-        // name, for
-        // example
-        // "my_data.db".
-        if (currentDB.exists()) {
-            FileChannel src = new FileInputStream(currentDB).getChannel();
-            FileChannel dst = new FileOutputStream(backupDB).getChannel();
-            dst.transferFrom(src, 0, src.size());
-            src.close();
-            dst.close();
-        }
-    }
 }

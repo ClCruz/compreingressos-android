@@ -29,4 +29,5 @@ dependencies {
     compile project(':viewpager_indicator')
     compile files('libs/ormlite-android-4.48.jar')
     compile files('libs/ormlite-core-4.48.jar')
+    compile ("net.glxn.qrgen:android:2.0")
 }

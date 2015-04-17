@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white">#FFF</color>
+    <color name="red_compreingressos">#8d0a0c</color>
     <color name="font_history_orders">#636465</color>
 </resources>

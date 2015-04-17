@@ -3,11 +3,16 @@ package br.com.compreingressos.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
+
 /**
  * Created by luiszacheu on 13/04/15.
  */
 @DatabaseTable(tableName = "ingressos")
-public class Ingresso {
+public class Ingresso implements Serializable {
+
+   private static final long serialVersionUID = 1L;
+
 
     @DatabaseField(generatedId = true)
     private int id;

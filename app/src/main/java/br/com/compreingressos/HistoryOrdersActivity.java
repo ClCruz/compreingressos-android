@@ -1,6 +1,7 @@
 package br.com.compreingressos;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,9 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import br.com.compreingressos.adapter.OrderAdapter;
 import br.com.compreingressos.dao.OrderDao;
@@ -51,17 +54,8 @@ public class HistoryOrdersActivity extends ActionBarActivity {
 
         try {
             orderDao = new OrderDao(databaseHelper.getConnectionSource());
-
             orders = (ArrayList<Order>) orderDao.queryForAll();
 
-            for (Order order : orders){
-                Log.e(LOG_TAG, "order ------ > " + order.toString());
-                Log.e(LOG_TAG, "espetaculo ------ > " + order.getEspetaculo().toString());
-
-                for (Ingresso i : order.getIngressosCollection()){
-                    Log.e(LOG_TAG, "Ingresso ------ > " + i.toString());
-                }
-            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -70,11 +64,8 @@ public class HistoryOrdersActivity extends ActionBarActivity {
         OrderAdapter adapter = null;
 
         if (orders.size() > 0){
-
-
-
-
             adapter = new OrderAdapter(this, orders);
+
             adapter.setOnItemClickListener(onItemClick);
         }
 
@@ -85,10 +76,18 @@ public class HistoryOrdersActivity extends ActionBarActivity {
     private OnItemClickListener onItemClick = new OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
-//            Toast.makeText(getApplicationContext(), .get(position).getTitulo(), Toast.LENGTH_SHORT).show();
-//            Intent intent = new Intent(EspetaculosActivity.this, CompreIngressosActivity.class);
-//            intent.putExtra("url", espetaculos.get(position).getUrl());
-//            startActivity(intent);
+            Toast.makeText(getApplicationContext(),orders.get(position).getTituloEspetaculo(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(HistoryOrdersActivity.this, DetailHistoryOrderActivity.class);
+
+            Order order = orders.get(position);
+            order.setIngressos(new ArrayList<>(order.getIngressosCollection()));
+
+            for (Ingresso ingresso : order.getIngressos()){
+                Log.e(LOG_TAG, "ingress0 - " + ingresso.toString());
+            }
+            intent.putExtra("order", orders.get(position));
+
+            startActivity(intent);
 
         }
     };
