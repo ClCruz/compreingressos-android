@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -49,6 +50,8 @@ public class EspetaculosActivity extends ActionBarActivity {
     private ProgressBar progressBar;
     private static final String OBJ_LIST = "OBJ_LIST";
     String genero;
+    String latitude, longitude;
+
 
 
     @Override
@@ -58,6 +61,11 @@ public class EspetaculosActivity extends ActionBarActivity {
 
         if (getIntent().hasExtra("genero")){
             genero = getIntent().getStringExtra("genero");
+        }
+
+        if (getIntent().hasExtra("latitude") && getIntent().hasExtra("longitude")){
+            latitude = getIntent().getStringExtra("latitude");
+            longitude = getIntent().getStringExtra("longitude");
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -116,8 +124,6 @@ public class EspetaculosActivity extends ActionBarActivity {
     private Response.Listener<Espetaculos> createSuccessListener() {
         return new Response.Listener<Espetaculos>() {
 
-
-
             @Override
             public void onResponse(Espetaculos response) {
 
@@ -144,8 +150,19 @@ public class EspetaculosActivity extends ActionBarActivity {
     private void startRequest() {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
+        StringBuilder urlCustom = new StringBuilder(URL);
 
-        GsonRequest<Espetaculos> jsonObjRequest = new GsonRequest<>(Request.Method.GET, URL, Espetaculos.class, headers, this.createSuccessListener(), this.createErrorListener(), "yyyy-MM-dd");
+        if (genero.contains("Perto de mim")){
+            urlCustom.append("?latitude=" + latitude + "&longitude="+longitude);
+        }else if (genero.contains("Shows")){
+            urlCustom.append("?genero=Shows");
+        }else if (genero.contains("Clássicos")){
+            urlCustom.append("?genero=Classicos");
+        }else if (genero.contains("Teatros")){
+            urlCustom.append("?genero=Teatros");
+        }
+
+        GsonRequest<Espetaculos> jsonObjRequest = new GsonRequest<>(Request.Method.GET, urlCustom.toString(), Espetaculos.class, headers, this.createSuccessListener(), this.createErrorListener(), "yyyy-MM-dd");
         this.requestQueue.add(jsonObjRequest);
     }
 

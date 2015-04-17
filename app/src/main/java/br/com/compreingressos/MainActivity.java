@@ -21,18 +21,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.j256.ormlite.support.ConnectionSource;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
-import br.com.compreingressos.dao.OrderDao;
 import br.com.compreingressos.helper.DatabaseHelper;
-import br.com.compreingressos.helper.OrderHelper;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
-import br.com.compreingressos.model.Order;
 import br.com.compreingressos.toolbox.GsonRequest;
 import br.com.compreingressos.toolbox.VolleySingleton;
 import br.com.compreingressos.utils.DatabaseManager;
@@ -59,6 +55,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private RequestQueue requestQueue;
 
     private GeneroAdapter adapter;
+    private double latitude;
+    private double longitude;
 
 
 
@@ -86,6 +84,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             public void onClickListener(View v, int position) {
                 Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
                 intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
+                intent.putExtra("latitude", "" + latitude);
+                intent.putExtra("longitude", ""+longitude);
 
                 startActivity(intent);
             }
@@ -130,6 +130,10 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             getNetworkLocation();
         }
 
+        if (location == null){
+            getNetworkLocation();
+        }
+
     }
 
 
@@ -150,17 +154,12 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         locationManager.requestLocationUpdates(locationProvider, 200, 0, this);
 
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        try {
-            Log.e(LOG_TAG, " " + location.getLatitude());
-            Log.e(LOG_TAG, "" +  location.getLongitude());
-        }catch (Exception e){
-            Log.e(LOG_TAG, "" +  e.getMessage());
-        }
+
     }
 
     public void getNetworkLocation() {
         String locationProvider = LocationManager.NETWORK_PROVIDER;
-        locationManager.requestLocationUpdates(locationProvider, 200, 0, this);
+        locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
 
         location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
     }
@@ -186,9 +185,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     public ArrayList<Genero> initGeneros(){
         ArrayList<Genero> generos = new ArrayList<>();
-        generos.add(new Genero("Sugestões perto de mim", R.drawable.perto_de_mim));
+        generos.add(new Genero("Perto de mim", R.drawable.perto_de_mim));
         generos.add(new Genero("Shows",R.drawable.shows));
-        generos.add(new Genero("Classicos", R.drawable.concerto_sinfonico));
+        generos.add(new Genero("Clássicos", R.drawable.concerto_sinfonico));
         generos.add(new Genero("Teatro",R.drawable.comedia));
         generos.add(new Genero("Muito mais", R.drawable.circo));
 
@@ -199,7 +198,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
-
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
     }
 
     @Override
