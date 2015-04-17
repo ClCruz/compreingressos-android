@@ -46,9 +46,6 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if (viewType == TYPE_HEADER){
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.header_generos, viewGroup, false);
-
-
-
             MainBannerFragment  fragment = new MainBannerFragment();
 
             FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();

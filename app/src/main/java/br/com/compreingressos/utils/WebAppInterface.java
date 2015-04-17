@@ -39,11 +39,9 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void getInfoPagamento(String resultJson){
-        Log.e("json result ------->", "" + resultJson);
-//        OrderHelper.loadOrderFromJSON(resultJson);
 
         try {
-            gravar(OrderHelper.loadOrderFromJSON(OrderHelper.JSON));
+            gravar(OrderHelper.loadOrderFromJSON(resultJson));
         } catch (SQLException e) {
             Log.e(LOG_TAG, "nao foi possivel salvar o pedido");
             e.printStackTrace();

@@ -7,7 +7,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -101,7 +100,7 @@ public class EspetaculosActivity extends ActionBarActivity {
     private OnItemClickListener onItemClick = new OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
-            Toast.makeText(getApplicationContext(), espetaculos.get(position).getTitulo(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), espetaculos.get(position).getTitulo(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(EspetaculosActivity.this, CompreIngressosActivity.class);
             intent.putExtra("url", espetaculos.get(position).getUrl());
             intent.putExtra("titulo_espetaculo", espetaculos.get(position).getTitulo());

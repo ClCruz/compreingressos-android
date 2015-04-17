@@ -87,9 +87,6 @@ public class HistoryOrdersActivity extends ActionBarActivity {
             Order order = orders.get(position);
             order.setIngressos(new ArrayList<>(order.getIngressosCollection()));
 
-            for (Ingresso ingresso : order.getIngressos()){
-                Log.e(LOG_TAG, "ingress0 - " + ingresso.toString());
-            }
             intent.putExtra("order", orders.get(position));
 
             startActivity(intent);

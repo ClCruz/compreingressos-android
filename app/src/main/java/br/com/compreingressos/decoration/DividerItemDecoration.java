@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import br.com.compreingressos.R;
@@ -25,9 +24,6 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration{
         int right = parent.getWidth() - parent.getPaddingRight();
 
         int childCount = parent.getChildCount();
-
-
-        Log.e("---- > ", "" + childCount);
 
         for (int i = 0; i < childCount; i++) {
             View child = parent.getChildAt(i);

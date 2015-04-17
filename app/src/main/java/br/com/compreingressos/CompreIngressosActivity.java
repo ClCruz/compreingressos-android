@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +35,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private Toolbar toolbar;
     private Button btnAvancar;
     private boolean isFirstUrlLoading = true;
+    private int countReading = 0;
 
 
 
@@ -100,10 +100,12 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 }
 
                 if (url.contains("pagamento_ok.php")){
-                    if ( isFirstUrlLoading ){
+                    if ( countReading  == 2 ){
+
                         view.loadUrl(runScripGetInfoPayment());
                     }
                     isFirstUrlLoading = false;
+                    countReading ++;
                 }
 
                 if (url.contains("etapa5.php")){
@@ -114,7 +116,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
             @Override
             public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
-                Log.e("shouldOverrideKeyEvent", " keyevent -" + event);
 
                 return super.shouldOverrideKeyEvent(view, event);
             }
@@ -122,13 +123,10 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
-                Log.e(LOG_TAG, "url --> " + url);
 
                 if (Uri.parse(url).getHost().equals("compra.compreingressos.com"))
                     url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61566&eventoDS=COSI%20FAN%20TUT%20TE";
                 if (url.contains("etapa1.php")){
-                    Log.e(LOG_TAG, "Entrou aqui");
-//                    view.loadUrl("javascript:$('.container_botoes_etapas').hide()");
                     WebSettings webSettings = view.getSettings();
                     webSettings.setBuiltInZoomControls(true);
                     webSettings.setDisplayZoomControls(false);
@@ -139,7 +137,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
                         public void onClick(View v) {
                             StringBuilder scriptOnClick  = new StringBuilder("javascript:var length = $('.container_botoes_etapas').find('a').length;");
                             scriptOnClick.append("$('.container_botoes_etapas').find('a')[length - 1].click(); ");
-                            Log.e(LOG_TAG, scriptOnClick.toString());
                             view.loadUrl(scriptOnClick.toString());
                         }
                     });
@@ -194,19 +191,17 @@ public class CompreIngressosActivity extends ActionBarActivity {
 //                Log.e("onLoadResource", "Passou aqui");
                 view.loadUrl("javascript:$(\"#menu_topo\").hide();$('.aba' && '.fechado').hide();$(\"#footer\").hide();$(\"#selos\").hide();");
                 view.loadUrl("javascript:$(document).ready(function(){$('.container_botoes_etapas').hide();});");
+                view.loadUrl("javascript:$('.imprima_agora').hide();");
 
                 if (url.contains("etapa1.php")){
                     view.loadUrl("javascript:Android.showToast($(\".destaque_menor_v2\").first().find(\"h3\").text());");
-
                 }
-
-
             }
 
 
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                Log.e("onReceivedSslError", "aqui");
+
             }
 
         });
@@ -214,7 +209,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
         if (getIntent().getStringExtra("url_flux_webview") == null){
             webView.loadUrl(url);
         }else{
-            Log.e("link next activity", getIntent().getStringExtra("url_flux_webview"));
             webView.loadUrl(getIntent().getStringExtra("url_flux_webview"));
         }
 
@@ -272,8 +266,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
         scriptGetInfoPayment.append("}); \n");
         scriptGetInfoPayment.append("} \n");
         scriptGetInfoPayment.append("}); \n");
-        scriptGetInfoPayment.append("var payload = { \n");
-        scriptGetInfoPayment.append("order: { \n");
+        scriptGetInfoPayment.append("var payload = \n");
+        scriptGetInfoPayment.append("{ \n");
         scriptGetInfoPayment.append("number: order_number, \n");
         scriptGetInfoPayment.append("date:   order_date, \n");
         scriptGetInfoPayment.append("total:  order_total, \n");
@@ -284,11 +278,10 @@ public class CompreIngressosActivity extends ActionBarActivity {
         scriptGetInfoPayment.append("horario: time \n");
         scriptGetInfoPayment.append("}, \n");
         scriptGetInfoPayment.append("ingressos: tickets \n");
-        scriptGetInfoPayment.append("} \n");
         scriptGetInfoPayment.append("}; \n");
         scriptGetInfoPayment.append("Android.getInfoPagamento(JSON.stringify(payload));");
+        scriptGetInfoPayment.append("$('.imprima_agora').hide();");
 
-        Log.e(LOG_TAG, "scrip get info " + scriptGetInfoPayment.toString());
 
         return scriptGetInfoPayment.toString();
     }

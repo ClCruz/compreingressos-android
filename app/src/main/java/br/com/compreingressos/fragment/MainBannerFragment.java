@@ -96,7 +96,6 @@ public class MainBannerFragment extends Fragment implements BannerListener {
             handler.postDelayed(runnable, 5000);
         }
 
-        Log.e("------------- >>" , "Atualizou os banners!!!");
     }
 
     public void slideShow() {

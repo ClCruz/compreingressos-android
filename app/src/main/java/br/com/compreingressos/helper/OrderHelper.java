@@ -21,6 +21,7 @@ public class OrderHelper {
     private static final String LOG_TAG = "OrderHelper";
     public static final String JSON = " {\"number\":\"436464\",\"date\":\"sáb 28 nov\",\"total\":\"50,00\",\"espetaculo\":{\"titulo\":\"COSI FAN TUT TE\",\"endereco\":\"Praça Ramos de Azevedo, s/n - República - São Paulo, SP\",\"nome_teatro\n\":\"Theatro Municipal de São Paulo\",\"horario\":\"20h00\"},\"ingressos\":[{\"qrcode\":\"0054741128200000100146\",\"local\":\"SETOR 3 ANFITEATRO C-06\",\"type\":\"INTEIRA\",\"price\":\"50,00\",\"service_price\":\" 0,00\",\"total\":\"50,00\"}]}";
 
+
     public static Order loadOrderFromJSON(String jsonString){
         GsonBuilder gsonBuilder = new GsonBuilder();
 
@@ -28,26 +29,15 @@ public class OrderHelper {
         Gson gson = gsonBuilder.create();
 
         try {
-
-            Log.e(LOG_TAG, "jsonString -> " + jsonString);
-
             Order order;
             try {
-
                 JsonParser parser = new JsonParser();
                 JsonObject obj = parser.parse(jsonString).getAsJsonObject();
-
 
                 order = gson.fromJson(obj, Order.class);
             }catch (Exception e ){
                 e.printStackTrace();
                 return  null;
-            }
-
-            Log.e(LOG_TAG, "Order -> " + order.toString());
-
-            for (Ingresso i : order.getIngressos()){
-                Log.e(LOG_TAG, i.toString());
             }
 
             return order;

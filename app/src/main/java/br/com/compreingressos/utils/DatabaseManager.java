@@ -30,20 +30,5 @@ public class DatabaseManager {
         return helper;
     }
 
-/**
- *
- * @return
- */
-//    public  ArrayList<Order> findAllOrder() {
-//        ArrayList<Order> orders = null;
-//        try {
-//            orders = getHelper().getBookDao().queryBuilder()
-//                    .orderBy("id", false).query();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return list;
-//    }
-//}
 
 }

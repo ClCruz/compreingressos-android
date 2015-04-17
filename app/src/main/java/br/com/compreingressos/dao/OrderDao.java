@@ -1,13 +1,10 @@
 package br.com.compreingressos.dao;
 
-import android.util.Log;
-
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
 
-import br.com.compreingressos.model.Espetaculo;
 import br.com.compreingressos.model.Ingresso;
 import br.com.compreingressos.model.Order;
 
@@ -30,10 +27,6 @@ public class OrderDao extends BaseDaoImpl<Order, Integer> {
     public int create(Order data) throws SQLException {
         espetaculoDao =  new EspetaculoDao(getConnectionSource());
         ingressoDao = new IngressoDao(getConnectionSource());
-
-        if(data == null)
-            Log.e("-=---------- > ", "data null");
-
 
         Order order = data;
         order.setTituloEspetaculo(data.getEspetaculo().getTitulo());

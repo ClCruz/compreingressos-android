@@ -187,9 +187,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         ArrayList<Genero> generos = new ArrayList<>();
         generos.add(new Genero("Perto de mim", R.drawable.perto_de_mim));
         generos.add(new Genero("Shows",R.drawable.shows));
-        generos.add(new Genero("Clássicos", R.drawable.concerto_sinfonico));
-        generos.add(new Genero("Teatro",R.drawable.comedia));
-        generos.add(new Genero("Muito mais", R.drawable.circo));
+        generos.add(new Genero("Clássicos", R.drawable.classicos));
+        generos.add(new Genero("Teatros",R.drawable.teatro));
+        generos.add(new Genero("Muito mais", R.drawable.muito_mais));
 
 
         return generos;

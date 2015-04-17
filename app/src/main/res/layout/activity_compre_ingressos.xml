@@ -23,7 +23,8 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-
+        android:background="@color/red_compreingressos"
+        android:textColor="@color/white"
         android:layout_alignParentStart="true"
         android:text="Avançar"
         android:visibility="gone" />

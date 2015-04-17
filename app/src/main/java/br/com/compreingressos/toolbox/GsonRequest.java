@@ -61,8 +61,6 @@ public class GsonRequest<T> extends Request<T> {
         try {
             String json = new String(response.data,HttpHeaderParser.parseCharset(response.headers));
 
-
-
             if (!formatString.isEmpty()){
                 gsonBuilder.registerTypeAdapter(Espetaculo.class, new DateDeserializer());
                 gsonBuilder.serializeNulls();

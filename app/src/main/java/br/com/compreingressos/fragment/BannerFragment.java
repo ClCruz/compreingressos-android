@@ -1,20 +1,18 @@
 package br.com.compreingressos.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 
 import com.android.volley.toolbox.NetworkImageView;
 
 import br.com.compreingressos.R;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.toolbox.VolleySingleton;
-import br.com.compreingressos.widget.CustomNetworkImageView;
 
 /**
  * Created by luiszacheu on 08/04/15.
@@ -24,6 +22,7 @@ public class BannerFragment extends Fragment {
     private Banner banner;
     private View view;
     private NetworkImageView imgBanner;
+    private ProgressBar progressBar;
 
     public static BannerFragment newInstance(Banner banner){
         BannerFragment fragment = new BannerFragment();
@@ -51,6 +50,7 @@ public class BannerFragment extends Fragment {
 
         imgBanner = (NetworkImageView) rootView.findViewById(R.id.imageView);
         imgBanner.setImageUrl(banner.getImagem(), VolleySingleton.getInstance(getActivity().getApplicationContext()).getImageLoader());
+
 
 
         return rootView;
