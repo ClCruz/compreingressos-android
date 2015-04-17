@@ -3,11 +3,13 @@ package br.com.compreingressos;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -43,8 +45,11 @@ public class HistoryOrdersActivity extends ActionBarActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setTitle("");
+            toolbar.setTitle("Historico de Pedidos");
+            toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
+            toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
             setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_orders);
         recyclerView.setHasFixedSize(true);
@@ -91,4 +96,16 @@ public class HistoryOrdersActivity extends ActionBarActivity {
 
         }
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

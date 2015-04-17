@@ -44,7 +44,7 @@
             android:name=".CompreIngressosActivity"
             android:label="@string/title_activity_compre_ingressos"
             android:screenOrientation="portrait"
-            android:parentActivityName=".EspetaculosActivity"></activity>
+            android:parentActivityName=".MainActivity"></activity>
         <activity android:name=".HistoryOrdersActivity"
             android:label="HistoryOrdersActivity"
             android:screenOrientation="portrait"

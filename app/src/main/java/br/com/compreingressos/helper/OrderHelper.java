@@ -4,10 +4,11 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-
-import java.util.Locale;
 
 import br.com.compreingressos.model.Ingresso;
 import br.com.compreingressos.model.Order;
@@ -30,8 +31,18 @@ public class OrderHelper {
 
             Log.e(LOG_TAG, "jsonString -> " + jsonString);
 
-            Order order = gson.fromJson(jsonString, Order.class);
+            Order order;
+            try {
 
+                JsonParser parser = new JsonParser();
+                JsonObject obj = parser.parse(jsonString).getAsJsonObject();
+
+
+                order = gson.fromJson(obj, Order.class);
+            }catch (Exception e ){
+                e.printStackTrace();
+                return  null;
+            }
 
             Log.e(LOG_TAG, "Order -> " + order.toString());
 
@@ -47,6 +58,9 @@ public class OrderHelper {
         }catch (JsonParseException e){
             e.printStackTrace();
             Log.e(LOG_TAG, e.getMessage());
+            return null;
+        }catch (Exception e){
+            e.printStackTrace();
             return null;
         }
 

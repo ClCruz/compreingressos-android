@@ -31,6 +31,10 @@ public class OrderDao extends BaseDaoImpl<Order, Integer> {
         espetaculoDao =  new EspetaculoDao(getConnectionSource());
         ingressoDao = new IngressoDao(getConnectionSource());
 
+        if(data == null)
+            Log.e("-=---------- > ", "data null");
+
+
         Order order = data;
         order.setTituloEspetaculo(data.getEspetaculo().getTitulo());
         order.setEnderecoEspetaculo(data.getEspetaculo().getEndereco());

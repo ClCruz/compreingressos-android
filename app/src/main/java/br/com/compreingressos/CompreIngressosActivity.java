@@ -13,7 +13,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.SslErrorHandler;
@@ -32,29 +31,33 @@ public class CompreIngressosActivity extends ActionBarActivity {
 //    private static final String URL_ESPETACULOS = "http://www.compreingressos.com/?app=tokecompre";
     private WebView webView;
     private String url;
-    private String genero;
+    private String tituloEspetaculo;
 
     private Toolbar toolbar;
     private Button btnAvancar;
     private boolean isFirstUrlLoading = true;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compre_ingressos);
 
-        if (getIntent().hasExtra("url")){
+        if (getIntent().hasExtra("url"))
             url = getIntent().getStringExtra("url");
-            genero = getIntent().getStringExtra("genero");
-            Log.e(LOG_TAG, url);
-        }
+
+        if (getIntent().hasExtra("titulo_espetaculo"))
+            tituloEspetaculo = getIntent().getStringExtra("titulo_espetaculo");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar !=null){
-            toolbar.setTitle(genero);
+            toolbar.setTitle(tituloEspetaculo);
+            toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
             toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
 
         }
 
@@ -97,7 +100,14 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 }
 
                 if (url.contains("pagamento_ok.php")){
-                    view.loadUrl(runScripGetInfoPayment());
+                    if ( isFirstUrlLoading ){
+                        view.loadUrl(runScripGetInfoPayment());
+                    }
+                    isFirstUrlLoading = false;
+                }
+
+                if (url.contains("etapa5.php")){
+                    view.loadUrl("javascript:$(\".meu_codigo_cartao\").hide();");
                 }
 
             }
@@ -159,6 +169,22 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     progressDialog.show();
                 }
 
+                if (url.contains("etapa1.php")){
+                    toolbar.setTitle("Escolha um assento");
+                }else if (url.contains("etapa2.php")){
+                    toolbar.setTitle("Tipo de ingresso");
+                }else if (url.contains("etapa3.php")){
+                    toolbar.setTitle("Login");
+                }else if (url.contains("etapa4.php")){
+                    toolbar.setTitle("Confirmação");
+                }else if (url.contains("etapa5.php")){
+                    toolbar.setTitle("Pagamento");
+                    btnAvancar.setText("Pagar");
+                }if (url.contains("pagamento_ok.php")){
+                    toolbar.setTitle("Compra Finalizada");
+                    btnAvancar.setVisibility(View.GONE);
+                }
+
 
             }
 
@@ -173,6 +199,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     view.loadUrl("javascript:Android.showToast($(\".destaque_menor_v2\").first().find(\"h3\").text());");
 
                 }
+
+
             }
 
 
@@ -192,15 +220,25 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // Check if the key event was the Back button and if there's history
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
             webView.goBack();
             return true;
         }
-        // If it wasn't the Back key or there's no web page history, bubble up to the default
-        // system behavior (probably exit the activity)
         return super.onKeyDown(keyCode, event);
     }
 
@@ -254,6 +292,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
         return scriptGetInfoPayment.toString();
     }
+
+
 
 
 

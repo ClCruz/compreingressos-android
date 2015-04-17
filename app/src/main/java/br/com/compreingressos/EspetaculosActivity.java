@@ -2,11 +2,12 @@ package br.com.compreingressos;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -47,16 +48,25 @@ public class EspetaculosActivity extends ActionBarActivity {
     private ArrayList<Espetaculo> espetaculos = new ArrayList<>();
     private ProgressBar progressBar;
     private static final String OBJ_LIST = "OBJ_LIST";
+    String genero;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_espetaculos);
+
+        if (getIntent().hasExtra("genero")){
+            genero = getIntent().getStringExtra("genero");
+        }
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setTitle("");
+            toolbar.setTitle(genero);
+            toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
+            toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
             setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_espetaculos);
         recyclerView.addItemDecoration(new DividerItemDecoration(this));
@@ -86,6 +96,7 @@ public class EspetaculosActivity extends ActionBarActivity {
             Toast.makeText(getApplicationContext(), espetaculos.get(position).getTitulo(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(EspetaculosActivity.this, CompreIngressosActivity.class);
             intent.putExtra("url", espetaculos.get(position).getUrl());
+            intent.putExtra("titulo_espetaculo", espetaculos.get(position).getTitulo());
             startActivity(intent);
 
         }
@@ -136,8 +147,17 @@ public class EspetaculosActivity extends ActionBarActivity {
 
         GsonRequest<Espetaculos> jsonObjRequest = new GsonRequest<>(Request.Method.GET, URL, Espetaculos.class, headers, this.createSuccessListener(), this.createErrorListener(), "yyyy-MM-dd");
         this.requestQueue.add(jsonObjRequest);
+    }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

@@ -60,8 +60,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     private GeneroAdapter adapter;
 
-    private OrderDao orderDao;
-    private DatabaseHelper databaseHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,13 +130,6 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             getNetworkLocation();
         }
 
-        try {
-            gravar(OrderHelper.loadOrderFromJSON(OrderHelper.JSON));
-        } catch (SQLException e) {
-            Log.e(LOG_TAG, "nao foi" );
-            e.printStackTrace();
-        }
-
     }
 
 
@@ -175,19 +167,14 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_history_orders) {
             Intent intent = new Intent(this, HistoryOrdersActivity.class);
             startActivity(intent);
@@ -272,24 +259,5 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         return new DatabaseHelper(MainActivity.this).getConnectionSource();
     }
 
-
-
-    private boolean gravar(Order order) throws SQLException{
-        databaseHelper =  new DatabaseHelper(this);
-
-        try {
-            orderDao = new OrderDao(databaseHelper.getConnectionSource());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        int x = 0;
-
-        //create é o insert do objeto no bd, retorna  a qtd de linhas inseridas
-        x = orderDao.create(order);
-
-        return x > 0;
-    }
 
 }
