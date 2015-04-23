@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 
+import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.WebAppInterface;
 
 
@@ -131,7 +133,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     webSettings.setBuiltInZoomControls(true);
                     webSettings.setDisplayZoomControls(false);
 
-                    btnAvancar.setVisibility(View.VISIBLE);
+                    showNextButton();
                     btnAvancar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -159,6 +161,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
+
                 view.setVisibility(View.GONE);
                 if (progressDialog == null) {
                     progressDialog = new ProgressDialog(CompreIngressosActivity.this);
@@ -166,36 +169,54 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     progressDialog.show();
                 }
 
+                hideNextButton();
+
                 if (url.contains("etapa1.php")){
                     toolbar.setTitle("Escolha um assento");
+                    showNextButton();
                 }else if (url.contains("etapa2.php")){
+                    showNextButton();
                     toolbar.setTitle("Tipo de ingresso");
                 }else if (url.contains("etapa3.php")){
+                    hideNextButton();
                     toolbar.setTitle("Login");
                 }else if (url.contains("etapa4.php")){
+                    showNextButton();
                     toolbar.setTitle("Confirmação");
                 }else if (url.contains("etapa5.php")){
+                    showNextButton();
                     toolbar.setTitle("Pagamento");
                     btnAvancar.setText("Pagar");
-                }if (url.contains("pagamento_ok.php")){
+                }else if (url.contains("pagamento_ok.php")){
                     toolbar.setTitle("Compra Finalizada");
-                    btnAvancar.setVisibility(View.GONE);
+                    hideNextButton();
+                }else if (url.contains("espetaculos/")){
+                    toolbar.setTitle(tituloEspetaculo);
                 }
-
 
             }
 
 
             @Override
             public void onLoadResource(WebView view, String url) {
-//                Log.e("onLoadResource", "Passou aqui");
+
+
                 view.loadUrl("javascript:$(\"#menu_topo\").hide();$('.aba' && '.fechado').hide();$(\"#footer\").hide();$(\"#selos\").hide();");
-                view.loadUrl("javascript:$(document).ready(function(){$('.container_botoes_etapas').hide();});");
                 view.loadUrl("javascript:$('.imprima_agora').hide();");
 
                 if (url.contains("etapa1.php")){
                     view.loadUrl("javascript:Android.showToast($(\".destaque_menor_v2\").first().find(\"h3\").text());");
                 }
+
+                view.loadUrl("javascript:$(document).ready(function(){$('.voltar').hide();});");
+
+                if (AndroidUtils.isKitKatOrNewer(CompreIngressosActivity.this)){
+                    view.loadUrl("javascript:$(document).ready(function(){$('.container_botoes_etapas').hide();});");
+                }else{
+                    view.loadUrl("javascript:$(document).ready(function(){$('.container_botoes_etapas').show();});");
+
+                }
+
             }
 
 
@@ -287,7 +308,20 @@ public class CompreIngressosActivity extends ActionBarActivity {
     }
 
 
+    private void showNextButton(){
+        if (AndroidUtils.isKitKatOrNewer(CompreIngressosActivity.this)){
+            if (!btnAvancar.isShown()){
+                btnAvancar.setVisibility(View.VISIBLE);
+            }
+        }
 
+    }
+
+    private void hideNextButton(){
+        if (btnAvancar.isShown()){
+            btnAvancar.setVisibility(View.GONE);
+        }
+    }
 
 
 
