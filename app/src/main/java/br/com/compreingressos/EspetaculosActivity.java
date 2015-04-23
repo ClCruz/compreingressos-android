@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -154,7 +155,7 @@ public class EspetaculosActivity extends ActionBarActivity {
         if (genero.contains("Perto de mim")){
             urlCustom.append("?latitude=" + latitude + "&longitude="+longitude);
         }else if (genero.contains("Shows")){
-            urlCustom.append("?genero=Shows");
+            urlCustom.append("?genero=Show");
         }else if (genero.contains("Clássicos")){
             urlCustom.append("?genero=Classicos");
         }else if (genero.contains("Teatros")){
