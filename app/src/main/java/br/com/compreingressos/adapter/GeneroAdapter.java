@@ -4,9 +4,12 @@ import android.content.Context;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +21,7 @@ import br.com.compreingressos.R;
 import br.com.compreingressos.fragment.MainBannerFragment;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
+import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.CustomTypeFace;
 
 /**
@@ -35,11 +39,14 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_ITEM = 1;
     private ActionBarActivity activity;
 
+
     public GeneroAdapter(Context context, ArrayList<Genero> generos, ArrayList<Banner> banners) {
         this.mListGeneros = generos;
         this.context = context;
         this.mListBanners = banners;
         activity  = (ActionBarActivity) context;
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+
     }
 
     @Override
@@ -56,7 +63,14 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return new ViewHolderHeader(v);
 
         }else if (viewType == TYPE_ITEM){
+
+
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_genero, viewGroup, false);
+
+            if (AndroidUtils.isPhablet(context)){
+                v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 800));
+            }
+
             return new ViewHolderItem(v);
         }
 
@@ -71,6 +85,7 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ((ViewHolderItem) viewHolder).nomeView.setText(genero.getNome());
             ((ViewHolderItem) viewHolder).coverView.setBackgroundResource(genero.getCover());
             ((ViewHolderItem) viewHolder).coverView.setPadding(0, 10, 0, 0);
+
         }
 
     }
