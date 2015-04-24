@@ -30,4 +30,5 @@ dependencies {
     compile files('libs/ormlite-android-4.48.jar')
     compile files('libs/ormlite-core-4.48.jar')
     compile ("net.glxn.qrgen:android:2.0")
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

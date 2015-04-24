@@ -1,15 +1,20 @@
 package br.com.compreingressos.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
+import br.com.compreingressos.CompreIngressosActivity;
 import br.com.compreingressos.R;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.toolbox.VolleySingleton;
@@ -21,7 +26,7 @@ public class BannerFragment extends Fragment {
 
     private Banner banner;
     private View view;
-    private NetworkImageView imgBanner;
+    private ImageView imgBanner;
     private ProgressBar progressBar;
 
     public static BannerFragment newInstance(Banner banner){
@@ -48,9 +53,32 @@ public class BannerFragment extends Fragment {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_visores, container, false);
 
-        imgBanner = (NetworkImageView) rootView.findViewById(R.id.imageView);
-        imgBanner.setImageUrl(banner.getImagem(), VolleySingleton.getInstance(getActivity().getApplicationContext()).getImageLoader());
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
+        imgBanner = (ImageView) rootView.findViewById(R.id.imageView);
 
+        Picasso.with(getActivity())
+                .load(banner.getImagem())
+                .into(imgBanner, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError() {
+//                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+
+        rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CompreIngressosActivity.class);
+                intent.putExtra("url", banner.getUrl());
+                intent.putExtra("titulo_espetaculo", "Espetaculo");
+                startActivity(intent);
+            }
+        });
 
 
         return rootView;

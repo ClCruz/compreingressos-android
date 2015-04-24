@@ -101,7 +101,6 @@ public class EspetaculosActivity extends ActionBarActivity {
     private OnItemClickListener onItemClick = new OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
-//            Toast.makeText(getApplicationContext(), espetaculos.get(position).getTitulo(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(EspetaculosActivity.this, CompreIngressosActivity.class);
             intent.putExtra("url", espetaculos.get(position).getUrl());
             intent.putExtra("titulo_espetaculo", espetaculos.get(position).getTitulo());
@@ -170,12 +169,13 @@ public class EspetaculosActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
 
 
 }

@@ -9,6 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -27,6 +30,8 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     PageViewAdapter mAdapter;
     ViewPager mPager;
     CirclePageIndicator mIndicator;
+    FrameLayout viewBanner;
+    ProgressBar progressBar;
 
     private Handler handler = new Handler();
     private Runnable runnable;
@@ -38,7 +43,8 @@ public class MainBannerFragment extends Fragment implements BannerListener {
 
         mPager = (ViewPager) rootView.findViewById(R.id.pager);
         mIndicator = (CirclePageIndicator) rootView.findViewById(R.id.indicator);
-
+        viewBanner = (FrameLayout) rootView.findViewById(R.id.view_banner);
+//        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
         return rootView;
     }
@@ -47,10 +53,10 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     public void onResume() {
         super.onResume();
 
-        if (mPager.getAdapter() == null) {
-            mAdapter = new PageViewAdapter(getChildFragmentManager(), initListDummy());
-            mPager.setAdapter(mAdapter);
 
+        if (mPager.getAdapter() == null) {
+            mAdapter = new PageViewAdapter(getChildFragmentManager(), initList());
+            mPager.setAdapter(mAdapter);
         }
 
         mIndicator.setViewPager(mPager);
@@ -74,13 +80,11 @@ public class MainBannerFragment extends Fragment implements BannerListener {
         }
     }
 
-    public ArrayList<Banner> initListDummy(){
+    public ArrayList<Banner> initList(){
         ArrayList<Banner> banners =  new ArrayList<>();
-        for (int i = 0; i < 5 ; i++) {
-            Banner banner = new Banner("teste", "teste");
+        Banner banner = new Banner("empty", "empty");
 
-            banners.add(banner);
-        }
+        banners.add(banner);
 
         return banners;
     }
@@ -90,6 +94,10 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     public void updateBannerAdapter(ArrayList<Banner> listBanner) {
         mAdapter.setListBanners(listBanner);
         mAdapter.notifyDataSetChanged();
+
+        if (listBanner.size() > 0){
+            viewBanner.setVisibility(View.VISIBLE);
+        }
 
         if (handler != null) {
             slideShow();
