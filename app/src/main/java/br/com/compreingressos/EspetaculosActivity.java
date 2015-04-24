@@ -2,12 +2,10 @@ package br.com.compreingressos;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -83,6 +81,7 @@ public class EspetaculosActivity extends ActionBarActivity {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(EspetaculosActivity.this, COLUMN_NUMBER);
         recyclerView.setLayoutManager(gridLayoutManager);
 
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         this.requestQueue = VolleySingleton.getInstance(EspetaculosActivity.this).getRequestQueue();
         startRequest();
@@ -126,12 +125,15 @@ public class EspetaculosActivity extends ActionBarActivity {
             @Override
             public void onResponse(Espetaculos response) {
 
+                if (response.getEspetaculos().size() > 0){
+                    progressBar.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+
                 for (Espetaculo espetaculo : response.getEspetaculos()){
                     espetaculos = response.getEspetaculos();
                 }
                 setResultAdapter(espetaculos);
-
-
             }
         };
     }
