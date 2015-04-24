@@ -29,7 +29,6 @@ import br.com.compreingressos.utils.WebAppInterface;
 public class CompreIngressosActivity extends ActionBarActivity {
 
     private static final String LOG_TAG = CompreIngressosActivity.class.getSimpleName();
-//    private static final String URL_ESPETACULOS = "http://www.compreingressos.com/?app=tokecompre";
     private WebView webView;
     private String url;
     private String tituloEspetaculo;
@@ -58,7 +57,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
             toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
             toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
             setSupportActionBar(toolbar);
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
 
         }
@@ -199,8 +197,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
             @Override
             public void onLoadResource(WebView view, String url) {
-
-
                 view.loadUrl("javascript:$(\"#menu_topo\").hide();$('.aba' && '.fechado').hide();$(\"#footer\").hide();$(\"#selos\").hide();");
                 view.loadUrl("javascript:$('.imprima_agora').hide();");
 
@@ -216,15 +212,12 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     view.loadUrl("javascript:$(document).ready(function(){$('.container_botoes_etapas').show();});");
 
                 }
-
             }
-
 
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
 
             }
-
         });
 
         if (getIntent().getStringExtra("url_flux_webview") == null){
@@ -234,7 +227,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
         }
 
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -246,7 +238,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
