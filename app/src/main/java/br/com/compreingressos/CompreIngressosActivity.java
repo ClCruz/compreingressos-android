@@ -21,6 +21,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.WebAppInterface;
@@ -37,6 +38,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private Button btnAvancar;
     private boolean isFirstUrlLoading = true;
     private int countReading = 0;
+    private ProgressBar progressBar;
 
 
 
@@ -60,6 +62,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
             getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
 
         }
+
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         btnAvancar = (Button) findViewById(R.id.btn_avancar);
 
@@ -90,10 +94,9 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 try {
-                    if (progressDialog.isShowing()) {
-                        view.setVisibility(View.VISIBLE);
-                        progressDialog.dismiss();
-                        progressDialog = null;
+                    if (progressBar.isShown()) {
+                        webView.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
                     }
                 } catch (Exception exception) {
                     exception.printStackTrace();
@@ -160,12 +163,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
-                view.setVisibility(View.GONE);
-                if (progressDialog == null) {
-                    progressDialog = new ProgressDialog(CompreIngressosActivity.this);
-                    progressDialog.setMessage("Aguarde...");
-                    progressDialog.show();
-                }
+                webView.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
 
                 hideNextButton();
 

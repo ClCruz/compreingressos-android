@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/btn_avancar"
-        android:layout_below="@+id/toolbar" />
+        android:layout_below="@+id/toolbar" android:visibility="gone"/>
 
     <Button
         android:id="@+id/btn_avancar"
@@ -28,5 +28,15 @@
         android:layout_alignParentStart="true"
         android:text="Avançar"
         android:visibility="gone" />
+
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="visible"/>
 </RelativeLayout>
 
