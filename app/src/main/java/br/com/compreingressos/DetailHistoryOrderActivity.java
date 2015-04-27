@@ -11,12 +11,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
 import br.com.compreingressos.adapter.OrderDetailAdapter;
+import br.com.compreingressos.interfaces.OnItemClickListener;
 import br.com.compreingressos.model.Ingresso;
 import br.com.compreingressos.model.Order;
 
@@ -63,7 +65,17 @@ public class DetailHistoryOrderActivity extends ActionBarActivity {
         adapter = new OrderDetailAdapter(this, order);
 
         recyclerView.setAdapter(adapter);
+
     }
+
+    private OnItemClickListener onItemClick = new OnItemClickListener() {
+        @Override
+        public void onItemClick(View view, int position) {
+            Toast.makeText(getApplicationContext(), order.getTituloEspetaculo(), Toast.LENGTH_SHORT).show();
+
+
+        }
+    };
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -1,15 +1,19 @@
 package br.com.compreingressos.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.glxn.qrgen.android.QRCode;
 
@@ -19,8 +23,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.compreingressos.DetailHistoryOrderActivity;
 import br.com.compreingressos.R;
 import br.com.compreingressos.fragment.MainBannerFragment;
+import br.com.compreingressos.helper.PassWalletHelper;
+import br.com.compreingressos.interfaces.OnItemClickListener;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.model.Ingresso;
@@ -80,9 +87,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((ViewHolderItem) viewHolder).cadeiraView.setText(ingresso.getLocal());
 
             Bitmap myBitmap = QRCode.from(ingresso.getQrcode()).bitmap();
-
             ((ViewHolderItem) viewHolder).qrcodeView.setImageBitmap(myBitmap);
-
 
         }
 
@@ -95,8 +100,6 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         return TYPE_ITEM;
     }
-
-
 
     private boolean isPositionHeader(int position) {
         return position == 0;
@@ -123,6 +126,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public TextView setorView;
         public TextView cadeiraView;
         public ImageView qrcodeView;
+        public ImageButton passwallet;
 
         public ViewHolderItem(View itemView) {
             super(itemView);
@@ -130,12 +134,15 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             cadeiraView = (TextView) itemView.findViewById(R.id.txt_cadeira);
 
             qrcodeView = (ImageView) itemView.findViewById(R.id.img_qrcode);
-            itemView.setOnClickListener(new View.OnClickListener(){
+
+            passwallet = (ImageButton) itemView.findViewById(R.id.passwallet);
+            passwallet.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    onItemClickListener.onClickListener(v, getPosition() - 1); //Foi inserido o (-1) pois a lista foi somado +1 para termos um item para adicionar o cabeçalho.
+                    PassWalletHelper.launchPassWallet(context, Uri.parse("http://mpassbook.herokuapp.com/passes/0054741128200000100146.pkpass"), true);
                 }
             });
+
         }
     }
 
@@ -152,5 +159,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         }
     }
+
+
 
 }
