@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <include layout="@layout/toolbar" android:id="@id/toolbar"></include>
+
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@+id/toolbar">
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:id="@+id/imageView3"
+          android:src="@drawable/ic_smiley_face_hi"
+          android:layout_alignParentTop="true"
+          android:layout_centerHorizontal="true" />
+
+      <TextView
+
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="30sp"
+          android:text="Muito obrigado!"
+          android:id="@+id/txt_titulo_obrigado"
+          android:textColor="@color/red_compreingressos"
+          android:layout_below="@+id/imageView3"
+          android:layout_centerHorizontal="true" />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="24sp"
+          android:text="Compra efetuada com sucesso!"
+          android:id="@+id/textView2"
+          android:layout_below="@+id/txt_titulo_obrigado"
+          android:layout_centerHorizontal="true"
+          android:layout_marginTop="50dp" />
+
+      <Button
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Ver Ingressos"
+          android:id="@+id/button"
+          android:layout_centerVertical="true"
+          android:layout_centerHorizontal="true" />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="22sp"
+          android:text="Basta apresenta-los na entrada do evento."
+          android:id="@+id/textView3"
+          android:gravity="center"
+          android:layout_marginBottom="105dp"
+          android:layout_alignParentBottom="true"
+          android:layout_alignParentRight="true"
+          android:layout_alignParentEnd="true" />
+  </RelativeLayout>
+
+
+
+
+</RelativeLayout>

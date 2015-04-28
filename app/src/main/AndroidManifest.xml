@@ -53,6 +53,10 @@
             android:label="DetailHistoryOrderActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".HistoryOrdersActivity"></activity>
+        <activity android:name=".PaymentFinishedActivity"
+            android:label="PaymentFinishedActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"></activity>
      </application>
 
 </manifest>
