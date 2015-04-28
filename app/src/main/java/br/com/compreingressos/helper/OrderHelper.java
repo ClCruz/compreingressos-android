@@ -2,13 +2,17 @@ package br.com.compreingressos.helper;
 
 import android.util.Log;
 
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+
+import java.text.SimpleDateFormat;
 
 import br.com.compreingressos.model.Ingresso;
 import br.com.compreingressos.model.Order;
@@ -54,7 +58,38 @@ public class OrderHelper {
             return null;
         }
 
+    }
 
+    public static String createJsonPeerTicket(Order order, Ingresso ingresso){
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE dd MMM");
 
+        JsonObject jsonOrder = new JsonObject();
+
+        jsonOrder.addProperty("number", order.getNumber());
+        jsonOrder.addProperty("date", sdf.format(order.getDate()));
+
+        JsonObject jsonEspetaculo = new JsonObject();
+        jsonEspetaculo.addProperty("titulo", order.getTituloEspetaculo());
+        jsonEspetaculo.addProperty("endereco", order.getEnderecoEspetaculo());
+        jsonEspetaculo.addProperty("nome_teatro", order.getNomeTeatroEspetaculo());
+        jsonEspetaculo.addProperty("horario", order.getHorarioEspetaculo());
+
+        JsonArray jsonIngressos = new JsonArray();
+        JsonObject jsonIngresso = new JsonObject();
+        jsonIngresso.addProperty("qrcode", ingresso.getQrcode());
+        jsonIngresso.addProperty("local", ingresso.getLocal());
+        jsonIngresso.addProperty("type", ingresso.getType());
+        jsonIngresso.addProperty("price", ingresso.getPrice());
+        jsonIngresso.addProperty("service_price", ingresso.getService_price());
+        jsonIngresso.addProperty("total", ingresso.getTotal());
+
+        jsonIngressos.add(jsonIngresso);
+
+        jsonOrder.add("espetaculo", jsonEspetaculo);
+        jsonOrder.add("ingressos", jsonIngressos);
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create();
+
+        return gson.toJson(jsonOrder);
     }
 }

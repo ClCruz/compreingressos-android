@@ -81,7 +81,6 @@ public class HistoryOrdersActivity extends ActionBarActivity {
     private OnItemClickListener onItemClick = new OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
-            Toast.makeText(getApplicationContext(),orders.get(position).getTituloEspetaculo(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(HistoryOrdersActivity.this, DetailHistoryOrderActivity.class);
 
             Order order = orders.get(position);

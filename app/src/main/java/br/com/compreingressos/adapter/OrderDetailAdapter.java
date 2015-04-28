@@ -1,10 +1,8 @@
 package br.com.compreingressos.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,24 +13,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
 import net.glxn.qrgen.android.QRCode;
 
-import org.w3c.dom.Text;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.compreingressos.DetailHistoryOrderActivity;
 import br.com.compreingressos.R;
-import br.com.compreingressos.fragment.MainBannerFragment;
+import br.com.compreingressos.helper.OrderHelper;
 import br.com.compreingressos.helper.PassWalletHelper;
-import br.com.compreingressos.interfaces.OnItemClickListener;
-import br.com.compreingressos.model.Banner;
-import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.model.Ingresso;
 import br.com.compreingressos.model.Order;
-import br.com.compreingressos.utils.CustomTypeFace;
+import br.com.compreingressos.toolbox.VolleySingleton;
 
 /**
  * Created by luiszacheu on 30/03/15.
@@ -44,11 +45,12 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Order order;
     private List<Ingresso> mListIngressos = new ArrayList<>();
     private Context context;
-    public static OnItemClickListener onItemClickListener;
+
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
     private ActionBarActivity activity;
     private SimpleDateFormat sdf = new SimpleDateFormat("EEE dd MMM");
+    private RequestQueue requestQueue;
 
     public OrderDetailAdapter(Context context, Order order) {
         this.order = order;
@@ -62,7 +64,6 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if (viewType == TYPE_HEADER){
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.header_order, viewGroup, false);
-
 
             return new ViewHolderHeader(v);
 
@@ -88,9 +89,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             Bitmap myBitmap = QRCode.from(ingresso.getQrcode()).bitmap();
             ((ViewHolderItem) viewHolder).qrcodeView.setImageBitmap(myBitmap);
-
         }
-
     }
 
     @Override
@@ -114,14 +113,6 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return (mListIngressos == null ? 0 : mListIngressos.size()) +1 ;
     }
 
-    public interface OnItemClickListener{
-        public void onClickListener(View v, int position);
-    }
-
-    public void SetOnItemClickListener(final OnItemClickListener onItemClickListener){
-        OrderDetailAdapter.onItemClickListener = onItemClickListener;
-    }
-
     public class ViewHolderItem extends RecyclerView.ViewHolder {
         public TextView setorView;
         public TextView cadeiraView;
@@ -139,10 +130,32 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             passwallet.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    PassWalletHelper.launchPassWallet(context, Uri.parse("http://mpassbook.herokuapp.com/passes/0054741128200000100146.pkpass"), true);
+                    Ingresso ingresso  =  order.getIngressos().get(getPosition()-1);
+
+                    requestQueue = VolleySingleton.getInstance(context).getRequestQueue();
+
+                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, context.getString(R.string.url_mpassbook) + "generate.json", OrderHelper.createJsonPeerTicket(order, ingresso), new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                String strNamePkPassresponse = response.getJSONArray("passes").get(0).toString();
+                                PassWalletHelper.launchPassWallet(context, Uri.parse( context.getString(R.string.url_mpassbook) + strNamePkPassresponse), true);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Toast.makeText(context, context.getString(R.string.message_erro_envio_passwallet), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    });
+                    requestQueue.add(jsonObjectRequest);
                 }
             });
-
         }
     }
 

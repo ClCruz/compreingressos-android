@@ -71,8 +71,6 @@ public class DetailHistoryOrderActivity extends ActionBarActivity {
     private OnItemClickListener onItemClick = new OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
-            Toast.makeText(getApplicationContext(), order.getTituloEspetaculo(), Toast.LENGTH_SHORT).show();
-
 
         }
     };
