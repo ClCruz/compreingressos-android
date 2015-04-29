@@ -60,8 +60,6 @@ public class HistoryOrdersActivity extends ActionBarActivity {
         try {
             orderDao = new OrderDao(databaseHelper.getConnectionSource());
             orders = (ArrayList<Order>) orderDao.queryForAll();
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -70,7 +68,6 @@ public class HistoryOrdersActivity extends ActionBarActivity {
 
         if (orders.size() > 0){
             adapter = new OrderAdapter(this, orders);
-
             adapter.setOnItemClickListener(onItemClick);
         }
 

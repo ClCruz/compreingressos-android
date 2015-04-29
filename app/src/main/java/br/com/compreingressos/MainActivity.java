@@ -82,7 +82,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         adapter.SetOnItemClickListener(new GeneroAdapter.OnItemClickListener() {
             @Override
             public void onClickListener(View v, int position) {
-                Intent intent = new Intent(MainActivity.this, PaymentFinishedActivity.class);
+                Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
                 intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
                 intent.putExtra("latitude", "" + latitude);
                 intent.putExtra("longitude", ""+longitude);

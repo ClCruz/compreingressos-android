@@ -1,67 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
-    <include layout="@layout/toolbar" android:id="@id/toolbar"></include>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"></include>
 
-
-  <RelativeLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_below="@+id/toolbar">
-      <ImageView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:id="@+id/imageView3"
-          android:src="@drawable/ic_smiley_face_hi"
-          android:layout_alignParentTop="true"
-          android:layout_centerHorizontal="true" />
-
-      <TextView
-
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textSize="30sp"
-          android:text="Muito obrigado!"
-          android:id="@+id/txt_titulo_obrigado"
-          android:textColor="@color/red_compreingressos"
-          android:layout_below="@+id/imageView3"
-          android:layout_centerHorizontal="true" />
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textSize="24sp"
-          android:text="Compra efetuada com sucesso!"
-          android:id="@+id/textView2"
-          android:layout_below="@+id/txt_titulo_obrigado"
-          android:layout_centerHorizontal="true"
-          android:layout_marginTop="50dp" />
-
-      <Button
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="Ver Ingressos"
-          android:id="@+id/button"
-          android:layout_centerVertical="true"
-          android:layout_centerHorizontal="true" />
-
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textSize="22sp"
-          android:text="Basta apresenta-los na entrada do evento."
-          android:id="@+id/textView3"
-          android:gravity="center"
-          android:layout_marginBottom="105dp"
-          android:layout_alignParentBottom="true"
-          android:layout_alignParentRight="true"
-          android:layout_alignParentEnd="true" />
-  </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:padding="10dp">
 
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/img_smile"
+            android:src="@drawable/ic_smile" />
+
+        <TextView
+            android:id="@+id/txt_titulo_obrigado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_smile"
+            android:layout_centerHorizontal="true"
+
+            android:gravity="center"
+            android:text="Obrigado!"
+            android:textColor="@color/red_compreingressos"
+            android:textSize="26sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txt_titulo_obrigado"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="Compra efetuada com sucesso!"
+            android:textSize="18sp" />
+
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/textView2"
+            android:gravity="center"
+            android:padding="2dp"
+            android:text="Basta apresentar seus ingressos na entrada do evento."
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btn_ver_ingressos"
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            android:layout_alignEnd="@+id/toolbar_title"
+            android:layout_alignRight="@+id/toolbar_title"
+            android:layout_below="@+id/textView3"
+            android:layout_marginTop="15dp"
+            android:background="@color/red_compreingressos"
+            android:text="Ver Ingressos"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+
+        <ImageView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="left"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/logo_toolbar" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btn_ver_ingressos"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:text="Seus ingressos estão disponiveis na área 'Meus ingressos' na tela inicial. E também no seu e-mail \n(Verifique sua caixa de spam)"
+            android:textSize="18sp" />
+
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

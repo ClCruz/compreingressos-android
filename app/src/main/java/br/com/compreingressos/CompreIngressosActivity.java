@@ -1,17 +1,14 @@
 package br.com.compreingressos;
 
 import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -88,9 +85,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
         webView.setWebViewClient(new WebViewClient() {
 
-            ProgressDialog progressDialog;
-            Intent intent = new Intent(CompreIngressosActivity.this, CompreIngressosActivity.class);
-
             @Override
             public void onPageFinished(WebView view, String url) {
                 try {
@@ -104,8 +98,12 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
                 if (url.contains("pagamento_ok.php")){
                     if ( countReading  == 2 ){
-
+                        webView.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.VISIBLE);
                         view.loadUrl(runScripGetInfoPayment());
+                        Intent intent = new Intent(CompreIngressosActivity.this, PaymentFinishedActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                     isFirstUrlLoading = false;
                     countReading ++;

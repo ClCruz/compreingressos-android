@@ -33,6 +33,8 @@ public class DetailHistoryOrderActivity extends ActionBarActivity {
     private RecyclerView recyclerView;
     private OrderDetailAdapter adapter;
 
+
+    private boolean isFinishedOrder = false;
     private Order order;
     private Intent intent;
 
@@ -42,20 +44,24 @@ public class DetailHistoryOrderActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_history_order);
 
+        intent = getIntent();
+        if (intent.getSerializableExtra("order") != null){
+            order = (Order) intent.getSerializableExtra("order");
+        }
+
+        isFinishedOrder = intent.getBooleanExtra("isFinishedOrder", false);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             toolbar.setTitle("Meus Ingressos");
             toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
             toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
             setSupportActionBar(toolbar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-
-
-
-        intent = getIntent();
-        if (intent.getSerializableExtra("order") != null){
-            order = (Order) intent.getSerializableExtra("order");
+            if (isFinishedOrder){
+                getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
+            }else{
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            }
         }
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tickts);
@@ -79,7 +85,15 @@ public class DetailHistoryOrderActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                if (isFinishedOrder){
+                    Intent homeIntent = new Intent(DetailHistoryOrderActivity.this, MainActivity.class);
+                    homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(homeIntent);
+                    finish();
+                }else{
+                    NavUtils.navigateUpFromSameTask(this);
+                }
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
