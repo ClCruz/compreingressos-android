@@ -10,7 +10,7 @@ import android.view.WindowManager;
 
 public class SplashScreenActivity extends Activity {
 
-    private static int SPLASH_TIME_OUT = 2000;
+    private static int SPLASH_TIME_OUT = 4000;
     private static String TAG_LOG = SplashScreenActivity.class.getSimpleName();
 
 
