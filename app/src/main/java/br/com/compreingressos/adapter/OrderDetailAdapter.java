@@ -2,6 +2,7 @@ package br.com.compreingressos.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.aztec.AztecWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.QRCodeDecoderMetaData;
 
 import net.glxn.qrgen.android.QRCode;
 
@@ -87,8 +94,21 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((ViewHolderItem) viewHolder).setorView.setText(ingresso.getType());
             ((ViewHolderItem) viewHolder).cadeiraView.setText(ingresso.getLocal());
 
-            Bitmap myBitmap = QRCode.from(ingresso.getQrcode()).bitmap();
-            ((ViewHolderItem) viewHolder).qrcodeView.setImageBitmap(myBitmap);
+            AztecWriter write = new AztecWriter();
+
+            BitMatrix bitMatrix  = write.encode(ingresso.getQrcode(), BarcodeFormat.AZTEC, 512, 512);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
+            }
+
+            ((ViewHolderItem) viewHolder).qrcodeView.setImageBitmap(bmp);
+
         }
     }
 
