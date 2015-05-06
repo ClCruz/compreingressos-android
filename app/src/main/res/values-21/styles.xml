@@ -7,11 +7,11 @@
         <item name="android:colorPrimaryDark">#8d0a0c</item>
         <!-- colorAccent is used as the default value for colorControlActivated
         which is used to tint widgets -->
-        <item name="android:colorAccent">#FF8d0a0c</item>
+        <item name="android:colorAccent">@color/red_compreingressos</item>
         <!-- You can also set colorControlNormal, colorControlActivated
         colorControlHighlight and colorSwitchThumbNormal. -->
 
-        <item name="android:textColorPrimary">#8d0a0c</item>
+        <item name="android:textColorPrimary">@color/red_compreingressos</item>
 
     </style>
 

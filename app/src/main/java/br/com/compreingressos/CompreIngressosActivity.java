@@ -51,12 +51,13 @@ public class CompreIngressosActivity extends ActionBarActivity {
             tituloEspetaculo = getIntent().getStringExtra("titulo_espetaculo");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar !=null){
+        if (toolbar != null){
             toolbar.setTitle(tituloEspetaculo);
             toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
             toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         }
 

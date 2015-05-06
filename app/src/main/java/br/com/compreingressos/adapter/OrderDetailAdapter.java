@@ -1,7 +1,9 @@
 package br.com.compreingressos.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +21,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.aztec.AztecWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.QRCodeDecoderMetaData;
 
 import net.glxn.qrgen.android.QRCode;
 
@@ -80,15 +89,33 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if (viewHolder instanceof ViewHolderHeader){
             ((ViewHolderHeader) viewHolder).espetaculoView.setText(order.getTituloEspetaculo());
-            ((ViewHolderHeader) viewHolder).dataView.setText(sdf.format(order.getDate()) + " ás " + order.getHorarioEspetaculo());
+            ((ViewHolderHeader) viewHolder).teatroView.setText(order.getNomeTeatroEspetaculo());
+            ((ViewHolderHeader) viewHolder).mesView.setText(new SimpleDateFormat("MMM").format(order.getDate()).toUpperCase());
+            ((ViewHolderHeader) viewHolder).diaNumeroView.setText(new SimpleDateFormat("dd").format(order.getDate()));
+            ((ViewHolderHeader) viewHolder).diaView.setText(new SimpleDateFormat("EEE").format(order.getDate()).toUpperCase());
             ((ViewHolderHeader) viewHolder).enderecoView.setText(order.getEnderecoEspetaculo());
+            ((ViewHolderHeader) viewHolder).horarioView.setText(order.getHorarioEspetaculo());
         }else if(viewHolder instanceof ViewHolderItem){
             Ingresso ingresso = getItem(position);
             ((ViewHolderItem) viewHolder).setorView.setText(ingresso.getType());
             ((ViewHolderItem) viewHolder).cadeiraView.setText(ingresso.getLocal());
+            ((ViewHolderItem) viewHolder).valorView.setText("R$ " + ingresso.getPrice());
 
-            Bitmap myBitmap = QRCode.from(ingresso.getQrcode()).bitmap();
-            ((ViewHolderItem) viewHolder).qrcodeView.setImageBitmap(myBitmap);
+            AztecWriter write = new AztecWriter();
+
+            BitMatrix bitMatrix  = write.encode(ingresso.getQrcode(), BarcodeFormat.AZTEC, 256, 256);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                }
+            }
+
+            ((ViewHolderItem) viewHolder).qrcodeView.setImageBitmap(bmp);
+
         }
     }
 
@@ -116,6 +143,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public class ViewHolderItem extends RecyclerView.ViewHolder {
         public TextView setorView;
         public TextView cadeiraView;
+        public TextView valorView;
         public ImageView qrcodeView;
         public ImageButton passwallet;
 
@@ -123,6 +151,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             super(itemView);
             setorView = (TextView) itemView.findViewById(R.id.txt_setor);
             cadeiraView = (TextView) itemView.findViewById(R.id.txt_cadeira);
+            valorView = (TextView) itemView.findViewById(R.id.txt_valor);
 
             qrcodeView = (ImageView) itemView.findViewById(R.id.img_qrcode);
 
@@ -130,6 +159,10 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             passwallet.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
+                    final ProgressDialog progressDialog = new ProgressDialog(context);
+                    progressDialog.setMessage("Aguarde...");
+                    progressDialog.show();
+
                     Ingresso ingresso  =  order.getIngressos().get(getPosition()-1);
 
                     requestQueue = VolleySingleton.getInstance(context).getRequestQueue();
@@ -139,10 +172,12 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
+                                progressDialog.dismiss();
                                 String strNamePkPassresponse = response.getJSONArray("passes").get(0).toString();
                                 PassWalletHelper.launchPassWallet(context, Uri.parse( context.getString(R.string.url_mpassbook) + strNamePkPassresponse), true);
 
                             } catch (JSONException e) {
+                                progressDialog.dismiss();
                                 e.printStackTrace();
                                 Toast.makeText(context, context.getString(R.string.message_erro_envio_passwallet), Toast.LENGTH_LONG).show();
                             }
@@ -150,7 +185,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
+                            progressDialog.dismiss();
                         }
                     });
                     requestQueue.add(jsonObjectRequest);
@@ -161,14 +196,22 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class ViewHolderHeader extends RecyclerView.ViewHolder{
         public TextView espetaculoView;
-        public TextView dataView;
+        public TextView teatroView;
+        public TextView mesView;
+        public TextView diaNumeroView;
+        public TextView diaView;
         public TextView enderecoView;
+        public TextView horarioView;
 
         public ViewHolderHeader(View itemView) {
             super(itemView);
             espetaculoView = (TextView) itemView.findViewById(R.id.txt_espetaculo);
-            dataView = (TextView) itemView.findViewById(R.id.txt_data);
+            teatroView = (TextView) itemView.findViewById(R.id.txt_teatro);
+            mesView = (TextView) itemView.findViewById(R.id.txt_mes);
+            diaNumeroView = (TextView) itemView.findViewById(R.id.txt_dia_numero);
+            diaView = (TextView) itemView.findViewById(R.id.txt_dia);
             enderecoView = (TextView) itemView.findViewById(R.id.txt_endereco);
+            horarioView = (TextView) itemView.findViewById(R.id.txt_horario);
 
         }
     }

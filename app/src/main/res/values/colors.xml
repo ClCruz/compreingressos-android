@@ -2,5 +2,6 @@
 <resources>
     <color name="white">#FFF</color>
     <color name="red_compreingressos">#d0112b</color>
+    <color name="red_status_bar">#a60e22</color>
     <color name="font_history_orders">#636465</color>
 </resources>

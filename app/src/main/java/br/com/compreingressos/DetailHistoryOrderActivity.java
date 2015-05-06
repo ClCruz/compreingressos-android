@@ -1,6 +1,7 @@
 package br.com.compreingressos;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -54,7 +55,15 @@ public class DetailHistoryOrderActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             toolbar.setTitle("Meus Ingressos");
-            toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
+            if (Build.VERSION.SDK_INT >= 21) {
+                this.setTheme(R.style.Base_ThemeOverlay_AppCompat_Dark);
+                toolbar.setBackgroundColor(getResources().getColor(R.color.red_compreingressos));
+                getWindow().setStatusBarColor(getResources().getColor(R.color.red_status_bar));
+                toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+            }else{
+                toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
+            }
+
             toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
             setSupportActionBar(toolbar);
             if (isFinishedOrder){
