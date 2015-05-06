@@ -82,6 +82,7 @@
                 android:textSize="14sp" />
 
             <TextView
+
                 android:id="@+id/txt_endereco"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,10 +91,10 @@
                 android:text="Praça Ramos de Azevedo, s/n -República -  São Paulo, SP"
                 android:textColor="@color/font_history_orders"
                 android:textSize="14sp"
-                android:layout_below="@+id/txt_teatro"
+                android:layout_below="@+id/ll_data"
                 android:layout_alignLeft="@+id/ll_data"
                 android:layout_alignStart="@+id/ll_data"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginTop="10dp"/>
 
             <TextView
                 android:id="@+id/txt_horario"

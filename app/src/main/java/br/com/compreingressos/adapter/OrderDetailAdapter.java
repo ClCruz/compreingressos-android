@@ -92,6 +92,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((ViewHolderHeader) viewHolder).diaNumeroView.setText(new SimpleDateFormat("dd").format(order.getDate()));
             ((ViewHolderHeader) viewHolder).diaView.setText(new SimpleDateFormat("EEE").format(order.getDate()).toUpperCase());
             ((ViewHolderHeader) viewHolder).enderecoView.setText(order.getEnderecoEspetaculo());
+            ((ViewHolderHeader) viewHolder).horarioView.setText(order.getHorarioEspetaculo());
         }else if(viewHolder instanceof ViewHolderItem){
             Ingresso ingresso = getItem(position);
             ((ViewHolderItem) viewHolder).setorView.setText(ingresso.getType());
@@ -192,6 +193,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public TextView diaNumeroView;
         public TextView diaView;
         public TextView enderecoView;
+        public TextView horarioView;
 
         public ViewHolderHeader(View itemView) {
             super(itemView);
@@ -201,6 +203,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             diaNumeroView = (TextView) itemView.findViewById(R.id.txt_dia_numero);
             diaView = (TextView) itemView.findViewById(R.id.txt_dia);
             enderecoView = (TextView) itemView.findViewById(R.id.txt_endereco);
+            horarioView = (TextView) itemView.findViewById(R.id.txt_horario);
 
         }
     }
