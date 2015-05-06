@@ -87,16 +87,20 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if (viewHolder instanceof ViewHolderHeader){
             ((ViewHolderHeader) viewHolder).espetaculoView.setText(order.getTituloEspetaculo());
-            ((ViewHolderHeader) viewHolder).dataView.setText(sdf.format(order.getDate()) + " ás " + order.getHorarioEspetaculo());
+            ((ViewHolderHeader) viewHolder).teatroView.setText(order.getNomeTeatroEspetaculo());
+            ((ViewHolderHeader) viewHolder).mesView.setText(new SimpleDateFormat("MMM").format(order.getDate()).toUpperCase());
+            ((ViewHolderHeader) viewHolder).diaNumeroView.setText(new SimpleDateFormat("dd").format(order.getDate()));
+            ((ViewHolderHeader) viewHolder).diaView.setText(new SimpleDateFormat("EEE").format(order.getDate()).toUpperCase());
             ((ViewHolderHeader) viewHolder).enderecoView.setText(order.getEnderecoEspetaculo());
         }else if(viewHolder instanceof ViewHolderItem){
             Ingresso ingresso = getItem(position);
             ((ViewHolderItem) viewHolder).setorView.setText(ingresso.getType());
             ((ViewHolderItem) viewHolder).cadeiraView.setText(ingresso.getLocal());
+            ((ViewHolderItem) viewHolder).valorView.setText("R$ " + ingresso.getPrice());
 
             AztecWriter write = new AztecWriter();
 
-            BitMatrix bitMatrix  = write.encode(ingresso.getQrcode(), BarcodeFormat.AZTEC, 512, 512);
+            BitMatrix bitMatrix  = write.encode(ingresso.getQrcode(), BarcodeFormat.AZTEC, 256, 256);
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
 
@@ -136,6 +140,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public class ViewHolderItem extends RecyclerView.ViewHolder {
         public TextView setorView;
         public TextView cadeiraView;
+        public TextView valorView;
         public ImageView qrcodeView;
         public ImageButton passwallet;
 
@@ -143,6 +148,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             super(itemView);
             setorView = (TextView) itemView.findViewById(R.id.txt_setor);
             cadeiraView = (TextView) itemView.findViewById(R.id.txt_cadeira);
+            valorView = (TextView) itemView.findViewById(R.id.txt_valor);
 
             qrcodeView = (ImageView) itemView.findViewById(R.id.img_qrcode);
 
@@ -181,13 +187,19 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class ViewHolderHeader extends RecyclerView.ViewHolder{
         public TextView espetaculoView;
-        public TextView dataView;
+        public TextView teatroView;
+        public TextView mesView;
+        public TextView diaNumeroView;
+        public TextView diaView;
         public TextView enderecoView;
 
         public ViewHolderHeader(View itemView) {
             super(itemView);
             espetaculoView = (TextView) itemView.findViewById(R.id.txt_espetaculo);
-            dataView = (TextView) itemView.findViewById(R.id.txt_data);
+            teatroView = (TextView) itemView.findViewById(R.id.txt_teatro);
+            mesView = (TextView) itemView.findViewById(R.id.txt_mes);
+            diaNumeroView = (TextView) itemView.findViewById(R.id.txt_dia_numero);
+            diaView = (TextView) itemView.findViewById(R.id.txt_dia);
             enderecoView = (TextView) itemView.findViewById(R.id.txt_endereco);
 
         }

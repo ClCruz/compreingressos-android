@@ -4,41 +4,112 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/view"
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:padding="5dp"
-        android:background="#FFFFFF">
+        android:layout_height="160dp">
+
+        <RelativeLayout
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            android:padding="10dp">
+
+            <LinearLayout
+                android:id="@+id/ll_data"
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/txt_espetaculo"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/red_compreingressos"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_mes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NOV"
+                    android:textColor="@color/white"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/txt_dia_numero"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="28"
+                    android:textColor="@color/white"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/txt_dia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="QUI"
+                    android:textColor="@color/white"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/txt_espetaculo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:text="Medium Text"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/txt_espetaculo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="10dp"
+                android:layout_toEndOf="@+id/ll_data"
+                android:layout_toRightOf="@+id/ll_data"
+                android:paddingBottom="3dp"
+                android:text="Coral Paulistano no conservatorioa - Serie Encontros com a Dança"
+                android:textColor="@color/red_compreingressos"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/txt_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_espetaculo"
-            android:layout_centerHorizontal="true"
-            android:text="Small Text"
-            android:textColor="@color/red_compreingressos"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/txt_teatro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_espetaculo"
+                android:layout_marginLeft="10dp"
+                android:layout_toEndOf="@+id/ll_data"
+                android:layout_toRightOf="@+id/ll_data"
+                android:paddingBottom="3dp"
+                android:text="Café Teatro Rubi - Sheratonda Bahia Hotel"
+                android:textColor="@color/font_history_orders"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/txt_endereco"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_data"
-            android:layout_centerHorizontal="true"
-            android:text="Small Text"
-            android:textSize="14sp" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/txt_endereco"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/location"
+                android:drawablePadding="3dp"
+                android:text="Praça Ramos de Azevedo, s/n -República -  São Paulo, SP"
+                android:textColor="@color/font_history_orders"
+                android:textSize="14sp"
+                android:layout_below="@+id/txt_teatro"
+                android:layout_alignLeft="@+id/ll_data"
+                android:layout_alignStart="@+id/ll_data"
+                android:layout_marginTop="5dp"/>
 
+            <TextView
+                android:id="@+id/txt_horario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/clock"
+                android:drawablePadding="3dp"
+                android:text="20h00"
+                android:textColor="@color/font_history_orders"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:layout_below="@+id/txt_endereco"
+                android:layout_alignLeft="@+id/txt_endereco"
+                android:layout_alignStart="@+id/txt_endereco"
+                android:layout_marginTop="5dp"/>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 </LinearLayout>
