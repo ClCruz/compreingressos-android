@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -45,27 +46,31 @@ public class PaymentFinishedActivity extends ActionBarActivity {
 
         databaseHelper =  new DatabaseHelper(this);
 
-        try {
-            orderDao = new OrderDao(databaseHelper.getConnectionSource());
-            QueryBuilder<Order, Integer> qb = orderDao.queryBuilder();
-            qb.orderBy("id", false);
-            order = orderDao.queryForFirst(qb.prepare());
-            int id = -1;
-            if (order == null){
-                id = -1;
-            }else{
-                id = order.getId();
-            }
-            order.setIngressos(new ArrayList<>(order.getIngressosCollection()));
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
         btnVerIngressos = (Button) findViewById(R.id.btn_ver_ingressos);
         btnVerIngressos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                try {
+                    orderDao = new OrderDao(databaseHelper.getConnectionSource());
+                    QueryBuilder<Order, Integer> qb = orderDao.queryBuilder();
+                    qb.orderBy("id", false);
+                    order = orderDao.queryForFirst(qb.prepare());
+
+                    int id = -1;
+                    if (order == null){
+                        id = -1;
+                    }else{
+                        id = order.getId();
+                    }
+
+                    order.setIngressos(new ArrayList<>(order.getIngressosCollection()));
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
 
                 Intent intent = new Intent(PaymentFinishedActivity.this, DetailHistoryOrderActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

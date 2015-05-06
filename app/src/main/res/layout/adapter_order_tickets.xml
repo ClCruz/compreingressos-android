@@ -44,7 +44,6 @@
                 android:background="#f2f6f7"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="Medium Text"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/font_history_orders" />
 
@@ -57,7 +56,6 @@
                 android:background="#f2f6f7"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="R$ 150,00"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@color/font_history_orders" />
         </LinearLayout>
@@ -66,7 +64,8 @@
             android:id="@+id/img_qrcode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/logo_toolbar" />
 
         <ImageButton

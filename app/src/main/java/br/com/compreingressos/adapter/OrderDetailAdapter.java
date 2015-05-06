@@ -1,5 +1,6 @@
 package br.com.compreingressos.adapter;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -157,6 +159,10 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             passwallet.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
+                    final ProgressDialog progressDialog = new ProgressDialog(context);
+                    progressDialog.setMessage("Aguarde...");
+                    progressDialog.show();
+
                     Ingresso ingresso  =  order.getIngressos().get(getPosition()-1);
 
                     requestQueue = VolleySingleton.getInstance(context).getRequestQueue();
@@ -166,10 +172,12 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         @Override
                         public void onResponse(JSONObject response) {
                             try {
+                                progressDialog.dismiss();
                                 String strNamePkPassresponse = response.getJSONArray("passes").get(0).toString();
                                 PassWalletHelper.launchPassWallet(context, Uri.parse( context.getString(R.string.url_mpassbook) + strNamePkPassresponse), true);
 
                             } catch (JSONException e) {
+                                progressDialog.dismiss();
                                 e.printStackTrace();
                                 Toast.makeText(context, context.getString(R.string.message_erro_envio_passwallet), Toast.LENGTH_LONG).show();
                             }
@@ -177,7 +185,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
+                            progressDialog.dismiss();
                         }
                     });
                     requestQueue.add(jsonObjectRequest);
