@@ -2,9 +2,9 @@ package br.com.compreingressos;
 
 import android.app.Application;
 
-import java.io.IOException;
+import com.crashlytics.android.Crashlytics;
 
-import br.com.compreingressos.utils.AndroidUtils;
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Created by luiszacheu on 19/03/15.
@@ -27,12 +27,7 @@ public class CompreIngressosApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-
-        try {
-            AndroidUtils.copyAppDbToDownloadFolder(getApplicationContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Fabric.with(this, new Crashlytics());
     }
 
     public boolean isDisplayDialogLocation() {

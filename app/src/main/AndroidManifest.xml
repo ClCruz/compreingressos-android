@@ -57,6 +57,9 @@
             android:label="PaymentFinishedActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"></activity>
-     </application>
+         <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="87c8b5e30a4128bde2d542f32ba16ba302ae696e" />
+    </application>
 
 </manifest>
