@@ -15,3 +15,7 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+#
+#-keep class org.apache.commons.logging.**
+#
+#-dontwarn com.squareup.okhttp.**
