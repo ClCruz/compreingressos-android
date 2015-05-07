@@ -31,11 +31,11 @@ public class CompreIngressosApplication extends Application{
         super.onCreate();
         Fabric.with(this, new Crashlytics());
 
-        try {
-            AndroidUtils.copyAppDbToDownloadFolder(getApplicationContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            AndroidUtils.copyAppDbToDownloadFolder(getApplicationContext());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public boolean isDisplayDialogLocation() {
