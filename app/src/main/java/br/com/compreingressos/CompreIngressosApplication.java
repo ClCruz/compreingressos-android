@@ -2,6 +2,8 @@ package br.com.compreingressos;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import java.io.IOException;
 
 import br.com.compreingressos.utils.AndroidUtils;
@@ -27,6 +29,7 @@ public class CompreIngressosApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         try {
             AndroidUtils.copyAppDbToDownloadFolder(getApplicationContext());
