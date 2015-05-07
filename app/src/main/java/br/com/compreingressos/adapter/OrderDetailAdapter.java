@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ import br.com.compreingressos.helper.PassWalletHelper;
 import br.com.compreingressos.model.Ingresso;
 import br.com.compreingressos.model.Order;
 import br.com.compreingressos.toolbox.VolleySingleton;
+import br.com.compreingressos.utils.AndroidUtils;
 
 /**
  * Created by luiszacheu on 30/03/15.
@@ -101,9 +103,11 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             ((ViewHolderItem) viewHolder).cadeiraView.setText(ingresso.getLocal());
             ((ViewHolderItem) viewHolder).valorView.setText("R$ " + ingresso.getPrice());
 
+            DisplayMetrics dm = context.getResources().getDisplayMetrics();
+
             AztecWriter write = new AztecWriter();
 
-            BitMatrix bitMatrix  = write.encode(ingresso.getQrcode(), BarcodeFormat.AZTEC, 256, 256);
+            BitMatrix bitMatrix  = write.encode(ingresso.getQrcode(), BarcodeFormat.AZTEC, AndroidUtils.getDPI(128, dm), AndroidUtils.getDPI(128 ,dm));
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
 
@@ -215,7 +219,6 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         }
     }
-
 
 
 }

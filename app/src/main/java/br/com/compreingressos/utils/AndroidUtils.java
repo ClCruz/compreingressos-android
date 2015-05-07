@@ -66,12 +66,7 @@ public class AndroidUtils {
         // example
         // "my_data_backup.db"
         File currentDB = context.getDatabasePath("compreingressos.sqlite"); // databaseName=your
-        // current
-        // application
-        // database
-        // name, for
-        // example
-        // "my_data.db".
+        // current application database name, for example "my_data.db".
         if (currentDB.exists()) {
             FileChannel src = new FileInputStream(currentDB).getChannel();
             FileChannel dst = new FileOutputStream(backupDB).getChannel();
@@ -80,5 +75,10 @@ public class AndroidUtils {
             dst.close();
             Log.e("---------------" , "Copiou");
         }
+    }
+
+
+    public static int getDPI(int size, DisplayMetrics metrics) {
+        return (size * metrics.densityDpi) / DisplayMetrics.DENSITY_DEFAULT;
     }
 }
