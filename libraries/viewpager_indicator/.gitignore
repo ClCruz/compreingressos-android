@@ -41,5 +41,7 @@ Thumbs.db.gradle
 *.jar
 libraries/viewpager_indicator/build/
 
+*.class
+/libraries/viewpager_indicator/build/intermediates/bundles/debug/
 
-git
+
