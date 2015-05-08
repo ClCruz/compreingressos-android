@@ -57,6 +57,10 @@
             android:label="PaymentFinishedActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".SearchActivity"
+            android:label="SearchActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"></activity>
          <meta-data
             android:name="io.fabric.ApiKey"
             android:value="87c8b5e30a4128bde2d542f32ba16ba302ae696e" />

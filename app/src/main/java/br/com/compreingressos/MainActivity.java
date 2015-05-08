@@ -178,6 +178,10 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             Intent intent = new Intent(this, HistoryOrdersActivity.class);
             startActivity(intent);
             return true;
+        }else if (id == R.id.action_search){
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -188,7 +192,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         generos.add(new Genero("Perto de mim", R.drawable.perto_de_mim));
         generos.add(new Genero("Shows",R.drawable.shows));
         generos.add(new Genero("Clássicos", R.drawable.classicos));
-        generos.add(new Genero("Teatros",R.drawable.teatro));
+        generos.add(new Genero("Teatros", R.drawable.teatro));
         generos.add(new Genero("Muito mais", R.drawable.muito_mais));
 
 

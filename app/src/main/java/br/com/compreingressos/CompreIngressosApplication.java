@@ -27,7 +27,7 @@ public class CompreIngressosApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+//        Fabric.with(this, new Crashlytics());
     }
 
     public boolean isDisplayDialogLocation() {
