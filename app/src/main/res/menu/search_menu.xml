@@ -4,6 +4,6 @@
     <item android:id="@+id/action_search"
         android:title="Buscar"
         android:icon="@android:drawable/ic_search_category_default"
-        yourapp:showAsAction="ifRoom|collapseActionView"
+        yourapp:showAsAction="always"
         yourapp:actionViewClass="android.support.v7.widget.SearchView" />
 </menu>
