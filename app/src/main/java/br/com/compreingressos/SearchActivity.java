@@ -102,9 +102,7 @@ public class SearchActivity extends ActionBarActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(SearchActivity.this, query, Toast.LENGTH_SHORT).show();
-                    startRequest(query);
-
+                startRequest(query);
                 return false;
             }
 
