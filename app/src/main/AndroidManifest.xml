@@ -11,12 +11,64 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    //Permissoes para o parse
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <!--
+  IMPORTANT: Change "com.parse.tutorials.pushnotifications.permission.C2D_MESSAGE" in the lines below
+  to match your app's package name + ".permission.C2D_MESSAGE".
+-->
+    <permission
+        android:name="br.com.compreingressos.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="br.com.compreingressos.permission.C2D_MESSAGE" />
+
     <application
         android:name=".CompreIngressosApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+
+        <!-- replace @drawable/push_icon with your push icon identifier -->
+        <meta-data
+            android:name="com.parse.push.notification_icon"
+            android:resource="@drawable/push_icon" />
+
+        <service android:name="com.parse.PushService" />
+
+        <receiver android:name="com.parse.ParseBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+
+                <category android:name="br.com.compreingressos" />
+            </intent-filter>
+
+        </receiver>
+        <receiver
+            android:name="br.com.compreingressos.broadcast.ParseReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.parse.push.intent.RECEIVE" />
+                <action android:name="com.parse.push.intent.DELETE" />
+                <action android:name="com.parse.push.intent.OPEN" />
+            </intent-filter>
+        </receiver>
+
+
         <activity
             android:name=".SplashScreenActivity"
             android:label="@string/app_name"
@@ -38,30 +90,35 @@
         <activity
             android:name=".EspetaculosActivity"
             android:label="@string/title_activity_compre_ingressos"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".CompreIngressosActivity"
             android:label="@string/title_activity_compre_ingressos"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity"></activity>
-        <activity android:name=".HistoryOrdersActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".HistoryOrdersActivity"
             android:label="HistoryOrdersActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity"></activity>
-        <activity android:name=".DetailHistoryOrderActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".DetailHistoryOrderActivity"
             android:label="DetailHistoryOrderActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".HistoryOrdersActivity"></activity>
-        <activity android:name=".PaymentFinishedActivity"
+            android:parentActivityName=".HistoryOrdersActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".PaymentFinishedActivity"
             android:label="PaymentFinishedActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity"></activity>
-        <activity android:name=".SearchActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".SearchActivity"
             android:label="SearchActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity"></activity>
-         <meta-data
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <meta-data
             android:name="io.fabric.ApiKey"
             android:value="87c8b5e30a4128bde2d542f32ba16ba302ae696e" />
     </application>
