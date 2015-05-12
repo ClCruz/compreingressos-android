@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private boolean isFirstUrlLoading = true;
     private int countReading = 0;
     private ProgressBar progressBar;
+
 
 
 
@@ -146,7 +148,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 }
 
                 if (Uri.parse(url).getHost().equals("www.compreingressos.com") || Uri.parse(url).getHost().equals("compra.compreingressos.com") || Uri.parse(url).getHost().equals("186.237.201.132")) {
-                    view.loadUrl(url);
+                    view.loadUrl(getUrlFromTokecompre(url));
                     return false;
                 }
 
@@ -156,7 +158,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
             @Override
             public void doUpdateVisitedHistory(WebView view, String url, boolean isReload) {
-                super.doUpdateVisitedHistory(view, url, isReload);
+                super.doUpdateVisitedHistory(view, getUrlFromTokecompre(url), isReload);
             }
 
             @Override
@@ -219,7 +221,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
         });
 
         if (getIntent().getStringExtra("url_flux_webview") == null){
-            webView.loadUrl(url);
+            webView.loadUrl(getUrlFromTokecompre(url));
         }else{
             webView.loadUrl(getIntent().getStringExtra("url_flux_webview"));
         }
@@ -312,6 +314,9 @@ public class CompreIngressosActivity extends ActionBarActivity {
         }
     }
 
+    private String getUrlFromTokecompre(String mUrl){
+        return mUrl+"&app=tokecompre";
+    }
 
 
 }

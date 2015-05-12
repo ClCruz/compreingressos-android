@@ -68,6 +68,9 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_genero, viewGroup, false);
 
+            DisplayMetrics dm = context.getResources().getDisplayMetrics();
+
+
             return new ViewHolderItem(v);
         }
 
@@ -96,10 +99,10 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public void updateBanners(ArrayList<Banner> banners){
-        if (banners == null)
-            banners = new ArrayList<>();
+        if (banners != null)
+            ((MainBannerFragment) activity.getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(banners);
 
-        ((MainBannerFragment) activity.getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(banners);
+
     }
 
     private boolean isPositionHeader(int position) {
