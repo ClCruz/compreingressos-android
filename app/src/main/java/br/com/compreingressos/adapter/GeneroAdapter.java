@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -66,10 +67,6 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
 
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_genero, viewGroup, false);
-
-            if (AndroidUtils.isPhablet(context)){
-                v.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 800));
-            }
 
             return new ViewHolderItem(v);
         }
