@@ -13,7 +13,7 @@ import com.google.gson.JsonSyntaxException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-import br.com.compreingressos.utils.DateDeserializer;
+import br.com.compreingressos.deserializer.EspetaculoDeserializer;
 import br.com.compreingressos.model.Espetaculo;
 
 /**
@@ -62,7 +62,7 @@ public class GsonRequest<T> extends Request<T> {
             String json = new String(response.data,HttpHeaderParser.parseCharset(response.headers));
 
             if (!formatString.isEmpty()){
-                gsonBuilder.registerTypeAdapter(Espetaculo.class, new DateDeserializer());
+                gsonBuilder.registerTypeAdapter(Espetaculo.class, new EspetaculoDeserializer());
             }
 
             gsonBuilder.serializeNulls();

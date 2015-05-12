@@ -6,14 +6,21 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
+import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
+import br.com.compreingressos.deserializer.OrderDeserializer;
 import br.com.compreingressos.model.Ingresso;
 import br.com.compreingressos.model.Order;
 
@@ -29,35 +36,15 @@ public class OrderHelper {
     public static Order loadOrderFromJSON(String jsonString){
         GsonBuilder gsonBuilder = new GsonBuilder();
 
-        gsonBuilder.setDateFormat("EEE dd MMM");
+        gsonBuilder.registerTypeAdapter(Order.class, new OrderDeserializer());
         Gson gson = gsonBuilder.create();
 
-        try {
-            Order order;
             try {
-                JsonParser parser = new JsonParser();
-                JsonObject obj = parser.parse(jsonString).getAsJsonObject();
-
-                order = gson.fromJson(obj, Order.class);
+                return gson.fromJson(jsonString, Order.class);
             }catch (Exception e ){
                 e.printStackTrace();
                 return  null;
             }
-
-            return order;
-        }catch (JsonSyntaxException e){
-            e.printStackTrace();
-            Log.e(LOG_TAG, e.getMessage());
-            return null;
-        }catch (JsonParseException e){
-            e.printStackTrace();
-            Log.e(LOG_TAG, e.getMessage());
-            return null;
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
-
     }
 
     public static String createJsonPeerTicket(Order order, Ingresso ingresso){
