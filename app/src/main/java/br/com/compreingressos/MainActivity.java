@@ -227,16 +227,20 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             @Override
             public void onResponse(Banner[] response) {
 
-                for (int i = 0; i < response.length; i++) {
-                    Banner banner = new Banner();
-                    banner.setImagem(response[i].getImagem());
-                    banner.setUrl(response[i].getUrl());
+                if (response != null){
+                    for (int i = 0; i < response.length; i++) {
+                        Banner banner = new Banner();
+                        banner.setImagem(response[i].getImagem());
+                        banner.setUrl(response[i].getUrl());
 
-                    mListBanners.add(banner);
+                        mListBanners.add(banner);
 
+                    }
+
+                    adapter.updateBanners(mListBanners);
                 }
 
-                adapter.updateBanners(mListBanners);
+
             }
         };
     }

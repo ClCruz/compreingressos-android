@@ -63,10 +63,11 @@ public class GsonRequest<T> extends Request<T> {
 
             if (!formatString.isEmpty()){
                 gsonBuilder.registerTypeAdapter(Espetaculo.class, new DateDeserializer());
-                gsonBuilder.serializeNulls();
             }
 
-            Gson gson = formatString.isEmpty() ? new Gson() : gsonBuilder.create();
+            gsonBuilder.serializeNulls();
+
+            Gson gson = gsonBuilder.create();
 
             return Response.success(gson.fromJson(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
