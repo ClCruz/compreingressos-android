@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import br.com.compreingressos.dao.OrderDao;
 import br.com.compreingressos.helper.DatabaseHelper;
+import br.com.compreingressos.helper.ParseHelper;
 import br.com.compreingressos.model.Order;
 
 /**
@@ -70,6 +71,12 @@ public class PaymentFinishedActivity extends ActionBarActivity {
 
                 } catch (SQLException e) {
                     e.printStackTrace();
+                }
+
+                if (!ParseHelper.getIsClient(PaymentFinishedActivity.this)){
+                    ParseHelper.setIsClient(PaymentFinishedActivity.this);
+                    ParseHelper.setUnSubscribeParseChannel("prospect");
+                    ParseHelper.setSubscribeParseChannel("client");
                 }
 
                 Intent intent = new Intent(PaymentFinishedActivity.this, DetailHistoryOrderActivity.class);

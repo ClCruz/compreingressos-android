@@ -21,6 +21,11 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.parse.ParseAnalytics;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.WebAppInterface;
 
@@ -45,6 +50,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compre_ingressos);
+
 
         if (getIntent().hasExtra("url"))
             url = getIntent().getStringExtra("url");
@@ -227,6 +233,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
         }
 
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

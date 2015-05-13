@@ -18,14 +18,14 @@ import io.fabric.sdk.android.Fabric;
 public class CompreIngressosApplication extends Application{
 
     //Google Analytics
-    private static final String PROPERTY_ID = "UA-XXXXX-Y";
+    private static final String PROPERTY_ID = "UA-16656615-2";
 
     public static int GENERAL_TRACKER = 0;
 
     public enum TrackerName {
         APP_TRACKER, // Tracker used only in this app.
-        GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
-        ECOMMERCE_TRACKER, // Tracker used by all ecommerce transactions from a company.
+        GLOBAL_TRACKER // Tracker used by all the apps from a company. eg: roll-up tracking.
+
     }
 
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
@@ -51,9 +51,11 @@ public class CompreIngressosApplication extends Application{
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
-
         Parse.initialize(this, YOUR_APP_ID, YOUR_CLIENT_KEY);
-        ParseHelper.setParseChannel(ParseHelper.getParseChannel());
+
+        if (!ParseHelper.getIsClient(this)){
+            ParseHelper.setSubscribeParseChannel("prospect");
+        }
 
 
     }
