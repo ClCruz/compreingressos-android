@@ -19,6 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.analytics.Tracker;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.util.ArrayList;
@@ -98,6 +99,10 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         mRecyclerView.setAdapter(adapter);
 
         DatabaseManager.init(this);
+
+        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
+
+        t.enableAutoActivityTracking(true);
 
     }
 
