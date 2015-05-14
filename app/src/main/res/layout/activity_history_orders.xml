@@ -1,17 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include
-        layout="@layout/toolbar"
-        android:id="@id/toolbar"></include>
+        android:id="@id/toolbar"
+        layout="@layout/toolbar"></include>
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_orders"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/recycler_view_orders"
         android:layout_below="@+id/toolbar"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
+
+    <LinearLayout
+        android:id="@+id/empty_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/placeholder_ticket" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Você ainda não comprou nenhum ingresso."
+            android:textColor="@color/font_history_orders"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </LinearLayout>
 </RelativeLayout>

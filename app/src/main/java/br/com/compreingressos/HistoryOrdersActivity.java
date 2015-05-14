@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.sql.SQLException;
@@ -37,6 +38,7 @@ public class HistoryOrdersActivity extends ActionBarActivity {
     private RecyclerView recyclerView;
     private OrderDao orderDao;
     private ArrayList<Order> orders = null;
+    private LinearLayout emptyHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,9 @@ public class HistoryOrdersActivity extends ActionBarActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        emptyHistory = (LinearLayout) findViewById(R.id.empty_history);
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_orders);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -69,9 +74,13 @@ public class HistoryOrdersActivity extends ActionBarActivity {
         if (orders.size() > 0){
             adapter = new OrderAdapter(this, orders);
             adapter.setOnItemClickListener(onItemClick);
+            recyclerView.setAdapter(adapter);
+        }else{
+            recyclerView.setVisibility(View.GONE);
+            emptyHistory.setVisibility(View.VISIBLE);
         }
 
-        recyclerView.setAdapter(adapter);
+
 
     }
 
