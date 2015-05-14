@@ -120,6 +120,12 @@
             android:label="SearchActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"></activity>
+        <activity
+            android:theme="@style/Theme.AppCompat.Translucent"
+            android:name=".HowToPinchActivity"
+            android:label="HowToPinchActivity"
+            android:parentActivityName=".CompreIngressosActivity"
+            android:screenOrientation="portrait"></activity>
 
         <meta-data
             android:name="io.fabric.ApiKey"

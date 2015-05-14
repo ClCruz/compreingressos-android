@@ -1,18 +1,22 @@
 package br.com.compreingressos;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -20,6 +24,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.parse.ParseAnalytics;
 
@@ -122,7 +128,23 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     view.loadUrl("javascript:$(\".meu_codigo_cartao\").hide();");
                 }
 
+
+                if (url.contains("etapa1.php")){
+                    if (PreferenceManager.getDefaultSharedPreferences(CompreIngressosActivity.this).getBoolean("show_pinch_screen", true)){
+                        if ( countReading  == 1 ){
+                            Intent i  = new Intent(CompreIngressosActivity.this, HowToPinchActivity.class);
+                            startActivity(i);
+                        }
+
+                        isFirstUrlLoading = false;
+                        countReading ++;
+                    }
+
+
+                }
+
             }
+
 
             @Override
             public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
@@ -145,11 +167,12 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     btnAvancar.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            StringBuilder scriptOnClick  = new StringBuilder("javascript:var length = $('.container_botoes_etapas').find('a').length;");
+                            StringBuilder scriptOnClick = new StringBuilder("javascript:var length = $('.container_botoes_etapas').find('a').length;");
                             scriptOnClick.append("$('.container_botoes_etapas').find('a')[length - 1].click(); ");
                             view.loadUrl(scriptOnClick.toString());
                         }
                     });
+
 
                 }
 
