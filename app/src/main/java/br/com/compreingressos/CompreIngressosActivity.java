@@ -164,8 +164,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
 
-                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
-                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
+//                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
+//                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
 
                 if (url.contains("etapa1.php")){
                     WebSettings webSettings = view.getSettings();
@@ -265,7 +265,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
         });
 
         if (getIntent().getStringExtra("url_flux_webview") == null){
-            Log.e(LOG_TAG, " ---- >> "  + url);
             webView.loadUrl(getUrlFromTokecompre(url));
         }else{
             webView.loadUrl(getIntent().getStringExtra("url_flux_webview"));
@@ -345,8 +344,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
     }
 
     public String injectPromoCode(){
-        Log.e(LOG_TAG, "antes -- > " + codePromo);
-
         StringBuilder script = new StringBuilder("javascript:var codigo = "+ codePromo +";\n");
         script.append("var groups = /<a href=\\\"#([\\d]+)\\\" rel=\\\"[\\d]+\\\">PROMO APP<\\/a>/.exec(document.documentElement.outerHTML);\n");
         script.append("var ref;\n");
@@ -356,9 +353,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
         script.append("$('.container_beneficio').find('input[type=\"text\"]').val(codigo);\n");
         script.append("$('a[class^=\"validarBin\"]').click();\n");
         script.append("}");
-
-
-        Log.e(LOG_TAG, "depois -- > " + codePromo);
 
         return script.toString();
     }

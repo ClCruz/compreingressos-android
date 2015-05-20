@@ -155,7 +155,7 @@ public class SearchActivity extends ActionBarActivity {
         @Override
         public void onItemClick(View view, int position) {
             Intent intent = new Intent(SearchActivity.this, CompreIngressosActivity.class);
-            intent.putExtra("url", espetaculos.get(position).getUrl());
+            intent.putExtra("u", espetaculos.get(position).getUrl());
             intent.putExtra("titulo_espetaculo", espetaculos.get(position).getTitulo());
             startActivity(intent);
 
@@ -170,8 +170,6 @@ public class SearchActivity extends ActionBarActivity {
 
             @Override
             public void onResponse(Espetaculos response) {
-
-                Log.e("searchview - result", "" + response.getEspetaculos().size());
 
                 if (response.getEspetaculos().size() > 0){
 
