@@ -74,7 +74,7 @@ public class BannerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CompreIngressosActivity.class);
-                intent.putExtra("url", banner.getUrl());
+                intent.putExtra("u", banner.getUrl());
                 intent.putExtra("titulo_espetaculo", "Espetaculo");
                 startActivity(intent);
             }

@@ -101,7 +101,7 @@ public class EspetaculosActivity extends ActionBarActivity {
         @Override
         public void onItemClick(View view, int position) {
             Intent intent = new Intent(EspetaculosActivity.this, CompreIngressosActivity.class);
-            intent.putExtra("url", espetaculos.get(position).getUrl());
+            intent.putExtra("u", espetaculos.get(position).getUrl());
             intent.putExtra("titulo_espetaculo", espetaculos.get(position).getTitulo());
             startActivity(intent);
 
