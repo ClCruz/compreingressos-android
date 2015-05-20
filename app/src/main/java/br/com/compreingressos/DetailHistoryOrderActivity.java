@@ -54,7 +54,7 @@ public class DetailHistoryOrderActivity extends ActionBarActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setTitle("Meus Ingressos");
+            toolbar.setTitle("Ingresso(s)");
             if (Build.VERSION.SDK_INT >= 21) {
                 this.setTheme(R.style.Base_ThemeOverlay_AppCompat_Dark);
                 toolbar.setBackgroundColor(getResources().getColor(R.color.red_compreingressos));

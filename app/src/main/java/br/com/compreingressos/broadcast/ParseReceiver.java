@@ -18,6 +18,10 @@ import br.com.compreingressos.MainActivity;
  */
 public class ParseReceiver extends ParsePushBroadcastReceiver {
 
+    String title = "";
+    String url = "";
+    String codePromo = "";
+
     public ParseReceiver() {
         // TODO Auto-generated constructor stub
     }
@@ -26,8 +30,7 @@ public class ParseReceiver extends ParsePushBroadcastReceiver {
     @Override
     public void onPushOpen(Context context, Intent intent) {
         Log.e("Push", "Clicked");
-        String url = "";
-        String  title = "";
+
         Bundle extras = intent.getExtras();
 
         try {
@@ -36,18 +39,38 @@ public class ParseReceiver extends ParsePushBroadcastReceiver {
 
             jObject = new JSONObject(message);
             Log.e("Push", jObject.getString("alert"));
-            Log.e("Push", jObject.getString("uri"));
+            Log.e("Push", jObject.getString("u"));
+            Log.e("Push", jObject.getString("c"));
             title = jObject.getString("alert");
-            url = jObject.getString("uri");
+            try {
+                url = jObject.getString("u");
+            }catch (Exception e){
+                url = null;
+                e.printStackTrace();
+            }
+
+            try {
+                codePromo = jObject.getString("c");
+            }catch (Exception e){
+                codePromo = null;
+                e.printStackTrace();
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        Intent i = new Intent(context, MainActivity.class);
-        i.putExtras(intent.getExtras());
-        i.putExtra("titulo_espetaculo", title);
-        i.putExtra("url", url);
+        Intent i;
+
+        if (url != null){
+            i = new Intent(context, CompreIngressosActivity.class);
+            i.putExtras(intent.getExtras());
+            i.putExtra("titulo_espetaculo", title);
+            i.putExtra("u", url);
+            i.putExtra("c", codePromo);
+        }else{
+            i = new Intent(context, MainActivity.class);
+        }
 
         i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);

@@ -48,6 +48,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private boolean isFirstUrlLoading = true;
     private int countReading = 0;
     private ProgressBar progressBar;
+    private boolean hasSupportPinch = true;
+    private String codePromo;
 
 
 
@@ -58,8 +60,10 @@ public class CompreIngressosActivity extends ActionBarActivity {
         setContentView(R.layout.activity_compre_ingressos);
 
 
-        if (getIntent().hasExtra("url"))
-            url = getIntent().getStringExtra("url");
+        if (getIntent().hasExtra("u")){
+            url = getIntent().getStringExtra("u");
+            codePromo = getIntent().getStringExtra("c");
+        }
 
         if (getIntent().hasExtra("titulo_espetaculo"))
             tituloEspetaculo = getIntent().getStringExtra("titulo_espetaculo");
@@ -72,7 +76,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         }
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -113,6 +116,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
                 if (url.contains("pagamento_ok.php")){
                     if ( countReading  == 2 ){
+                        codePromo = "";
                         webView.setVisibility(View.GONE);
                         progressBar.setVisibility(View.VISIBLE);
                         view.loadUrl(runScripGetInfoPayment());
@@ -132,15 +136,19 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 if (url.contains("etapa1.php")){
                     if (PreferenceManager.getDefaultSharedPreferences(CompreIngressosActivity.this).getBoolean("show_pinch_screen", true)){
                         if ( countReading  == 1 ){
-                            Intent i  = new Intent(CompreIngressosActivity.this, HowToPinchActivity.class);
-                            startActivity(i);
+                            if (hasSupportPinch){
+                                Intent i  = new Intent(CompreIngressosActivity.this, HowToPinchActivity.class);
+                                startActivity(i);
+                            }
                         }
 
                         isFirstUrlLoading = false;
                         countReading ++;
                     }
+                }
 
-
+                if (url.contains("etapa2.php")){
+                    view.loadUrl(injectPromoCode());
                 }
 
             }
@@ -156,12 +164,19 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
 
-                if (Uri.parse(url).getHost().equals("compra.compreingressos.com"))
+                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
                     url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
+
                 if (url.contains("etapa1.php")){
                     WebSettings webSettings = view.getSettings();
                     webSettings.setBuiltInZoomControls(true);
-                    webSettings.setDisplayZoomControls(false);
+
+                    try {
+                        webSettings.setDisplayZoomControls(false);
+                    }catch (NoSuchMethodError e ){
+                        hasSupportPinch = false;
+                        e.printStackTrace();
+                    }
 
                     showNextButton();
                     btnAvancar.setOnClickListener(new View.OnClickListener() {
@@ -250,11 +265,11 @@ public class CompreIngressosActivity extends ActionBarActivity {
         });
 
         if (getIntent().getStringExtra("url_flux_webview") == null){
+            Log.e(LOG_TAG, " ---- >> "  + url);
             webView.loadUrl(getUrlFromTokecompre(url));
         }else{
             webView.loadUrl(getIntent().getStringExtra("url_flux_webview"));
         }
-
     }
 
 
@@ -327,6 +342,25 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
 
         return scriptGetInfoPayment.toString();
+    }
+
+    public String injectPromoCode(){
+        Log.e(LOG_TAG, "antes -- > " + codePromo);
+
+        StringBuilder script = new StringBuilder("javascript:var codigo = "+ codePromo +";\n");
+        script.append("var groups = /<a href=\\\"#([\\d]+)\\\" rel=\\\"[\\d]+\\\">PROMO APP<\\/a>/.exec(document.documentElement.outerHTML);\n");
+        script.append("var ref;\n");
+        script.append("if (groups.length == 2) ref = groups[1];\n");
+        script.append("if (ref) {\n");
+        script.append("$('a[href=\"#'+ref+'\"]').click();\n");
+        script.append("$('.container_beneficio').find('input[type=\"text\"]').val(codigo);\n");
+        script.append("$('a[class^=\"validarBin\"]').click();\n");
+        script.append("}");
+
+
+        Log.e(LOG_TAG, "depois -- > " + codePromo);
+
+        return script.toString();
     }
 
 
