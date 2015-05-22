@@ -87,14 +87,31 @@
 -keep class sun.misc.Unsafe { *; }
 #-keep class com.google.gson.stream.** { *; }
 
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    static final java.io.ObjectStreamField serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
 # Application classes that will be serialized/deserialized over Gson
 -keep class br.com.compreingressos.model.** { *; }
+-keepclassmembers class br.com.compreingressos.model.** { *; }
+-keep class br.com.compreingressos.deserializer.** { *; }
+-keepclassmembers class br.com.compreingressos.deserializer.** { *; }
 
 -keep public class com.google.gson.** { *; }
 
 ##---------------End: proguard configuration for Gson  ----------
 
 ##---------------Begin: proguard configurarion for ORMLite-------
+
+-keepclassmembers class **DateTime {
+    <init>(long);
+    long getMillis();
+}
 
 # OrmLite uses reflection
 -keep class com.j256.**
@@ -103,6 +120,12 @@
 -keepclassmembers enum com.j256.** { *; }
 -keep interface com.j256.**
 -keepclassmembers interface com.j256.** { *; }
+
+
+-keepclassmembers class * {
+  public <init>(android.content.Context);
+}
+
 
 ##---------------End: proguard configurarion for ORMLite-------
 

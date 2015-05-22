@@ -1,7 +1,6 @@
 package br.com.compreingressos;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -13,10 +12,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -24,14 +21,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.parse.ParseAnalytics;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import br.com.compreingressos.interfaces.LoadDataResultFromWebviewListener;
 import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.WebAppInterface;
 
@@ -50,6 +41,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private ProgressBar progressBar;
     private boolean hasSupportPinch = true;
     private String codePromo;
+    public WebAppInterface webAppInterface;
 
 
 
@@ -96,15 +88,18 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
         webSettings.setGeolocationEnabled(true);
 
+        webAppInterface = new WebAppInterface(this);
 
 
-        webView.addJavascriptInterface(new WebAppInterface(this), "Android");
+
+        webView.addJavascriptInterface(webAppInterface, "Android");
 
 
         webView.setWebViewClient(new WebViewClient() {
 
             @Override
             public void onPageFinished(WebView view, String url) {
+
                 try {
                     if (progressBar.isShown()) {
                         webView.setVisibility(View.VISIBLE);
@@ -115,14 +110,23 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 }
 
                 if (url.contains("pagamento_ok.php")){
-                    if ( countReading  == 2 ){
+                    if ( countReading  > 0 ){
                         codePromo = "";
                         webView.setVisibility(View.GONE);
                         progressBar.setVisibility(View.VISIBLE);
                         view.loadUrl(runScripGetInfoPayment());
-                        Intent intent = new Intent(CompreIngressosActivity.this, PaymentFinishedActivity.class);
-                        startActivity(intent);
-                        finish();
+
+                        webAppInterface.setHelloInterface(new LoadDataResultFromWebviewListener() {
+                            @Override
+                            public String finishLoadResultData(String resultData) {
+                                Intent intent = new Intent(CompreIngressosActivity.this, PaymentFinishedActivity.class);
+                                startActivity(intent);
+                                finish();
+                                return resultData;
+                            }
+                        });
+
+
                     }
                     isFirstUrlLoading = false;
                     countReading ++;
@@ -163,6 +167,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
+
+                Log.e("carregando ", "carregando ");
 
 //                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
 //                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
@@ -339,7 +345,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
         scriptGetInfoPayment.append("Android.getInfoPagamento(JSON.stringify(payload));");
         scriptGetInfoPayment.append("$('.imprima_agora').hide();");
 
-
+        Log.e("----> ", "" + scriptGetInfoPayment.toString());
         return scriptGetInfoPayment.toString();
     }
 
@@ -353,6 +359,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
         script.append("$('.container_beneficio').find('input[type=\"text\"]').val(codigo);\n");
         script.append("$('a[class^=\"validarBin\"]').click();\n");
         script.append("}");
+
 
         return script.toString();
     }
@@ -374,8 +381,9 @@ public class CompreIngressosActivity extends ActionBarActivity {
     }
 
     private String getUrlFromTokecompre(String mUrl){
-        return mUrl+"&app=tokecompre";
+        return Uri.parse(mUrl).buildUpon().appendQueryParameter("app", "tokecompre").toString();
     }
+
 
 
 }

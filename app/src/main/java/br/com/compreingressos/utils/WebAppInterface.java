@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import br.com.compreingressos.dao.OrderDao;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.OrderHelper;
+import br.com.compreingressos.interfaces.LoadDataResultFromWebviewListener;
 import br.com.compreingressos.model.Order;
 
 /**
@@ -20,6 +21,7 @@ public class WebAppInterface {
     Context context;
     private OrderDao orderDao;
     private DatabaseHelper databaseHelper;
+    public static LoadDataResultFromWebviewListener loadDataResultFromWebviewListener;
 
     public WebAppInterface(Context c){
         context = c;
@@ -38,13 +40,15 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void getInfoPagamento(String resultJson){
-
+        Log.e("WebApp", "" + resultJson);
         try {
             gravar(OrderHelper.loadOrderFromJSON(resultJson));
+            print(resultJson);
         } catch (SQLException e) {
             Log.e(LOG_TAG, "nao foi possivel salvar o pedido");
             e.printStackTrace();
         }
+        print(resultJson);
     }
 
     private boolean gravar(Order order) throws SQLException {
@@ -64,5 +68,14 @@ public class WebAppInterface {
 
         return x > 0;
     }
+
+    public void setHelloInterface(LoadDataResultFromWebviewListener listener){
+        loadDataResultFromWebviewListener=listener;
+    }
+
+    public void print(String result){
+        System.out.println(loadDataResultFromWebviewListener.finishLoadResultData(result));
+    }
+
 
 }

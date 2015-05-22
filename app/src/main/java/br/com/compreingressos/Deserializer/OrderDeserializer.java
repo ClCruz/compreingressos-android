@@ -46,8 +46,6 @@ public class OrderDeserializer implements JsonDeserializer<Order> {
             e.printStackTrace();
             date =  null;
         }
-
-        Log.e("passou aqui","passou aqui");
         Order order = new Order();
         Espetaculo espetaculo = new Espetaculo();
 

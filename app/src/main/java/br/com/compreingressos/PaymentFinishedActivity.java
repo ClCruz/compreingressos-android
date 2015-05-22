@@ -45,7 +45,7 @@ public class PaymentFinishedActivity extends ActionBarActivity {
 
         }
 
-        databaseHelper =  new DatabaseHelper(this);
+        databaseHelper =  new DatabaseHelper(PaymentFinishedActivity.this);
 
 
 
@@ -60,12 +60,12 @@ public class PaymentFinishedActivity extends ActionBarActivity {
                     qb.orderBy("id", false);
                     order = orderDao.queryForFirst(qb.prepare());
 
-                    int id = -1;
-                    if (order == null){
-                        id = -1;
-                    }else{
-                        id = order.getId();
-                    }
+//                    int id = -1;
+//                    if (order == null){
+//                        id = -1;
+//                    }else{
+//                        id = order.getId();
+//                    }
 
                     order.setIngressos(new ArrayList<>(order.getIngressosCollection()));
 
