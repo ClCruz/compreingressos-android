@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -21,6 +22,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
+
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.CookieStore;
+import java.net.HttpCookie;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
 
 import br.com.compreingressos.interfaces.LoadDataResultFromWebviewListener;
 import br.com.compreingressos.utils.AndroidUtils;
@@ -153,6 +163,25 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
                 if (url.contains("etapa2.php")){
                     view.loadUrl(injectPromoCode());
+                }
+
+
+
+                if (url.contains("etapa4.php")){
+                    CookieSyncManager syncManager = CookieSyncManager.createInstance(CompreIngressosActivity.this);
+                    syncManager.sync();
+
+                    CookieManager manager = new CookieManager();
+                    manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+                    CookieHandler.setDefault(manager);
+
+
+                    CookieStore cookieJar = manager.getCookieStore();
+                    List<HttpCookie> cookies = cookieJar.getCookies();
+
+                    for (HttpCookie cookie: cookies) {
+                        Log.d("Cookie", "cookie name : "+cookie.getName().toString());
+                    }
                 }
 
             }
