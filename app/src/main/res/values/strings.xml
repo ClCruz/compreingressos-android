@@ -12,8 +12,9 @@
     <string name="btn_gps_positive">Ativar GPS</string>
     <string name="btn_gps_negative">Agora não!</string>
 
-    <string name="message_erro_envio_passwallet">Não foi possivel enviar para o PassWallet</string>
+    <string name="message_nenhum_espetaculo_encontrado">Não foi encontrado nenhum espetaculo!</string>
 
+    <string name="message_erro_envio_passwallet">Não foi possivel enviar para o PassWallet</string>
     <string name="url_mpassbook">http://mpassbook.herokuapp.com/passes/</string>
 
 

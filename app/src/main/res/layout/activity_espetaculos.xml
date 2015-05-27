@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Não vou encontrado nenhum espetaculo!"
+        android:text="@string/message_nenhum_espetaculo_encontrado"
         android:visibility="gone"
         android:textColor="@color/font_history_orders"
         android:textSize="14sp"/>
