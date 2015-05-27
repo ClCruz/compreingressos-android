@@ -109,34 +109,38 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     @Override
     protected void onResume() {
         super.onResume();
-        locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        try {
+            locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
 
-        hasLocationGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        hasLocationWifi = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            hasLocationGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            hasLocationWifi = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-        if (hasLocationGPS) {
-            if (location == null) {
-                try {
-                    getGPSLocation();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    getNetworkLocation();
+            if (hasLocationGPS) {
+                if (location == null) {
+                    try {
+                        getGPSLocation();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        getNetworkLocation();
+                    }
                 }
+
+
+            } else {
+                if (CompreIngressosApplication.getInstance().isDisplayDialogLocation) {
+                    CompreIngressosApplication.getInstance().setDisplayDialogLocation(false);
+                    Dialogs.showDialogLocation(this, this, getString(R.string.message_dialog_gps),
+                            getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative));
+                }
+
+                getNetworkLocation();
             }
 
-
-        } else {
-            if (CompreIngressosApplication.getInstance().isDisplayDialogLocation) {
-                CompreIngressosApplication.getInstance().setDisplayDialogLocation(false);
-                Dialogs.showDialogLocation(this, this, getString(R.string.message_dialog_gps),
-                        getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative));
+            if (location == null){
+                getNetworkLocation();
             }
-
-            getNetworkLocation();
-        }
-
-        if (location == null){
-            getNetworkLocation();
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
     }

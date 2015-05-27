@@ -81,14 +81,8 @@ public class EspetaculosAdapter extends RecyclerView.Adapter<EspetaculosAdapter.
             super(itemView);
 
             tituloView = (TextView) itemView.findViewById(R.id.txt_titulo);
-            tituloView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
-
             teatroView = (TextView) itemView.findViewById(R.id.txt_teatro);
-            teatroView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
-
             localView = (TextView) itemView.findViewById(R.id.txt_local);
-            localView.setTypeface(CustomTypeFace.setFontLora(itemView.getContext()));
-
             generoView = (TextView) itemView.findViewById(R.id.txt_genero);
             miniaturaView = (NetworkImageView) itemView.findViewById(R.id.img_miniatura);
 
