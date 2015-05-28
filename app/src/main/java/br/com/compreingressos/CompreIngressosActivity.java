@@ -159,13 +159,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     view.loadUrl(injectPromoCode());
                 }
 
-
-
-                if (url.contains("etapa4.php")){
-
-                    getCookies(url);
-
-                }
+                getCookies(url);
 
             }
 
@@ -297,17 +291,24 @@ public class CompreIngressosActivity extends ActionBarActivity {
         Map<String, String> mapCookies = new HashMap<String, String>();
         String[] arrayCookies = cookies.split(";");
 
-
         for (int i = 0; i < arrayCookies.length; i++) {
             String[] temp = arrayCookies[i].split("=");
             mapCookies.put(temp[0],temp[1]);
         }
 
-        Log.e(LOG_TAG, "cookie -----> " + mapCookies.get("user"));
-        Log.e(LOG_TAG, "cookie o -----> " + mapCookies.get(new String("user")));
+//        Log.e(LOG_TAG, "cookie -----> " + mapCookies.get("user"));
+//        Log.e(LOG_TAG, "cookie o -----> " + mapCookies.get(new String("user")));
 
         for (Object o : mapCookies.keySet()){
-            Log.e(LOG_TAG, "cookie -----> " + mapCookies.get(o.toString()));
+            Log.e(LOG_TAG, "cookie key -----> " + o.toString());
+
+            if (o.equals(new String("user"))){
+                Log.e(LOG_TAG, "cookie user -----> " + mapCookies.get(o.toString()));
+            }
+
+            if (o.toString().trim() == "user"){
+                Log.e(LOG_TAG, "cookie user ==-----> " + mapCookies.get(o.toString()));
+            }
         }
     }
 
