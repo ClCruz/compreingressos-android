@@ -14,7 +14,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.CookieSyncManager;
+import android.webkit.CookieManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -23,14 +23,8 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.net.CookieStore;
-import java.net.HttpCookie;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import br.com.compreingressos.interfaces.LoadDataResultFromWebviewListener;
 import br.com.compreingressos.utils.AndroidUtils;
@@ -168,20 +162,9 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
 
                 if (url.contains("etapa4.php")){
-                    CookieSyncManager syncManager = CookieSyncManager.createInstance(CompreIngressosActivity.this);
-                    syncManager.sync();
 
-                    CookieManager manager = new CookieManager();
-                    manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-                    CookieHandler.setDefault(manager);
+                    getCookies(url);
 
-
-                    CookieStore cookieJar = manager.getCookieStore();
-                    List<HttpCookie> cookies = cookieJar.getCookies();
-
-                    for (HttpCookie cookie: cookies) {
-                        Log.d("Cookie", "cookie name : "+cookie.getName().toString());
-                    }
                 }
 
             }
@@ -199,8 +182,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
                 Log.e("carregando ", "carregando ");
 
-//                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
-//                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
+                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
+                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
 
                 if (url.contains("etapa1.php")){
                     WebSettings webSettings = view.getSettings();
@@ -306,6 +289,27 @@ public class CompreIngressosActivity extends ActionBarActivity {
         }
     }
 
+    private void getCookies(String url) {
+        String cookies = CookieManager.getInstance().getCookie(url);
+        Log.e("-------- >>> ", "Cookies = " + cookies);
+
+
+        Map<String, String> mapCookies = new HashMap<String, String>();
+        String[] arrayCookies = cookies.split(";");
+
+
+        for (int i = 0; i < arrayCookies.length; i++) {
+            String[] temp = arrayCookies[i].split("=");
+            mapCookies.put(temp[0],temp[1]);
+        }
+
+        Log.e(LOG_TAG, "cookie -----> " + mapCookies.get("user"));
+        Log.e(LOG_TAG, "cookie o -----> " + mapCookies.get(new String("user")));
+
+        for (Object o : mapCookies.keySet()){
+            Log.e(LOG_TAG, "cookie -----> " + mapCookies.get(o.toString()));
+        }
+    }
 
 
     @Override
