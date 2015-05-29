@@ -165,6 +165,8 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     requestQueue = VolleySingleton.getInstance(context).getRequestQueue();
 
+//                    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, context.getString(R.string.url_mpassbook) + "v2/generate.json", OrderHelper.createJsonPeerTicket(order, ingresso), new Response.Listener<JSONObject>() {
+
                     JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, context.getString(R.string.url_mpassbook) + "generate.json", OrderHelper.createJsonPeerTicket(order, ingresso), new Response.Listener<JSONObject>() {
 
                         @Override

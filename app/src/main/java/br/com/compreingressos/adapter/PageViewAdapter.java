@@ -6,6 +6,7 @@ package br.com.compreingressos.adapter;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import android.database.DataSetObserver;
@@ -21,7 +22,7 @@ import br.com.compreingressos.model.Banner;
 public class PageViewAdapter extends FragmentStatePagerAdapter {
 
     private int mCount;
-    private List<Banner> mListBanners;
+    private List<Banner> mListBanners = Collections.emptyList();
     private FragmentManager fm = null;
     int mHeight;
     private static final String LOG_TAG = PageViewAdapter.class.getSimpleName();

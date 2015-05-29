@@ -2,11 +2,14 @@ package br.com.compreingressos.deserializer;
 
 import android.util.Log;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+
+import org.json.JSONArray;
 
 import java.lang.reflect.Type;
 import java.text.ParseException;
@@ -32,7 +35,6 @@ public class OrderDeserializer implements JsonDeserializer<Order> {
 
     @Override
     public Order deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-
         JsonObject obj = json.getAsJsonObject();
         Map.Entry<String, JsonElement> entry = obj.entrySet().iterator().next();
         if (entry == null) return null;
@@ -51,26 +53,28 @@ public class OrderDeserializer implements JsonDeserializer<Order> {
 
         order.setNumber(obj.get("number").getAsString());
         order.setDate(date);
-        order.setTotal(obj.get("total").getAsString());
+//        order.setTotal(obj.get("total").getAsString());
 
-        espetaculo.setTitulo(obj.get("espetaculo").getAsJsonObject().get("titulo").getAsString());
-        espetaculo.setTeatro(obj.get("espetaculo").getAsJsonObject().get("nome_teatro").getAsString());
-        espetaculo.setEndereco(obj.get("espetaculo").getAsJsonObject().get("endereco").getAsString());
-        espetaculo.setHorario(obj.get("espetaculo").getAsJsonObject().get("horario").getAsString());
+        espetaculo.setTitulo(obj.get("espetaculo").getAsJsonObject().get("titulo").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("titulo").getAsString());
+        espetaculo.setTeatro(obj.get("espetaculo").getAsJsonObject().get("nome_teatro").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("nome_teatro").getAsString());
+        espetaculo.setEndereco(obj.get("espetaculo").getAsJsonObject().get("endereco").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("endereco").getAsString());
+        espetaculo.setHorario(obj.get("espetaculo").getAsJsonObject().get("horario").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("horario").getAsString());
 
         order.setEspetaculo(espetaculo);
 
         List<Ingresso> ingressos = new ArrayList<>();
+        JsonArray ingressosArray = obj.getAsJsonArray("ingressos").getAsJsonArray();
 
-        for (int i = 0; i < obj.getAsJsonArray("ingressos").getAsJsonArray().size(); i++) {
+
+        for (int i = 0; i < ingressosArray.size(); i++) {
             Ingresso ingresso = new Ingresso();
 
-            ingresso.setQrcode(obj.getAsJsonArray("ingressos").get(i).getAsJsonObject().get("qrcode").getAsString());
-            ingresso.setLocal(obj.getAsJsonArray("ingressos").get(i).getAsJsonObject().get("local").getAsString());
-            ingresso.setType(obj.getAsJsonArray("ingressos").get(i).getAsJsonObject().get("type").getAsString());
-            ingresso.setPrice(obj.getAsJsonArray("ingressos").get(i).getAsJsonObject().get("price").getAsString());
-            ingresso.setService_price(obj.getAsJsonArray("ingressos").get(i).getAsJsonObject().get("service_price").getAsString());
-            ingresso.setTotal(obj.getAsJsonArray("ingressos").get(i).getAsJsonObject().get("total").getAsString());
+            ingresso.setQrcode(ingressosArray.get(i).getAsJsonObject().get("qrcode").isJsonNull() ? "" : ingressosArray.get(i).getAsJsonObject().get("qrcode").getAsString());
+            ingresso.setLocal(ingressosArray.get(i).getAsJsonObject().get("local").isJsonNull() ? "" : ingressosArray.get(i).getAsJsonObject().get("local").getAsString());
+            ingresso.setType(ingressosArray.get(i).getAsJsonObject().get("type").isJsonNull() ? "" : ingressosArray.get(i).getAsJsonObject().get("type").getAsString());
+            ingresso.setPrice(ingressosArray.get(i).getAsJsonObject().get("price").isJsonNull() ? "" : ingressosArray.get(i).getAsJsonObject().get("price").getAsString());
+            ingresso.setService_price(ingressosArray.get(i).getAsJsonObject().get("service_price").isJsonNull() ? "" : ingressosArray.get(i).getAsJsonObject().get("service_price").getAsString());
+            ingresso.setTotal(ingressosArray.get(i).getAsJsonObject().get("total").isJsonNull() ? "" : ingressosArray.get(i).getAsJsonObject().get("total").getAsString());
 
             ingressos.add(ingresso);
         }

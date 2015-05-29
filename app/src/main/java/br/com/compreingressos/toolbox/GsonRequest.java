@@ -1,10 +1,13 @@
 package br.com.compreingressos.toolbox;
 
+import android.util.Log;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,7 +17,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import br.com.compreingressos.deserializer.EspetaculoDeserializer;
+import br.com.compreingressos.deserializer.OrderDeserializer;
 import br.com.compreingressos.model.Espetaculo;
+import br.com.compreingressos.model.Order;
 
 /**
  * Created by luiszacheu on 02/04/15.
@@ -65,6 +70,7 @@ public class GsonRequest<T> extends Request<T> {
                 gsonBuilder.registerTypeAdapter(Espetaculo.class, new EspetaculoDeserializer());
             }
 
+            gsonBuilder.registerTypeAdapter(Order.class, new OrderDeserializer());
             gsonBuilder.serializeNulls();
 
             Gson gson = gsonBuilder.create();
@@ -75,5 +81,10 @@ public class GsonRequest<T> extends Request<T> {
         } catch (JsonSyntaxException e) {
             return Response.error(new ParseError(e));
         }
+    }
+
+    @Override
+    public RetryPolicy getRetryPolicy() {
+        return super.getRetryPolicy();
     }
 }
