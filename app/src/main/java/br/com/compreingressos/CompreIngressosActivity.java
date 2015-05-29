@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.interfaces.LoadDataResultFromWebviewListener;
 import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.WebAppInterface;
@@ -174,8 +175,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
 
-                Log.e("carregando ", "carregando ");
-
                 if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
                     url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
 
@@ -285,10 +284,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
     private void getCookies(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
-        Log.e("-------- >>> ", "Cookies = " + cookies);
-
-
-        Map<String, String> mapCookies = new HashMap<String, String>();
+        Map<String, String> mapCookies = new HashMap<>();
         String[] arrayCookies = cookies.split(";");
 
         for (int i = 0; i < arrayCookies.length; i++) {
@@ -296,19 +292,11 @@ public class CompreIngressosActivity extends ActionBarActivity {
             mapCookies.put(temp[0],temp[1]);
         }
 
-//        Log.e(LOG_TAG, "cookie -----> " + mapCookies.get("user"));
-//        Log.e(LOG_TAG, "cookie o -----> " + mapCookies.get(new String("user")));
-
         for (Object o : mapCookies.keySet()){
-            Log.e(LOG_TAG, "cookie key -----> " + o.toString());
-
-            if (o.equals(new String("user"))){
-                Log.e(LOG_TAG, "cookie user -----> " + mapCookies.get(o.toString()));
+            if (o.toString().contains("user")){
+                UserHelper.saveUserIdOnSharedPreferences(CompreIngressosActivity.this, mapCookies.get(o.toString()));
             }
 
-            if (o.toString().trim() == "user"){
-                Log.e(LOG_TAG, "cookie user ==-----> " + mapCookies.get(o.toString()));
-            }
         }
     }
 

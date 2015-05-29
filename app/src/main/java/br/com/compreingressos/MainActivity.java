@@ -28,6 +28,7 @@ import java.util.Map;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
 import br.com.compreingressos.helper.DatabaseHelper;
+import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.toolbox.GsonRequest;
@@ -103,6 +104,8 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
 
         t.enableAutoActivityTracking(true);
+
+        Log.e(LOG_TAG ,"client_id user -> " + UserHelper.retrieveUserIdOnSharedPreferences(MainActivity.this));
 
     }
 
