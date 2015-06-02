@@ -3,7 +3,9 @@ package br.com.compreingressos;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import br.com.compreingressos.adapter.OrderAdapter;
 import br.com.compreingressos.dao.OrderDao;
@@ -51,6 +54,7 @@ public class HistoryOrdersActivity extends ActionBarActivity {
     private OrderAdapter adapter;
     private RequestQueue requestQueue;
     private ProgressDialog progressDialog;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +76,16 @@ public class HistoryOrdersActivity extends ActionBarActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(HistoryOrdersActivity.this));
 
+        handler = new Handler();
+
         getOrdersFromDatabase();
 
         adapter = new OrderAdapter(HistoryOrdersActivity.this, orders);
 
         initRecyclerView();
+
+        requestQueue = VolleySingleton.getInstance(HistoryOrdersActivity.this).getRequestQueue();
+        startRequest();
 
     }
 
@@ -102,13 +111,14 @@ public class HistoryOrdersActivity extends ActionBarActivity {
             recyclerView.setVisibility(View.GONE);
             emptyHistory.setVisibility(View.VISIBLE);
         }
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        requestQueue = VolleySingleton.getInstance(HistoryOrdersActivity.this).getRequestQueue();
-        startRequest();
+
 
     }
 
@@ -142,34 +152,14 @@ public class HistoryOrdersActivity extends ActionBarActivity {
         return new Response.Listener<Order[]>() {
 
             @Override
-            public void onResponse(Order[] response) {
+            public void onResponse(final Order[] response) {
 
                 if (response != null){
-                    try {
-                        orderDao.delete(orderDao.queryForAll());
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+                    SaveOnDabaseAsyncTask saveOnDabaseAsyncTask = new SaveOnDabaseAsyncTask();
+                    saveOnDabaseAsyncTask.execute(response);
 
-                    for (int i = 0; i < response.length; i++) {
-                        Log.e(LOG_TAG, "---> " + response[i].toString());
-
-                        try {
-
-                            orderDao.create(response[i]);
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
                 }
-                Log.e("dsdssdsdsd", "dsdsddssd - " + orders.size());
 
-                getOrdersFromDatabase();
-                initRecyclerView();
-                adapter.updateList(orders);
-
-                progressDialog.dismiss();
             }
         };
     }
@@ -185,16 +175,62 @@ public class HistoryOrdersActivity extends ActionBarActivity {
     }
 
     private void startRequest() {
+//        String envHomol = "&env=homol";
+
         progressDialog = new ProgressDialog(HistoryOrdersActivity.this);
         progressDialog.setMessage("Aguarde...");
         progressDialog.show();
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
 
+
         GsonRequest<Order[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, "http://tokecompre-ci.herokuapp.com/tickets.json?client_id="+ UserHelper.retrieveUserIdOnSharedPreferences(HistoryOrdersActivity.this), Order[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
         jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         this.requestQueue.add(jsonObjRequest);
 
+    }
+
+
+    public class SaveOnDabaseAsyncTask extends AsyncTask<Order, Void, Boolean> {
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Order... params) {
+
+            try {
+                orderDao.delete(orderDao.queryForAll());
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+            for (int i = 0; i < params.length; i++) {
+                try {
+                    orderDao.create(params[i]);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+
+            getOrdersFromDatabase();
+            return true;
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+
+            if (aBoolean){
+                adapter.updateList(orders);
+                progressDialog.dismiss();
+                initRecyclerView();
+            }
+        }
     }
 
 }
