@@ -39,7 +39,7 @@ Thumbs.db.gradle
 .idea/gradle.xml
 
 *.jar
-libraries/viewpager_indicator/build/
+/libraries
 
 
 git
