@@ -1,6 +1,7 @@
 package br.com.compreingressos;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -49,7 +50,7 @@ public class HistoryOrdersActivity extends ActionBarActivity {
     private LinearLayout emptyHistory;
     private OrderAdapter adapter;
     private RequestQueue requestQueue;
-
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,7 @@ public class HistoryOrdersActivity extends ActionBarActivity {
         adapter = new OrderAdapter(HistoryOrdersActivity.this, orders);
 
         initRecyclerView();
+
     }
 
     private void getOrdersFromDatabase() {
@@ -163,10 +165,11 @@ public class HistoryOrdersActivity extends ActionBarActivity {
                 }
                 Log.e("dsdssdsdsd", "dsdsddssd - " + orders.size());
 
-                    getOrdersFromDatabase();
-                    initRecyclerView();
-                    adapter.updateList(orders);
+                getOrdersFromDatabase();
+                initRecyclerView();
+                adapter.updateList(orders);
 
+                progressDialog.dismiss();
             }
         };
     }
@@ -176,11 +179,15 @@ public class HistoryOrdersActivity extends ActionBarActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("-----> ", error.toString());
+                progressDialog.dismiss();
             }
         };
     }
 
     private void startRequest() {
+        progressDialog = new ProgressDialog(HistoryOrdersActivity.this);
+        progressDialog.setMessage("Aguarde...");
+        progressDialog.show();
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
 
