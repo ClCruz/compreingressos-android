@@ -175,8 +175,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
 
-                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
-                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
+//                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
+//                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
 
                 if (url.contains("etapa1.php")){
                     WebSettings webSettings = view.getSettings();
@@ -367,7 +367,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
         scriptGetInfoPayment.append("Android.getInfoPagamento(JSON.stringify(payload));");
         scriptGetInfoPayment.append("$('.imprima_agora').hide();");
 
-        Log.e("----> ", "" + scriptGetInfoPayment.toString());
         return scriptGetInfoPayment.toString();
     }
 
@@ -403,7 +402,11 @@ public class CompreIngressosActivity extends ActionBarActivity {
     }
 
     private String getUrlFromTokecompre(String mUrl){
-        return Uri.parse(mUrl).buildUpon().appendQueryParameter("app", "tokecompre").toString();
+        Uri.Builder urlResult =  Uri.parse(mUrl).buildUpon();
+
+        urlResult.appendQueryParameter("os", "android");
+        urlResult.appendQueryParameter("app", "tokecompre");
+        return urlResult.toString();
     }
 
 

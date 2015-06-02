@@ -33,8 +33,11 @@ import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.toolbox.GsonRequest;
 import br.com.compreingressos.toolbox.VolleySingleton;
+import br.com.compreingressos.utils.AndroidUtils;
+import br.com.compreingressos.utils.ConnectionUtils;
 import br.com.compreingressos.utils.DatabaseManager;
 import br.com.compreingressos.utils.Dialogs;
+import io.fabric.sdk.android.services.concurrency.internal.DefaultRetryPolicy;
 
 
 public class MainActivity extends ActionBarActivity implements LocationListener{
@@ -87,7 +90,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
                 Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
                 intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
                 intent.putExtra("latitude", "" + latitude);
-                intent.putExtra("longitude", ""+longitude);
+                intent.putExtra("longitude", "" + longitude);
 
                 startActivity(intent);
             }
@@ -105,7 +108,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
         t.enableAutoActivityTracking(true);
 
-        Log.e(LOG_TAG ,"client_id user -> " + UserHelper.retrieveUserIdOnSharedPreferences(MainActivity.this));
+        Log.e(LOG_TAG, "client_id user -> " + UserHelper.retrieveUserIdOnSharedPreferences(MainActivity.this));
 
     }
 
@@ -267,10 +270,28 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     }
 
     private void startRequest() {
+        StringBuilder urlwithParams = new StringBuilder(URL_VISORES);
+
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
 
-        GsonRequest<Banner[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, URL_VISORES, Banner[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
+        String con = "";
+        if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")){
+            con = "&con=wifi";
+        }else if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("mobile")){
+            con = "&con=wwan";
+        }
+
+        urlwithParams.append("?os=android");
+        urlwithParams.append(con);
+        urlwithParams.append("&width=" + AndroidUtils.getWidthScreen(MainActivity.this));
+
+
+        Log.e(LOG_TAG, urlwithParams.toString());
+
+
+        GsonRequest<Banner[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, urlwithParams.toString(), Banner[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
+        jsonObjRequest.setRetryPolicy(new com.android.volley.DefaultRetryPolicy(15000, com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES, com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         this.requestQueue.add(jsonObjRequest);
 
     }

@@ -50,6 +50,11 @@ public class AndroidUtils {
 
     }
 
+    public static int getWidthScreen(Context context){
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        return dm.widthPixels;
+    }
+
     public static boolean isPhablet(Context context){
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         int heightPixels = dm.heightPixels;

@@ -184,7 +184,7 @@ public class HistoryOrdersActivity extends ActionBarActivity {
         headers.put("Content-Type", "application/json");
 
 
-        GsonRequest<Order[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, "http://tokecompre-ci.herokuapp.com/tickets.json?client_id="+ UserHelper.retrieveUserIdOnSharedPreferences(HistoryOrdersActivity.this), Order[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
+        GsonRequest<Order[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, "http://tokecompre-ci.herokuapp.com/tickets.json?os=android&client_id="+ UserHelper.retrieveUserIdOnSharedPreferences(HistoryOrdersActivity.this), Order[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
         jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         this.requestQueue.add(jsonObjRequest);
 

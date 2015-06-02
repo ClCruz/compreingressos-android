@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -34,7 +35,6 @@ import br.com.compreingressos.toolbox.VolleySingleton;
 public class EspetaculosActivity extends ActionBarActivity {
 
     public static final String URL = "http://tokecompre-ci.herokuapp.com/espetaculos.json";
-    public static final String URL_WEBVIEW = "http://www.compreingressos.com/?app=tokecompre";
 
 //    Numero de colunas a ser mostrada na recyclerView
     public static final int COLUMN_NUMBER = 2;
@@ -153,17 +153,22 @@ public class EspetaculosActivity extends ActionBarActivity {
         headers.put("Content-Type", "application/json");
         StringBuilder urlCustom = new StringBuilder(URL);
 
+        urlCustom.append("?os=android");
+
         if (genero.contains("Perto de mim")){
-            urlCustom.append("?latitude=" + latitude + "&longitude="+longitude);
+            urlCustom.append("&latitude=" + latitude + "&longitude="+longitude);
         }else if (genero.contains("Shows")){
-            urlCustom.append("?genero=Show");
+            urlCustom.append("&genero=Show" + "&latitude=" + latitude + "&longitude="+longitude);
         }else if (genero.contains("Clássicos")){
-            urlCustom.append("?genero=Classicos");
+            urlCustom.append("&genero=Classicos"+"&latitude=" + latitude + "&longitude="+longitude);
         }else if (genero.contains("Teatros")){
-            urlCustom.append("?genero=Teatros");
+            urlCustom.append("&genero=Teatros"+"&latitude=" + latitude + "&longitude="+longitude);
         }
 
+
+
         GsonRequest<Espetaculos> jsonObjRequest = new GsonRequest<>(Request.Method.GET, urlCustom.toString(), Espetaculos.class, headers, this.createSuccessListener(), this.createErrorListener(), "yyyy-MM-dd");
+        jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         this.requestQueue.add(jsonObjRequest);
     }
 

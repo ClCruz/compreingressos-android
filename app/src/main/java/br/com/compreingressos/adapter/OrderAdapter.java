@@ -106,7 +106,6 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     public void updateList(List<Order> orders) {
-        Log.e(LOG_TAG, "->>>>>> " + orders.size());
         mListOrders = orders;
         notifyDataSetChanged();
     }
