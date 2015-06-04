@@ -3,7 +3,6 @@ package br.com.compreingressos;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -14,12 +13,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationServices;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.util.ArrayList;
@@ -37,17 +42,22 @@ import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.ConnectionUtils;
 import br.com.compreingressos.utils.DatabaseManager;
 import br.com.compreingressos.utils.Dialogs;
-import io.fabric.sdk.android.services.concurrency.internal.DefaultRetryPolicy;
 
 
-public class MainActivity extends ActionBarActivity implements LocationListener{
+public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener{
 
     public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/lista.json";
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    private LocationManager locationManager;
-    private Location location;
-    private boolean hasLocationGPS, hasLocationWifi;
+    private LocationManager mLocationManager;
+    private Location mLastLocation;
+    private boolean enableLocationGPS;
+
+    /**
+     * Provides the entry point to Google Play services.
+     */
+    protected GoogleApiClient mGoogleApiClient;
+
 
     private Toolbar toolbar;
 
@@ -64,17 +74,20 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     private double longitude;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar !=null){
+        if (toolbar != null) {
             toolbar.setTitle("");
             setSupportActionBar(toolbar);
         }
+
+        mLocationManager =  (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        buildGoogleApiClient();
 
         requestQueue = VolleySingleton.getInstance(this).getRequestQueue();
         startRequest();
@@ -87,6 +100,14 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         adapter.SetOnItemClickListener(new GeneroAdapter.OnItemClickListener() {
             @Override
             public void onClickListener(View v, int position) {
+                if (position == 0){
+                    enableLocationGPS = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                    if (!enableLocationGPS){
+                        Dialogs.showDialogLocation(MainActivity.this, MainActivity.this, getString(R.string.message_dialog_gps),
+                                getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative));
+                        return;
+                    }
+                }
                 Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
                 intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
                 intent.putExtra("latitude", "" + latitude);
@@ -113,71 +134,31 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        try {
-            locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-
-            hasLocationGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            hasLocationWifi = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-            if (hasLocationGPS) {
-                if (location == null) {
-                    try {
-                        getGPSLocation();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        getNetworkLocation();
-                    }
-                }
-
-
-            } else {
-                if (CompreIngressosApplication.getInstance().isDisplayDialogLocation) {
-                    CompreIngressosApplication.getInstance().setDisplayDialogLocation(false);
-                    Dialogs.showDialogLocation(this, this, getString(R.string.message_dialog_gps),
-                            getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative));
-                }
-
-                getNetworkLocation();
-            }
-
-            if (location == null){
-                getNetworkLocation();
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
     }
 
 
     @Override
     protected void onStop() {
         super.onStop();
-        locationManager.removeUpdates(this);
+        if (mGoogleApiClient.isConnected()){
+            mGoogleApiClient.disconnect();
+        }
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        locationManager.removeUpdates(this);
     }
 
-    public void getGPSLocation() {
-        String locationProvider = LocationManager.GPS_PROVIDER;
-        locationManager.requestLocationUpdates(locationProvider, 200, 0, this);
-
-        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-    }
-
-    public void getNetworkLocation() {
-        String locationProvider = LocationManager.NETWORK_PROVIDER;
-        locationManager.requestLocationUpdates(locationProvider, 0, 0, this);
-
-        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -193,7 +174,7 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
             Intent intent = new Intent(this, HistoryOrdersActivity.class);
             startActivity(intent);
             return true;
-        }else if (id == R.id.action_search){
+        } else if (id == R.id.action_search) {
             Intent intent = new Intent(this, SearchActivity.class);
             startActivity(intent);
             return true;
@@ -202,10 +183,10 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         return super.onOptionsItemSelected(item);
     }
 
-    public ArrayList<Genero> initGeneros(){
+    public ArrayList<Genero> initGeneros() {
         ArrayList<Genero> generos = new ArrayList<>();
         generos.add(new Genero("Perto de mim", R.drawable.perto_de_mim));
-        generos.add(new Genero("Shows",R.drawable.shows));
+        generos.add(new Genero("Shows", R.drawable.shows));
         generos.add(new Genero("Clássicos", R.drawable.classicos));
         generos.add(new Genero("Teatros", R.drawable.teatro));
         generos.add(new Genero("Muito mais", R.drawable.muito_mais));
@@ -214,35 +195,13 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         return generos;
     }
 
-
-    @Override
-    public void onLocationChanged(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
     private Response.Listener<Banner[]> createSuccessListener() {
         return new Response.Listener<Banner[]>() {
 
             @Override
             public void onResponse(Banner[] response) {
 
-                if (response != null){
+                if (response != null) {
                     for (int i = 0; i < response.length; i++) {
                         Banner banner = new Banner();
                         banner.setImagem(response[i].getImagem());
@@ -276,9 +235,9 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
         headers.put("Content-Type", "application/json");
 
         String con = "";
-        if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")){
+        if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")) {
             con = "&con=wifi";
-        }else if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("mobile")){
+        } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("mobile")) {
             con = "&con=wwan";
         }
 
@@ -296,8 +255,42 @@ public class MainActivity extends ActionBarActivity implements LocationListener{
 
     }
 
-    private ConnectionSource getConnectionSource(){
+    private ConnectionSource getConnectionSource() {
         return new DatabaseHelper(MainActivity.this).getConnectionSource();
+    }
+
+    /**  * Builds a GoogleApiClient. Uses the addApi() method to request the LocationServices API.  */
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+        if (mLastLocation != null){
+            longitude = mLastLocation.getLongitude();
+            latitude = mLastLocation.getLatitude();
+            Log.e(LOG_TAG, "long - " + longitude + " / " + "lat - " + latitude);
+        }
+    }
+
+
+    @Override
+    public void onConnectionFailed(ConnectionResult result) {
+        Log.i(LOG_TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+    }
+
+    @Override
+    public void onConnectionSuspended(int cause) {
+        Log.i(LOG_TAG, "Connection suspended");
+        mGoogleApiClient.connect();
     }
 
 

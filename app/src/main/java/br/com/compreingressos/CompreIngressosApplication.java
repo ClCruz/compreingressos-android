@@ -35,7 +35,6 @@ public class CompreIngressosApplication extends Application{
     public static final String YOUR_CLIENT_KEY = "PuVqOzx836qG4Ihv9rcy8kZNtsrU6yxTZJmfe4Uo";
 
     private static CompreIngressosApplication instance;
-    public boolean isDisplayDialogLocation = true;
 
     public static CompreIngressosApplication getInstance() {
 
@@ -58,14 +57,6 @@ public class CompreIngressosApplication extends Application{
         }
 
 
-    }
-
-    public boolean isDisplayDialogLocation() {
-        return isDisplayDialogLocation;
-    }
-
-    public void setDisplayDialogLocation(boolean isDisplayDialogLocation) {
-        this.isDisplayDialogLocation = isDisplayDialogLocation;
     }
 
     synchronized Tracker getTracker(TrackerName trackerId) {
