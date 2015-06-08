@@ -101,19 +101,19 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
             @Override
             public void onClickListener(View v, int position) {
                 if (position == 0){
+                    Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
+                    intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
+                    intent.putExtra("latitude", "" + latitude);
+                    intent.putExtra("longitude", "" + longitude);
                     enableLocationGPS = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                     if (!enableLocationGPS){
                         Dialogs.showDialogLocation(MainActivity.this, MainActivity.this, getString(R.string.message_dialog_gps),
-                                getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative));
-                        return;
+                                getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative), intent);
+
+                    }else {
+                        startActivity(intent);
                     }
                 }
-                Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
-                intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
-                intent.putExtra("latitude", "" + latitude);
-                intent.putExtra("longitude", "" + longitude);
-
-                startActivity(intent);
             }
         });
 
