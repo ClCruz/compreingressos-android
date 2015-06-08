@@ -14,6 +14,8 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -99,8 +101,12 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     public void updateBanners(ArrayList<Banner> banners){
-        if (banners != null)
+        try {
             ((MainBannerFragment) activity.getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(banners);
+        }catch (NullPointerException e){
+            Crashlytics.logException(e);
+        }
+
 
 
     }
