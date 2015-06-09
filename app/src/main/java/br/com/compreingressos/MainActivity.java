@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -113,6 +112,12 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
                     }else {
                         startActivity(intent);
                     }
+                }else{
+                    Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
+                    intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
+                    intent.putExtra("latitude", "" + latitude);
+                    intent.putExtra("longitude", "" + longitude);
+                    startActivity(intent);
                 }
             }
         });
