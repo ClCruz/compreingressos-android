@@ -51,7 +51,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private boolean hasSupportPinch = true;
     private String codePromo;
     public WebAppInterface webAppInterface;
-
+    boolean hasAssinatura = false;
 
 
 
@@ -120,6 +120,9 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
                 if (url.contains("pagamento_ok.php")){
                     if ( countReading  > 0 ){
+                        if (url.contains("assinaturas")){
+                            hasAssinatura = true;
+                        }
                         codePromo = "";
                         webView.setVisibility(View.GONE);
                         progressBar.setVisibility(View.VISIBLE);
@@ -129,13 +132,12 @@ public class CompreIngressosActivity extends ActionBarActivity {
                             @Override
                             public String finishLoadResultData(String resultData) {
                                 Intent intent = new Intent(CompreIngressosActivity.this, PaymentFinishedActivity.class);
+                                intent.putExtra("assinatura", hasAssinatura);
                                 startActivity(intent);
                                 finish();
                                 return resultData;
                             }
                         });
-
-
                     }
                     isFirstUrlLoading = false;
                     countReading ++;
@@ -144,7 +146,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 if (url.contains("etapa5.php")){
                     view.loadUrl("javascript:$(\".meu_codigo_cartao\").hide();");
                 }
-
 
                 if (url.contains("etapa1.php")){
                     if (PreferenceManager.getDefaultSharedPreferences(CompreIngressosActivity.this).getBoolean("show_pinch_screen", true)){

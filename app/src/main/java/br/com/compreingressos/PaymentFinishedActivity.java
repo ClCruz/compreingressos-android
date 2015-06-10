@@ -31,6 +31,7 @@ public class PaymentFinishedActivity extends ActionBarActivity {
     private DatabaseHelper databaseHelper;
     private OrderDao orderDao;
     private Order order;
+    private Boolean hasAssinatura = false;
 
 
     @Override
@@ -38,12 +39,17 @@ public class PaymentFinishedActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_finished);
 
+        if (getIntent().hasExtra("assinatura"))
+            hasAssinatura = getIntent().getBooleanExtra("assinatura", false);
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar !=null){
             toolbar.setTitle("");
             toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
+//            toolbar.setBackgroundColor(getResources().getColor(R.color.red_compreingressos));
             setSupportActionBar(toolbar);
             getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         }
 
@@ -83,6 +89,9 @@ public class PaymentFinishedActivity extends ActionBarActivity {
                 finish();
             }
         });
+
+        if (hasAssinatura)
+            btnVerIngressos.setVisibility(View.GONE);
     }
 
     @Override
@@ -90,6 +99,7 @@ public class PaymentFinishedActivity extends ActionBarActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 Intent homeIntent = new Intent(PaymentFinishedActivity.this, MainActivity.class);
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(homeIntent);
                 finish();
                 return true;
