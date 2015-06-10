@@ -135,8 +135,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         t.enableAutoActivityTracking(true);
         t.setScreenName(ConstantsGoogleAnalytics.HOME);
 
-        Log.e(LOG_TAG, "client_id user -> " + UserHelper.retrieveUserIdOnSharedPreferences(MainActivity.this));
-
     }
 
     @Override
@@ -251,10 +249,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         urlwithParams.append(con);
         urlwithParams.append("&width=" + AndroidUtils.getWidthScreen(MainActivity.this));
 
-
-        Log.e(LOG_TAG, urlwithParams.toString());
-
-
         GsonRequest<Banner[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, urlwithParams.toString(), Banner[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
         jsonObjRequest.setRetryPolicy(new com.android.volley.DefaultRetryPolicy(15000, com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES, com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         this.requestQueue.add(jsonObjRequest);
@@ -283,7 +277,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         if (mLastLocation != null){
             longitude = mLastLocation.getLongitude();
             latitude = mLastLocation.getLatitude();
-            Log.e(LOG_TAG, "long - " + longitude + " / " + "lat - " + latitude);
         }
     }
 

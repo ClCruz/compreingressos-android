@@ -10,14 +10,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import br.com.compreingressos.CompreIngressosActivity;
 import br.com.compreingressos.R;
 import br.com.compreingressos.model.Banner;
-import br.com.compreingressos.toolbox.VolleySingleton;
 
 /**
  * Created by luiszacheu on 08/04/15.
@@ -66,7 +64,6 @@ public class BannerFragment extends Fragment {
 
                     @Override
                     public void onError() {
-//                        progressBar.setVisibility(View.GONE);
                     }
                 });
 

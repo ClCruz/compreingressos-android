@@ -39,9 +39,6 @@ public class ParseReceiver extends ParsePushBroadcastReceiver {
             JSONObject jObject;
 
             jObject = new JSONObject(message);
-            Log.e("Push", jObject.getString("alert"));
-            Log.e("Push", jObject.getString("u"));
-            Log.e("Push", jObject.getString("c"));
             title = jObject.getString("alert");
             try {
                 url = jObject.getString("u");

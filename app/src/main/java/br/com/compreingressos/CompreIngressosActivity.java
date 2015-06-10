@@ -224,7 +224,13 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
-                webView.setVisibility(View.GONE);
+                if (url.contains("espetaculos")) {
+                    webView.setVisibility(View.VISIBLE);
+                }else{
+                    webView.setVisibility(View.GONE);
+                }
+
+
                 progressBar.setVisibility(View.VISIBLE);
 
                 hideNextButton();
@@ -256,7 +262,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     hideNextButton();
                 }else if (url.contains("espetaculos/")){
                     if (tituloEspetaculo.equals("Destaque")){
-                        Log.e(LOG_TAG, "entrou aqui no destaque");
                         mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_DESTAQUE);
                     }else{
                         mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_ESPETACULO);
@@ -305,7 +310,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private void getCookies(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
         Map<String, String> mapCookies = new HashMap<>();
-        Log.e(LOG_TAG, " cookie -> " + cookies);
         try {
             String[] arrayCookies = cookies.split(";");
 

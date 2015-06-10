@@ -5,12 +5,10 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.viewpagerindicator.CirclePageIndicator;
@@ -31,7 +29,6 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     ViewPager mPager;
     CirclePageIndicator mIndicator;
     FrameLayout viewBanner;
-    ProgressBar progressBar;
 
     private Handler handler = new Handler();
     private Runnable runnable;
@@ -44,7 +41,6 @@ public class MainBannerFragment extends Fragment implements BannerListener {
         mPager = (ViewPager) rootView.findViewById(R.id.pager);
         mIndicator = (CirclePageIndicator) rootView.findViewById(R.id.indicator);
         viewBanner = (FrameLayout) rootView.findViewById(R.id.view_banner);
-//        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
         return rootView;
     }
