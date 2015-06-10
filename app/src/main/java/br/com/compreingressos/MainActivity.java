@@ -190,11 +190,11 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
     public ArrayList<Genero> initGeneros() {
         ArrayList<Genero> generos = new ArrayList<>();
-        generos.add(new Genero("Perto de mim", R.drawable.perto_de_mim));
-        generos.add(new Genero("Shows", R.drawable.shows));
-        generos.add(new Genero("Clássicos", R.drawable.classicos));
-        generos.add(new Genero("Teatros", R.drawable.teatro));
-        generos.add(new Genero("Muito mais", R.drawable.muito_mais));
+        generos.add(new Genero("Perto de mim", R.drawable.ic_classico));
+        generos.add(new Genero("Shows", R.drawable.ic_classico));
+        generos.add(new Genero("Clássicos", R.drawable.ic_classico));
+        generos.add(new Genero("Teatros", R.drawable.ic_classico));
+        generos.add(new Genero("Muito mais", R.drawable.ic_classico));
 
 
         return generos;

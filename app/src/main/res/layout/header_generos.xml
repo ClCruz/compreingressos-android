@@ -9,6 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
 
-        android:background="#FFFFFF"></RelativeLayout>
+        android:background="@color/red_compreingressos"></RelativeLayout>
 
 </LinearLayout>

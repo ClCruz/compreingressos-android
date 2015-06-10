@@ -1,6 +1,7 @@
 package br.com.compreingressos.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
@@ -86,7 +87,7 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Genero genero = getItem(position);
             ((ViewHolderItem) viewHolder).nomeView.setText(genero.getNome());
             ((ViewHolderItem) viewHolder).coverView.setBackgroundResource(genero.getCover());
-            ((ViewHolderItem) viewHolder).coverView.setPadding(0, 10, 0, 0);
+//            ((ViewHolderItem) viewHolder).coverView.setPadding(0, 10, 0, 0);
 
         }
 
