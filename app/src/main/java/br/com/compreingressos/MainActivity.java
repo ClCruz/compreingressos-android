@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
+import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.model.Banner;
@@ -99,20 +100,20 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         adapter.SetOnItemClickListener(new GeneroAdapter.OnItemClickListener() {
             @Override
             public void onClickListener(View v, int position) {
-                if (position == 0){
+                if (position == 0) {
                     Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
                     intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
                     intent.putExtra("latitude", "" + latitude);
                     intent.putExtra("longitude", "" + longitude);
                     enableLocationGPS = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                    if (!enableLocationGPS){
+                    if (!enableLocationGPS) {
                         Dialogs.showDialogLocation(MainActivity.this, MainActivity.this, getString(R.string.message_dialog_gps),
                                 getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative), intent);
 
-                    }else {
+                    } else {
                         startActivity(intent);
                     }
-                }else{
+                } else {
                     Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
                     intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
                     intent.putExtra("latitude", "" + latitude);
@@ -131,8 +132,8 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         DatabaseManager.init(this);
 
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-
         t.enableAutoActivityTracking(true);
+        t.setScreenName(ConstantsGoogleAnalytics.HOME);
 
         Log.e(LOG_TAG, "client_id user -> " + UserHelper.retrieveUserIdOnSharedPreferences(MainActivity.this));
 

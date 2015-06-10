@@ -16,12 +16,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import br.com.compreingressos.adapter.EspetaculosAdapter;
+import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.decoration.DividerItemDecoration;
 import br.com.compreingressos.interfaces.OnItemClickListener;
 import br.com.compreingressos.model.Espetaculo;
@@ -57,6 +59,7 @@ public class EspetaculosActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_espetaculos);
 
+
         if (getIntent().hasExtra("genero")){
             genero = getIntent().getStringExtra("genero");
         }
@@ -74,6 +77,11 @@ public class EspetaculosActivity extends ActionBarActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
+        t.enableAutoActivityTracking(true);
+        t.setScreenName(ConstantsGoogleAnalytics.ESPETACULOS.replace("<#>", genero));
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_espetaculos);
         recyclerView.addItemDecoration(new DividerItemDecoration(this));
         recyclerView.setHasFixedSize(true);

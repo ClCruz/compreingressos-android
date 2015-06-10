@@ -9,11 +9,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.gms.analytics.Tracker;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.dao.OrderDao;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.ParseHelper;
@@ -45,9 +47,11 @@ public class PaymentFinishedActivity extends ActionBarActivity {
 
         }
 
+        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
+        t.enableAutoActivityTracking(true);
+        t.setScreenName(ConstantsGoogleAnalytics.FINALIZACAO_PAGAMENTO);
+
         databaseHelper =  new DatabaseHelper(PaymentFinishedActivity.this);
-
-
 
         btnVerIngressos = (Button) findViewById(R.id.btn_ver_ingressos);
         btnVerIngressos.setOnClickListener(new View.OnClickListener() {
@@ -59,14 +63,6 @@ public class PaymentFinishedActivity extends ActionBarActivity {
                     QueryBuilder<Order, Integer> qb = orderDao.queryBuilder();
                     qb.orderBy("id", false);
                     order = orderDao.queryForFirst(qb.prepare());
-
-//                    int id = -1;
-//                    if (order == null){
-//                        id = -1;
-//                    }else{
-//                        id = order.getId();
-//                    }
-
                     order.setIngressos(new ArrayList<>(order.getIngressosCollection()));
 
                 } catch (SQLException e) {
