@@ -23,6 +23,8 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -175,8 +177,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
 
-//                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
-//                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
+                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
+                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
 
                 if (url.contains("etapa1.php")){
                     WebSettings webSettings = view.getSettings();
@@ -285,12 +287,21 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private void getCookies(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
         Map<String, String> mapCookies = new HashMap<>();
-        String[] arrayCookies = cookies.split(";");
+        Log.e(LOG_TAG, " cookie -> " + cookies);
+        try {
+            String[] arrayCookies = cookies.split(";");
 
-        for (int i = 0; i < arrayCookies.length; i++) {
-            String[] temp = arrayCookies[i].split("=");
-            mapCookies.put(temp[0],temp[1]);
+            for (int i = 0; i < arrayCookies.length; i++) {
+                String[] temp = arrayCookies[i].split("=");
+                mapCookies.put(temp[0],temp[1]);
+            }
+
+        }catch (Exception e){
+            Crashlytics.log(cookies);
+            Crashlytics.logException(e);
         }
+
+
 
         for (Object o : mapCookies.keySet()){
             if (o.toString().contains("user")){
