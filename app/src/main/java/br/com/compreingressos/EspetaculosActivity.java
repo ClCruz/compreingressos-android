@@ -150,7 +150,7 @@ public class EspetaculosActivity extends ActionBarActivity {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(EspetaculosActivity.this, "Houve um erro!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EspetaculosActivity.this, getResources().getString(R.string.message_sem_conexao), Toast.LENGTH_SHORT).show();
             }
         };
     }

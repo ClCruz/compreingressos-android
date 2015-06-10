@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,7 +34,6 @@ import java.util.Map;
 import br.com.compreingressos.adapter.GeneroAdapter;
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.helper.DatabaseHelper;
-import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.toolbox.GsonRequest;
@@ -239,10 +239,15 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         headers.put("Content-Type", "application/json");
 
         String con = "";
-        if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")) {
-            con = "&con=wifi";
-        } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("mobile")) {
-            con = "&con=wwan";
+
+        try {
+            if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")) {
+                con = "&con=wifi";
+            } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("mobile")) {
+                con = "&con=wwan";
+            }
+        }catch (Exception e){
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.message_sem_conexao), Toast.LENGTH_SHORT).show();
         }
 
         urlwithParams.append("?os=android");
