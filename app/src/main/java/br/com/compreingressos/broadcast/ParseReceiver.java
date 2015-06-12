@@ -30,8 +30,6 @@ public class ParseReceiver extends ParsePushBroadcastReceiver {
 
     @Override
     public void onPushOpen(Context context, Intent intent) {
-        Log.e("Push", "Clicked");
-
         try {
             Bundle extras = intent.getExtras();
 
