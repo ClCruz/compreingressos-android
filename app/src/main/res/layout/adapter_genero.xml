@@ -2,36 +2,52 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/red_compreingressos"
+   android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center">
-        <ImageView
-            android:id="@+id/img_cover"
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_classico" />
-        <TextView
-            android:id="@+id/txt_nome"
-            android:layout_width="match_parent"
+            android:layout_weight="0.40"
+            android:gravity="right">
+
+            <ImageView
+                android:id="@+id/img_cover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/image_description" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:drawablePadding="5dp"
-            android:gravity="left|center"
-            android:padding="5dp"
-            android:text="sasasss"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:layout_gravity="left"
+            android:layout_weight="0.60">
+
+            <TextView
+                android:id="@+id/txt_nome"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|left"
+                android:gravity="left"
+                android:padding="3dp"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="0.75dp"
-        android:layout_margin="10dp"
-        android:background="@color/white"></View>
+        android:layout_height="1dp"
+        android:background="@drawable/line_genero"></View>
 </LinearLayout>
 
 

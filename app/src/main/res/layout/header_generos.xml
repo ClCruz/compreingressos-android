@@ -7,8 +7,6 @@
     <RelativeLayout
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-
-        android:background="@color/red_compreingressos"></RelativeLayout>
+        android:layout_height="220dp"></RelativeLayout>
 
 </LinearLayout>

@@ -125,7 +125,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
         mRecyclerView.setAdapter(adapter);
 
         DatabaseManager.init(this);
@@ -190,11 +189,11 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
     public ArrayList<Genero> initGeneros() {
         ArrayList<Genero> generos = new ArrayList<>();
-        generos.add(new Genero("Perto de mim", R.drawable.ic_classico));
-        generos.add(new Genero("Shows", R.drawable.ic_classico));
+        generos.add(new Genero("Perto de mim", R.drawable.ic_perto_de_mim));
+        generos.add(new Genero("Shows", R.drawable.ic_show));
         generos.add(new Genero("Clássicos", R.drawable.ic_classico));
-        generos.add(new Genero("Teatros", R.drawable.ic_classico));
-        generos.add(new Genero("Muito mais", R.drawable.ic_classico));
+        generos.add(new Genero("Teatros", R.drawable.ic_teatro));
+        generos.add(new Genero("Muito mais", R.drawable.ic_muito_mais));
 
 
         return generos;

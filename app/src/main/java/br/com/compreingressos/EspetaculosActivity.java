@@ -75,7 +75,7 @@ public class EspetaculosActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_espetaculos);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this));
+//        recyclerView.addItemDecoration(new DividerItemDecoration(this));
         recyclerView.setHasFixedSize(true);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(EspetaculosActivity.this, COLUMN_NUMBER);

@@ -16,8 +16,7 @@
 
     <string name="message_erro_envio_passwallet">Não foi possivel enviar para o PassWallet</string>
     <string name="url_mpassbook">http://mpassbook.herokuapp.com/passes/</string>
-
-
+    <string name="image_description">Imagem</string>
 
 
 </resources>

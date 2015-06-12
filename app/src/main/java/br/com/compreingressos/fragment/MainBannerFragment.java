@@ -44,7 +44,6 @@ public class MainBannerFragment extends Fragment implements BannerListener {
         mPager = (ViewPager) rootView.findViewById(R.id.pager);
         mIndicator = (CirclePageIndicator) rootView.findViewById(R.id.indicator);
         viewBanner = (FrameLayout) rootView.findViewById(R.id.view_banner);
-//        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
 
         return rootView;
     }
