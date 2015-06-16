@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
+import br.com.compreingressos.decoration.DividerItemDecoration;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.model.Banner;
@@ -125,6 +126,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this));
         mRecyclerView.setAdapter(adapter);
 
         DatabaseManager.init(this);

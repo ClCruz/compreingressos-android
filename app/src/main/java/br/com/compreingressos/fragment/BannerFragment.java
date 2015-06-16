@@ -1,6 +1,8 @@
 package br.com.compreingressos.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +15,8 @@ import android.widget.ProgressBar;
 import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+import com.squareup.picasso.Transformation;
 
 import br.com.compreingressos.CompreIngressosActivity;
 import br.com.compreingressos.R;
@@ -56,19 +60,41 @@ public class BannerFragment extends Fragment {
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
         imgBanner = (ImageView) rootView.findViewById(R.id.imageView);
 
-        Picasso.with(getActivity())
-                .load(banner.getImagem())
-                .into(imgBanner, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        progressBar.setVisibility(View.GONE);
-                    }
+        Transformation transformation = new Transformation() {
 
-                    @Override
-                    public void onError() {
-//                        progressBar.setVisibility(View.GONE);
-                    }
-                });
+            @Override public Bitmap transform(Bitmap source) {
+                int targetWidth = imgBanner.getWidth();
+
+                double aspectRatio = (double) source.getHeight() / (double) source.getWidth();
+                int targetHeight = (int) (targetWidth * aspectRatio);
+                Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
+                if (result != source) {
+                    // Same bitmap is returned if sizes are the same
+                    source.recycle();
+                }
+                return result;
+            }
+
+            @Override public String key() {
+                return "transformation" + " desiredWidth";
+            }
+        };
+
+
+        Picasso.with(getActivity())
+            .load(banner.getImagem())
+            .into(imgBanner, new Callback() {
+                @Override
+                public void onSuccess() {
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onError() {
+//                  progressBar.setVisibility(View.GONE);
+                }
+            });
+
 
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override

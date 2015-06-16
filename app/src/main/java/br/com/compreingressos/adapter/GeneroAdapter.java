@@ -71,7 +71,7 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_genero, viewGroup, false);
 
-            DisplayMetrics dm = context.getResources().getDisplayMetrics();
+//            DisplayMetrics dm = context.getResources().getDisplayMetrics();
 
 
             return new ViewHolderItem(v);
@@ -87,10 +87,6 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             Genero genero = getItem(position);
             ((ViewHolderItem) viewHolder).nomeView.setText(genero.getNome());
             ((ViewHolderItem) viewHolder).coverView.setBackgroundResource(genero.getCover());
-
-            if (position == mListGeneros.size()){
-                ((ViewHolderItem) viewHolder).dividerView.setVisibility(View.GONE);
-            }
         }
 
     }
@@ -138,12 +134,10 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public class ViewHolderItem extends RecyclerView.ViewHolder {
         public TextView nomeView;
         public ImageView coverView;
-        public View dividerView;
 
         public ViewHolderItem(View itemView) {
             super(itemView);
             nomeView = (TextView) itemView.findViewById(R.id.txt_nome);
-            dividerView = (View) itemView.findViewById(R.id.divider);
 
             coverView = (ImageView) itemView.findViewById(R.id.img_cover);
             itemView.setOnClickListener(new View.OnClickListener(){
