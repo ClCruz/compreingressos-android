@@ -11,7 +11,12 @@ public class ConnectionUtils {
 
     public static String getTypeNameConnection(Context context) {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        return connManager.getActiveNetworkInfo().getTypeName();
+
+        try {
+            return connManager.getActiveNetworkInfo().getTypeName();
+        }catch (Exception e){
+            return "";
+        }
     }
 
 

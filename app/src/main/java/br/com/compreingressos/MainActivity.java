@@ -2,6 +2,7 @@ package br.com.compreingressos;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
+import br.com.compreingressos.broadcast.NetworkStateReceiver;
 import br.com.compreingressos.decoration.DividerItemDecoration;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.UserHelper;
@@ -44,7 +46,7 @@ import br.com.compreingressos.utils.DatabaseManager;
 import br.com.compreingressos.utils.Dialogs;
 
 
-public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener{
+public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener, NetworkStateReceiver.NetworkStateReceiverListener {
 
     public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/lista.json";
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -74,6 +76,8 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
     private double longitude;
 
 
+    private NetworkStateReceiver networkStateReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +88,9 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
             toolbar.setTitle("");
             setSupportActionBar(toolbar);
         }
+
+        networkStateReceiver = new NetworkStateReceiver(MainActivity.this);
+        networkStateReceiver.addListener(this);
 
         mLocationManager =  (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -141,22 +148,28 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
     @Override
     protected void onStart() {
-        super.onStart();
         mGoogleApiClient.connect();
+        super.onStart();
     }
 
     @Override
     protected void onResume() {
+        this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
         super.onResume();
     }
 
+    @Override
+    protected void onPause() {
+        this.unregisterReceiver(networkStateReceiver);
+        super.onPause();
+    }
 
     @Override
     protected void onStop() {
-        super.onStop();
         if (mGoogleApiClient.isConnected()){
             mGoogleApiClient.disconnect();
         }
+        super.onStop();
 
     }
 
@@ -299,5 +312,13 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         mGoogleApiClient.connect();
     }
 
+    @Override
+    public void onNetworkAvailable() {
+        Log.d("--->>", "I'm in, baby!");
+    }
 
+    @Override
+    public void onNetworkUnavailable() {
+        Log.d("--->>>", "I'm dancing with myself");
+    }
 }
