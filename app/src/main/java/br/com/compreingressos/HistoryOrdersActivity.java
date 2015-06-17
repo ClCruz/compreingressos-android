@@ -20,6 +20,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.analytics.Tracker;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import br.com.compreingressos.adapter.OrderAdapter;
+import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.dao.OrderDao;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.UserHelper;
@@ -69,6 +71,10 @@ public class HistoryOrdersActivity extends ActionBarActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
+        t.enableAutoActivityTracking(true);
+        t.setScreenName(ConstantsGoogleAnalytics.MEUS_INGRESSOS);
 
         emptyHistory = (LinearLayout) findViewById(R.id.empty_history);
 

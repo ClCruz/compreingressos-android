@@ -48,9 +48,6 @@ public class WebAppInterface {
             e.printStackTrace();
         }
 
-
-
-        Log.e("WebApp", "" + resultJson);
         try {
             orderDao.create(OrderHelper.loadOrderFromJSON(resultJson));
             print(resultJson);
@@ -60,24 +57,6 @@ public class WebAppInterface {
         }
         print(resultJson);
     }
-
-//    private boolean gravar(Order order) throws SQLException {
-//        databaseHelper =  new DatabaseHelper(context);
-//
-//        try {
-//            orderDao = new OrderDao(databaseHelper.getConnectionSource());
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//        int x = 0;
-//
-//        //create é o insert do objeto no bd, retorna  a qtd de linhas inseridas
-//        x = orderDao.create(order);
-//
-//        return x > 0;
-//    }
 
     public void setHelloInterface(LoadDataResultFromWebviewListener listener){
         loadDataResultFromWebviewListener=listener;

@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import com.android.volley.toolbox.NetworkImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -21,7 +20,6 @@ import com.squareup.picasso.Transformation;
 import br.com.compreingressos.CompreIngressosActivity;
 import br.com.compreingressos.R;
 import br.com.compreingressos.model.Banner;
-import br.com.compreingressos.toolbox.VolleySingleton;
 
 /**
  * Created by luiszacheu on 08/04/15.
@@ -101,7 +99,7 @@ public class BannerFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CompreIngressosActivity.class);
                 intent.putExtra("u", banner.getUrl());
-                intent.putExtra("titulo_espetaculo", "Espetaculo");
+                intent.putExtra("titulo_espetaculo", "Destaque");
                 startActivity(intent);
             }
         });

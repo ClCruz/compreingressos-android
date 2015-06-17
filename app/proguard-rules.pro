@@ -137,3 +137,6 @@
 -keep class * extends java.util.ListResourceBundle {
         protected Object[][] getContents();
 }
+
+-dontwarn com.parse.**
+-keep class com.parse.** { *; }

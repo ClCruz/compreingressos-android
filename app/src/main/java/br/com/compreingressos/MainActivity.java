@@ -14,8 +14,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -36,8 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
-import br.com.compreingressos.broadcast.NetworkStateReceiver;
-import br.com.compreingressos.decoration.DividerItemDecoration;
+import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.model.Banner;
@@ -50,7 +47,7 @@ import br.com.compreingressos.utils.DatabaseManager;
 import br.com.compreingressos.utils.Dialogs;
 
 
-public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener {
+public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener{
 
     public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/lista.json";
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -87,7 +84,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         setContentView(R.layout.activity_main);
         mContainer = (RelativeLayout) findViewById(R.id.container);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_generos);
-
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -148,8 +144,14 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this));
+
         mRecyclerView.setAdapter(adapter);
+
+        DatabaseManager.init(this);
+
+        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
+        t.enableAutoActivityTracking(true);
+        t.setScreenName(ConstantsGoogleAnalytics.HOME);
 
     }
 
@@ -260,19 +262,20 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         headers.put("Content-Type", "application/json");
 
         String con = "";
-        if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")) {
-            con = "&con=wifi";
-        } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("mobile")) {
-            con = "&con=wwan";
+
+        try {
+            if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")) {
+                con = "&con=wifi";
+            } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("mobile")) {
+                con = "&con=wwan";
+            }
+        }catch (Exception e){
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.message_sem_conexao), Toast.LENGTH_SHORT).show();
         }
 
         urlwithParams.append("?os=android");
         urlwithParams.append(con);
         urlwithParams.append("&width=" + AndroidUtils.getWidthScreen(MainActivity.this));
-
-
-        Log.e(LOG_TAG, urlwithParams.toString());
-
 
         GsonRequest<Banner[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, urlwithParams.toString(), Banner[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
         jsonObjRequest.setRetryPolicy(new com.android.volley.DefaultRetryPolicy(15000, com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES, com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
@@ -284,7 +287,9 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         return new DatabaseHelper(MainActivity.this).getConnectionSource();
     }
 
-    /**  * Builds a GoogleApiClient. Uses the addApi() method to request the LocationServices API.  */
+    /**
+ * Builds a GoogleApiClient. Uses the addApi() method to request the LocationServices API.
+ */
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -302,7 +307,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         if (mLastLocation != null){
             longitude = mLastLocation.getLongitude();
             latitude = mLastLocation.getLatitude();
-            Log.e(LOG_TAG, "long - " + longitude + " / " + "lat - " + latitude);
         }
     }
 

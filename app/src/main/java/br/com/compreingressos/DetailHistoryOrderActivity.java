@@ -8,19 +8,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.gms.analytics.Tracker;
 
-import br.com.compreingressos.adapter.GeneroAdapter;
 import br.com.compreingressos.adapter.OrderDetailAdapter;
+import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.interfaces.OnItemClickListener;
-import br.com.compreingressos.model.Ingresso;
 import br.com.compreingressos.model.Order;
 
 /**
@@ -72,6 +67,10 @@ public class DetailHistoryOrderActivity extends ActionBarActivity {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }
+
+        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
+        t.enableAutoActivityTracking(true);
+        t.setScreenName(ConstantsGoogleAnalytics.DETALHE_INGRESSO);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tickts);
         recyclerView.setHasFixedSize(true);

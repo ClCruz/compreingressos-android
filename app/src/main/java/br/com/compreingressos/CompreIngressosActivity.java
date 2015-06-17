@@ -23,9 +23,13 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.analytics.Tracker;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.interfaces.LoadDataResultFromWebviewListener;
 import br.com.compreingressos.utils.AndroidUtils;
@@ -47,7 +51,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private boolean hasSupportPinch = true;
     private String codePromo;
     public WebAppInterface webAppInterface;
-
+    boolean hasAssinatura = false;
 
 
 
@@ -116,6 +120,9 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
                 if (url.contains("pagamento_ok.php")){
                     if ( countReading  > 0 ){
+                        if (url.contains("assinaturas")){
+                            hasAssinatura = true;
+                        }
                         codePromo = "";
                         webView.setVisibility(View.GONE);
                         progressBar.setVisibility(View.VISIBLE);
@@ -125,13 +132,12 @@ public class CompreIngressosActivity extends ActionBarActivity {
                             @Override
                             public String finishLoadResultData(String resultData) {
                                 Intent intent = new Intent(CompreIngressosActivity.this, PaymentFinishedActivity.class);
+                                intent.putExtra("assinatura", hasAssinatura);
                                 startActivity(intent);
                                 finish();
                                 return resultData;
                             }
                         });
-
-
                     }
                     isFirstUrlLoading = false;
                     countReading ++;
@@ -140,7 +146,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 if (url.contains("etapa5.php")){
                     view.loadUrl("javascript:$(\".meu_codigo_cartao\").hide();");
                 }
-
 
                 if (url.contains("etapa1.php")){
                     if (PreferenceManager.getDefaultSharedPreferences(CompreIngressosActivity.this).getBoolean("show_pinch_screen", true)){
@@ -219,32 +224,52 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
-                webView.setVisibility(View.GONE);
+                if (url.contains("espetaculos")) {
+                    webView.setVisibility(View.VISIBLE);
+                }else{
+                    webView.setVisibility(View.GONE);
+                }
+
+
                 progressBar.setVisibility(View.VISIBLE);
 
                 hideNextButton();
 
                 if (url.contains("etapa1.php")){
+                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_SEUINGRESSO);
                     toolbar.setTitle("Escolha um assento");
                     showNextButton();
                 }else if (url.contains("etapa2.php")){
+                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_TIPO_INGRESSO);
                     showNextButton();
                     toolbar.setTitle("Tipo de ingresso");
                 }else if (url.contains("etapa3.php")){
+                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_LOGIN);
                     hideNextButton();
                     toolbar.setTitle("Login");
                 }else if (url.contains("etapa4.php")){
+                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_CONFIRMACAO);
                     showNextButton();
                     toolbar.setTitle("Confirmação");
                 }else if (url.contains("etapa5.php")){
+                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_PAGAMENTO);
                     showNextButton();
                     toolbar.setTitle("Pagamento");
                     btnAvancar.setText("Pagar");
                 }else if (url.contains("pagamento_ok.php")){
+                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_FINAL_PAGAMENTO);
                     toolbar.setTitle("Compra Finalizada");
                     hideNextButton();
                 }else if (url.contains("espetaculos/")){
+                    if (tituloEspetaculo.equals("Destaque")){
+                        mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_DESTAQUE);
+                    }else{
+                        mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_ESPETACULO);
+                    }
+
                     toolbar.setTitle(tituloEspetaculo);
+                }else if (url.contains("assinatura")){
+                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_ASSINATURAS);
                 }
 
             }
@@ -285,12 +310,20 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private void getCookies(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
         Map<String, String> mapCookies = new HashMap<>();
-        String[] arrayCookies = cookies.split(";");
+        try {
+            String[] arrayCookies = cookies.split(";");
 
-        for (int i = 0; i < arrayCookies.length; i++) {
-            String[] temp = arrayCookies[i].split("=");
-            mapCookies.put(temp[0],temp[1]);
+            for (int i = 0; i < arrayCookies.length; i++) {
+                String[] temp = arrayCookies[i].split("=");
+                mapCookies.put(temp[0],temp[1]);
+            }
+
+        }catch (Exception e){
+            Crashlytics.log(cookies);
+            Crashlytics.logException(e);
         }
+
+
 
         for (Object o : mapCookies.keySet()){
             if (o.toString().contains("user")){
@@ -410,5 +443,11 @@ public class CompreIngressosActivity extends ActionBarActivity {
     }
 
 
+    public void mappingScreenNameToAnalytics(String screenName){
+
+        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
+        t.enableAutoActivityTracking(true);
+        t.setScreenName(screenName);
+    }
 
 }
