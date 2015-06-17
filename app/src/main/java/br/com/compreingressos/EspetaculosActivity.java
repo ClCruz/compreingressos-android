@@ -32,6 +32,7 @@ import br.com.compreingressos.model.Espetaculos;
 import br.com.compreingressos.toolbox.GsonRequest;
 import br.com.compreingressos.toolbox.VolleySingleton;
 import br.com.compreingressos.utils.ConnectionUtils;
+import br.com.compreingressos.widget.RecyclerViewCustom;
 
 /**
  * Created by luiszacheu on 01/04/15.
@@ -44,7 +45,7 @@ public class EspetaculosActivity extends ActionBarActivity {
     public static final int COLUMN_NUMBER = 2;
 
     private Toolbar toolbar;
-    private RecyclerView recyclerView;
+    private RecyclerViewCustom recyclerView;
 
     private RequestQueue requestQueue;
 
@@ -85,8 +86,9 @@ public class EspetaculosActivity extends ActionBarActivity {
         t.enableAutoActivityTracking(true);
         t.setScreenName(ConstantsGoogleAnalytics.ESPETACULOS.replace("<#>", genero));
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_espetaculos);
-        recyclerView.setHasFixedSize(true);
+        retryConnectionView = (LinearLayout) findViewById(R.id.retry_connection);
+        recyclerView = (RecyclerViewCustom) findViewById(R.id.recycler_view_espetaculos);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         showRecyclerEspetaculosView();
 
@@ -97,17 +99,24 @@ public class EspetaculosActivity extends ActionBarActivity {
             progressBar.setVisibility(View.VISIBLE);
             retryConnectionView.setVisibility(View.GONE);
 
-            recyclerView.setHasFixedSize(true);
-
             GridLayoutManager gridLayoutManager = new GridLayoutManager(EspetaculosActivity.this, COLUMN_NUMBER);
             recyclerView.setLayoutManager(gridLayoutManager);
-            this.requestQueue = VolleySingleton.getInstance(EspetaculosActivity.this).getRequestQueue();
+
+            if (this.requestQueue == null)
+                this.requestQueue = VolleySingleton.getInstance(EspetaculosActivity.this).getRequestQueue();
+
             startRequest();
+
         }else{
             retryConnectionView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
     }
 
     private void setResultAdapter(ArrayList<Espetaculo> listTablet) {

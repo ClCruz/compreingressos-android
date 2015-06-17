@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.ConnectionUtils;
 import br.com.compreingressos.utils.DatabaseManager;
 import br.com.compreingressos.utils.Dialogs;
+import br.com.compreingressos.widget.RecyclerViewCustom;
 
 
 public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener{
@@ -67,7 +69,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
     ArrayList<Genero> mListGeneros = new ArrayList<>();
     ArrayList<Banner> mListBanners = new ArrayList<>();
 
-    private RecyclerView mRecyclerView;
+    private RecyclerViewCustom mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private RequestQueue requestQueue;
@@ -76,14 +78,12 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
     private double latitude;
     private double longitude;
 
-    private RelativeLayout mContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mContainer = (RelativeLayout) findViewById(R.id.container);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_generos);
+        mRecyclerView = (RecyclerViewCustom) findViewById(R.id.recycler_view_generos);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -99,76 +99,74 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
         DatabaseManager.init(this);
 
-        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-
-        t.enableAutoActivityTracking(true);
+        trackerAnalytics();
 
         Log.e(LOG_TAG, "client_id user -> " + UserHelper.retrieveUserIdOnSharedPreferences(MainActivity.this));
+    }
+
+    private void trackerAnalytics() {
+        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
+        t.enableAutoActivityTracking(true);
+        t.setScreenName(ConstantsGoogleAnalytics.HOME);
     }
 
     private void showRecyclerHomeView() {
         requestQueue = VolleySingleton.getInstance(this).getRequestQueue();
         startRequest();
 
-        mListGeneros = initGeneros();
+       try {
 
-        if (adapter == null)
-            adapter = new GeneroAdapter(this, mListGeneros, mListBanners);
+           mListGeneros = initGeneros();
+           if (adapter == null)
+                adapter = new GeneroAdapter(this, mListGeneros, mListBanners);
 
-        adapter.SetOnItemClickListener(new GeneroAdapter.OnItemClickListener() {
-            @Override
-            public void onClickListener(View v, int position) {
-                if (position == 0) {
-                    Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
-                    intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
-                    intent.putExtra("latitude", "" + latitude);
-                    intent.putExtra("longitude", "" + longitude);
-                    enableLocationGPS = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                    if (!enableLocationGPS) {
-                        Dialogs.showDialogLocation(MainActivity.this, MainActivity.this, getString(R.string.message_dialog_gps),
-                                getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative), intent);
+           adapter.SetOnItemClickListener(new GeneroAdapter.OnItemClickListener() {
+               @Override
+               public void onClickListener(View v, int position) {
+                   if (position == 0) {
+                       Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
+                       intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
+                       intent.putExtra("latitude", "" + latitude);
+                       intent.putExtra("longitude", "" + longitude);
+                       enableLocationGPS = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                       if (!enableLocationGPS) {
+                           Dialogs.showDialogLocation(MainActivity.this, MainActivity.this, getString(R.string.message_dialog_gps),
+                                   getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative), intent);
 
-                    } else {
-                        startActivity(intent);
-                    }
-                } else {
-                    Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
-                    intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
-                    intent.putExtra("latitude", "" + latitude);
-                    intent.putExtra("longitude", "" + longitude);
-                    startActivity(intent);
-                }
-            }
-        });
+                       } else {
+                           startActivity(intent);
+                       }
+                   } else {
+                       Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
+                       intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
+                       intent.putExtra("latitude", "" + latitude);
+                       intent.putExtra("longitude", "" + longitude);
+                       startActivity(intent);
+                   }
+               }
+           });
 
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+//           adapter.notifyDataSetChanged();
+           mLayoutManager = new LinearLayoutManager(this);
+           mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mRecyclerView.setAdapter(adapter);
+           mRecyclerView.setAdapter(adapter);
+       } catch (Exception e){
+           e.printStackTrace();
+       }
 
-        DatabaseManager.init(this);
+    }
 
-        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.enableAutoActivityTracking(true);
-        t.setScreenName(ConstantsGoogleAnalytics.HOME);
-
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mRecyclerView.stopScroll();
     }
 
     @Override
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     @Override
@@ -181,12 +179,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -194,13 +186,11 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_history_orders) {
+        if (item.getItemId() == R.id.action_history_orders) {
             Intent intent = new Intent(this, HistoryOrdersActivity.class);
             startActivity(intent);
             return true;
-        } else if (id == R.id.action_search) {
+        } else if (item.getItemId() == R.id.action_search) {
             Intent intent = new Intent(this, SearchActivity.class);
             startActivity(intent);
             return true;
@@ -288,8 +278,8 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
     }
 
     /**
- * Builds a GoogleApiClient. Uses the addApi() method to request the LocationServices API.
- */
+    * Builds a GoogleApiClient. Uses the addApi() method to request the LocationServices API.
+    */
 
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -303,7 +293,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
     @Override
     public void onConnected(Bundle connectionHint) {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
         if (mLastLocation != null){
             longitude = mLastLocation.getLongitude();
             latitude = mLastLocation.getLatitude();

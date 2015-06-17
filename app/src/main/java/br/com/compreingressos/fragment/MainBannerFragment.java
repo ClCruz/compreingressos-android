@@ -19,6 +19,7 @@ import br.com.compreingressos.R;
 import br.com.compreingressos.adapter.PageViewAdapter;
 import br.com.compreingressos.interfaces.BannerListener;
 import br.com.compreingressos.model.Banner;
+import br.com.compreingressos.utils.ConnectionUtils;
 
 /**
  * Created by luiszacheu on 08/04/15.
@@ -38,6 +39,7 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main_banner, container, false);
 
+
         mPager = (ViewPager) rootView.findViewById(R.id.pager);
         mIndicator = (CirclePageIndicator) rootView.findViewById(R.id.indicator);
         viewBanner = (FrameLayout) rootView.findViewById(R.id.view_banner);
@@ -49,30 +51,35 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     public void onResume() {
         super.onResume();
 
+        if (ConnectionUtils.isInternetOn(getActivity().getApplicationContext())){
+            if (mPager.getAdapter() == null) {
+                mAdapter = new PageViewAdapter(getChildFragmentManager(), initList());
+                mPager.setAdapter(mAdapter);
+            }
 
-        if (mPager.getAdapter() == null) {
-            mAdapter = new PageViewAdapter(getChildFragmentManager(), initList());
-            mPager.setAdapter(mAdapter);
+            mIndicator.setViewPager(mPager);
         }
-
-        mIndicator.setViewPager(mPager);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (handler != null) {
-            handler.removeCallbacks(runnable);
-            handler = null;
+        if (mPager.getAdapter() == null) {
+            if (handler != null) {
+                handler.removeCallbacks(runnable);
+                handler = null;
+            }
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (handler != null) {
-            handler.removeCallbacks(runnable);
-            handler = null;
+        if (mPager.getAdapter() == null) {
+            if (handler != null) {
+                handler.removeCallbacks(runnable);
+                handler = null;
+            }
         }
     }
 
