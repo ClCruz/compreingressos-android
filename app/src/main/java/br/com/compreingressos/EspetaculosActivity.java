@@ -6,8 +6,10 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -22,12 +24,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.compreingressos.adapter.EspetaculosAdapter;
-import br.com.compreingressos.decoration.DividerItemDecoration;
 import br.com.compreingressos.interfaces.OnItemClickListener;
 import br.com.compreingressos.model.Espetaculo;
 import br.com.compreingressos.model.Espetaculos;
 import br.com.compreingressos.toolbox.GsonRequest;
 import br.com.compreingressos.toolbox.VolleySingleton;
+import br.com.compreingressos.utils.ConnectionUtils;
 
 /**
  * Created by luiszacheu on 01/04/15.
@@ -36,7 +38,7 @@ public class EspetaculosActivity extends ActionBarActivity {
 
     public static final String URL = "http://tokecompre-ci.herokuapp.com/espetaculos.json";
 
-//    Numero de colunas a ser mostrada na recyclerView
+    //    Numero de colunas a ser mostrada na recyclerView
     public static final int COLUMN_NUMBER = 2;
 
     private Toolbar toolbar;
@@ -51,17 +53,22 @@ public class EspetaculosActivity extends ActionBarActivity {
     String latitude, longitude;
 
 
+    private LinearLayout retryConnectionView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_espetaculos);
 
-        if (getIntent().hasExtra("genero")){
+        retryConnectionView = (LinearLayout) findViewById(R.id.retry_connection);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_espetaculos);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+
+        if (getIntent().hasExtra("genero")) {
             genero = getIntent().getStringExtra("genero");
         }
 
-        if (getIntent().hasExtra("latitude") && getIntent().hasExtra("longitude")){
+        if (getIntent().hasExtra("latitude") && getIntent().hasExtra("longitude")) {
             latitude = getIntent().getStringExtra("latitude");
             longitude = getIntent().getStringExtra("longitude");
         }
@@ -74,21 +81,30 @@ public class EspetaculosActivity extends ActionBarActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_espetaculos);
-//        recyclerView.addItemDecoration(new DividerItemDecoration(this));
-        recyclerView.setHasFixedSize(true);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(EspetaculosActivity.this, COLUMN_NUMBER);
-        recyclerView.setLayoutManager(gridLayoutManager);
-
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-
-        this.requestQueue = VolleySingleton.getInstance(EspetaculosActivity.this).getRequestQueue();
-        startRequest();
+        showRecyclerEspetaculosView();
 
     }
 
-    private void setResultAdapter(ArrayList<Espetaculo> listTablet){
+    private void showRecyclerEspetaculosView() {
+        if (ConnectionUtils.isInternetOn(EspetaculosActivity.this)) {
+            progressBar.setVisibility(View.VISIBLE);
+            retryConnectionView.setVisibility(View.GONE);
+
+            recyclerView.setHasFixedSize(true);
+
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(EspetaculosActivity.this, COLUMN_NUMBER);
+            recyclerView.setLayoutManager(gridLayoutManager);
+            this.requestQueue = VolleySingleton.getInstance(EspetaculosActivity.this).getRequestQueue();
+            startRequest();
+        }else{
+            retryConnectionView.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void setResultAdapter(ArrayList<Espetaculo> listTablet) {
 
         EspetaculosAdapter adapter = new EspetaculosAdapter(this, listTablet);
 
@@ -125,12 +141,12 @@ public class EspetaculosActivity extends ActionBarActivity {
             @Override
             public void onResponse(Espetaculos response) {
 
-                if (response.getEspetaculos().size() > 0){
+                if (response.getEspetaculos().size() > 0) {
                     progressBar.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
                 }
 
-                for (Espetaculo espetaculo : response.getEspetaculos()){
+                for (Espetaculo espetaculo : response.getEspetaculos()) {
                     espetaculos = response.getEspetaculos();
                 }
                 setResultAdapter(espetaculos);
@@ -155,20 +171,19 @@ public class EspetaculosActivity extends ActionBarActivity {
 
         urlCustom.append("?os=android");
 
-        if (genero.contains("Perto de mim")){
-            urlCustom.append("&latitude=" + latitude + "&longitude="+longitude);
-        }else if (genero.contains("Shows")){
-            urlCustom.append("&genero=Show" + "&latitude=" + latitude + "&longitude="+longitude);
-        }else if (genero.contains("Clássicos")){
-            urlCustom.append("&genero=Classicos"+"&latitude=" + latitude + "&longitude="+longitude);
-        }else if (genero.contains("Teatros")){
-            urlCustom.append("&genero=Teatros"+"&latitude=" + latitude + "&longitude="+longitude);
+        if (genero.contains("Perto de mim")) {
+            urlCustom.append("&latitude=" + latitude + "&longitude=" + longitude);
+        } else if (genero.contains("Shows")) {
+            urlCustom.append("&genero=Show" + "&latitude=" + latitude + "&longitude=" + longitude);
+        } else if (genero.contains("Clássicos")) {
+            urlCustom.append("&genero=Classicos" + "&latitude=" + latitude + "&longitude=" + longitude);
+        } else if (genero.contains("Teatros")) {
+            urlCustom.append("&genero=Teatros" + "&latitude=" + latitude + "&longitude=" + longitude);
         }
 
 
-
         GsonRequest<Espetaculos> jsonObjRequest = new GsonRequest<>(Request.Method.GET, urlCustom.toString(), Espetaculos.class, headers, this.createSuccessListener(), this.createErrorListener(), "yyyy-MM-dd");
-        jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         this.requestQueue.add(jsonObjRequest);
     }
 
@@ -184,5 +199,7 @@ public class EspetaculosActivity extends ActionBarActivity {
     }
 
 
-
+    public void onClickRetryListener(View view) {
+        showRecyclerEspetaculosView();
+    }
 }

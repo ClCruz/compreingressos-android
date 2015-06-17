@@ -14,6 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -46,7 +50,7 @@ import br.com.compreingressos.utils.DatabaseManager;
 import br.com.compreingressos.utils.Dialogs;
 
 
-public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener, NetworkStateReceiver.NetworkStateReceiverListener {
+public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener {
 
     public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/lista.json";
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -75,13 +79,15 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
     private double latitude;
     private double longitude;
 
-
-    private NetworkStateReceiver networkStateReceiver;
+    private RelativeLayout mContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mContainer = (RelativeLayout) findViewById(R.id.container);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_generos);
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -89,38 +95,47 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
             setSupportActionBar(toolbar);
         }
 
-        networkStateReceiver = new NetworkStateReceiver(MainActivity.this);
-        networkStateReceiver.addListener(this);
-
         mLocationManager =  (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         buildGoogleApiClient();
 
+        showRecyclerHomeView();
+
+        DatabaseManager.init(this);
+
+        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
+
+        t.enableAutoActivityTracking(true);
+
+        Log.e(LOG_TAG, "client_id user -> " + UserHelper.retrieveUserIdOnSharedPreferences(MainActivity.this));
+    }
+
+    private void showRecyclerHomeView() {
         requestQueue = VolleySingleton.getInstance(this).getRequestQueue();
         startRequest();
 
-
         mListGeneros = initGeneros();
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view_generos);
-        adapter = new GeneroAdapter(this, mListGeneros, mListBanners);
+        if (adapter == null)
+            adapter = new GeneroAdapter(this, mListGeneros, mListBanners);
+
         adapter.SetOnItemClickListener(new GeneroAdapter.OnItemClickListener() {
             @Override
             public void onClickListener(View v, int position) {
-                if (position == 0){
+                if (position == 0) {
                     Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
                     intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
                     intent.putExtra("latitude", "" + latitude);
                     intent.putExtra("longitude", "" + longitude);
                     enableLocationGPS = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                    if (!enableLocationGPS){
+                    if (!enableLocationGPS) {
                         Dialogs.showDialogLocation(MainActivity.this, MainActivity.this, getString(R.string.message_dialog_gps),
                                 getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative), intent);
 
-                    }else {
+                    } else {
                         startActivity(intent);
                     }
-                }else{
+                } else {
                     Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
                     intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
                     intent.putExtra("latitude", "" + latitude);
@@ -136,14 +151,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this));
         mRecyclerView.setAdapter(adapter);
 
-        DatabaseManager.init(this);
-
-        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-
-        t.enableAutoActivityTracking(true);
-
-        Log.e(LOG_TAG, "client_id user -> " + UserHelper.retrieveUserIdOnSharedPreferences(MainActivity.this));
-
     }
 
     @Override
@@ -154,13 +161,11 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
     @Override
     protected void onResume() {
-        this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
         super.onResume();
     }
 
     @Override
     protected void onPause() {
-        this.unregisterReceiver(networkStateReceiver);
         super.onPause();
     }
 
@@ -221,6 +226,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
             public void onResponse(Banner[] response) {
 
                 if (response != null) {
+                    mListBanners = new ArrayList<>();
                     for (int i = 0; i < response.length; i++) {
                         Banner banner = new Banner();
                         banner.setImagem(response[i].getImagem());
@@ -312,13 +318,5 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         mGoogleApiClient.connect();
     }
 
-    @Override
-    public void onNetworkAvailable() {
-        Log.d("--->>", "I'm in, baby!");
-    }
 
-    @Override
-    public void onNetworkUnavailable() {
-        Log.d("--->>>", "I'm dancing with myself");
-    }
 }

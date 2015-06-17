@@ -3,19 +3,24 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    tools:ignore="MergeRootFrame">
+    tools:context=".MainActivity">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_generos"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
-        android:background="@color/red_compreingressos"
-        android:scrollbars="vertical"
-        />
+        android:layout_below="@+id/toolbar">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view_generos"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/red_compreingressos"
+            android:scrollbars="vertical"
+            />
+
+    </FrameLayout>
 </RelativeLayout>
