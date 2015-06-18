@@ -74,16 +74,12 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         if (viewHolder instanceof  ViewHolderHeader){
             MainBannerFragment  fragment = new MainBannerFragment();
-
             FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
-
             fragmentTransaction.add(R.id.view, fragment, "header");
             fragmentTransaction.commit();
-
-        }
-
-        if (viewHolder instanceof ViewHolderItem){
+        }else if (viewHolder instanceof ViewHolderItem){
             Genero genero = getItem(position);
+
             ((ViewHolderItem) viewHolder).nomeView.setText(genero.getNome());
             ((ViewHolderItem) viewHolder).coverView.setBackgroundResource(genero.getCover());
         }
@@ -106,10 +102,6 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 Crashlytics.logException(e);
             }
         }
-
-
-
-
     }
 
     private boolean isPositionHeader(int position) {

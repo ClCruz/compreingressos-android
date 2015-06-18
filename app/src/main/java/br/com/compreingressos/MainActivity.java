@@ -2,7 +2,6 @@ package br.com.compreingressos;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -14,8 +13,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -28,7 +25,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationServices;
-import com.j256.ormlite.support.ConnectionSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +32,7 @@ import java.util.Map;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
-import br.com.compreingressos.helper.DatabaseHelper;
+import br.com.compreingressos.decoration.DividerItemDecoration;
 import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
@@ -48,26 +44,22 @@ import br.com.compreingressos.utils.DatabaseManager;
 import br.com.compreingressos.utils.Dialogs;
 import br.com.compreingressos.widget.RecyclerViewCustom;
 
-
 public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener{
 
     public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/lista.json";
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    private Toolbar toolbar;
+
     private LocationManager mLocationManager;
     private Location mLastLocation;
     private boolean enableLocationGPS;
 
-    /**
-     * Provides the entry point to Google Play services.
-     */
+    //Provides the entry point to Google Play services.
     protected GoogleApiClient mGoogleApiClient;
 
-
-    private Toolbar toolbar;
-
-    ArrayList<Genero> mListGeneros = new ArrayList<>();
-    ArrayList<Banner> mListBanners = new ArrayList<>();
+    private ArrayList<Genero> mListGeneros = new ArrayList<>();
+    private ArrayList<Banner> mListBanners = new ArrayList<>();
 
     private RecyclerViewCustom mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -91,81 +83,26 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
             setSupportActionBar(toolbar);
         }
 
+        //Tracking do google analytics, enviando o nome amigave da classe
+        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
+        t.enableAutoActivityTracking(true);
+        t.setScreenName(ConstantsGoogleAnalytics.HOME);
+
         mLocationManager =  (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         buildGoogleApiClient();
 
-        showRecyclerHomeView();
-
         DatabaseManager.init(this);
 
-        trackerAnalytics();
-
         Log.e(LOG_TAG, "client_id user -> " + UserHelper.retrieveUserIdOnSharedPreferences(MainActivity.this));
-    }
 
-    private void trackerAnalytics() {
-        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.enableAutoActivityTracking(true);
-        t.setScreenName(ConstantsGoogleAnalytics.HOME);
-    }
-
-    private void showRecyclerHomeView() {
-        requestQueue = VolleySingleton.getInstance(this).getRequestQueue();
-        startRequest();
-
-       try {
-
-           mListGeneros = initGeneros();
-           if (adapter == null)
-                adapter = new GeneroAdapter(this, mListGeneros, mListBanners);
-
-           adapter.SetOnItemClickListener(new GeneroAdapter.OnItemClickListener() {
-               @Override
-               public void onClickListener(View v, int position) {
-                   if (position == 0) {
-                       Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
-                       intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
-                       intent.putExtra("latitude", "" + latitude);
-                       intent.putExtra("longitude", "" + longitude);
-                       enableLocationGPS = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-                       if (!enableLocationGPS) {
-                           Dialogs.showDialogLocation(MainActivity.this, MainActivity.this, getString(R.string.message_dialog_gps),
-                                   getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative), intent);
-
-                       } else {
-                           startActivity(intent);
-                       }
-                   } else {
-                       Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
-                       intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
-                       intent.putExtra("latitude", "" + latitude);
-                       intent.putExtra("longitude", "" + longitude);
-                       startActivity(intent);
-                   }
-               }
-           });
-
-//           adapter.notifyDataSetChanged();
-           mLayoutManager = new LinearLayoutManager(this);
-           mRecyclerView.setLayoutManager(mLayoutManager);
-
-           mRecyclerView.setAdapter(adapter);
-       } catch (Exception e){
-           e.printStackTrace();
-       }
-
-    }
-
-    @Override
-    public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        mRecyclerView.stopScroll();
+        this.requestQueue = VolleySingleton.getInstance(this).getRequestQueue();
     }
 
     @Override
     protected void onStart() {
         mGoogleApiClient.connect();
+        showRecyclerHomeView();
         super.onStart();
     }
 
@@ -175,7 +112,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
             mGoogleApiClient.disconnect();
         }
         super.onStop();
-
     }
 
     @Override
@@ -209,6 +145,79 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
 
         return generos;
+    }
+
+    private void showRecyclerHomeView() {
+        startRequest();
+
+        mListGeneros = initGeneros();
+        if (adapter == null){
+            adapter = new GeneroAdapter(this, mListGeneros, mListBanners);
+        }
+
+        adapter.SetOnItemClickListener(new GeneroAdapter.OnItemClickListener() {
+            @Override
+            public void onClickListener(View v, int position) {
+                if (position == 0) {
+                    Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
+                    intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
+                    intent.putExtra("latitude", "" + latitude);
+                    intent.putExtra("longitude", "" + longitude);
+                    enableLocationGPS = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+                    if (!enableLocationGPS) {
+                        Dialogs.showDialogLocation(MainActivity.this, MainActivity.this, getString(R.string.message_dialog_gps),
+                                getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative), intent);
+
+                    } else {
+                        startActivity(intent);
+                    }
+                } else {
+                    Intent intent = new Intent(MainActivity.this, EspetaculosActivity.class);
+                    intent.putExtra("genero", mListGeneros.get(position).getNome().toString());
+                    intent.putExtra("latitude", "" + latitude);
+                    intent.putExtra("longitude", "" + longitude);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.scrollToPosition(0);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this));
+        mRecyclerView.setAdapter(adapter);
+
+
+    }
+
+    private void startRequest() {
+        StringBuilder urlwithParams = new StringBuilder(URL_VISORES);
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+
+        String con = "";
+
+        try {
+            if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")) {
+                con = "&con=wifi";
+            } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("mobile")) {
+                con = "&con=wwan";
+            }
+        }catch (Exception e){
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.message_sem_conexao), Toast.LENGTH_SHORT).show();
+        }
+
+        urlwithParams.append("?os=android");
+        urlwithParams.append(con);
+        urlwithParams.append("&width=" + AndroidUtils.getWidthScreen(MainActivity.this));
+
+        GsonRequest<Banner[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, urlwithParams.toString(), Banner[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
+        jsonObjRequest.setRetryPolicy(new com.android.volley.DefaultRetryPolicy(15000, com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES, com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        this.requestQueue.add(jsonObjRequest);
+
     }
 
     private Response.Listener<Banner[]> createSuccessListener() {
@@ -245,42 +254,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         };
     }
 
-    private void startRequest() {
-        StringBuilder urlwithParams = new StringBuilder(URL_VISORES);
-
-        Map<String, String> headers = new HashMap<String, String>();
-        headers.put("Content-Type", "application/json");
-
-        String con = "";
-
-        try {
-            if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")) {
-                con = "&con=wifi";
-            } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("mobile")) {
-                con = "&con=wwan";
-            }
-        }catch (Exception e){
-            Toast.makeText(MainActivity.this, getResources().getString(R.string.message_sem_conexao), Toast.LENGTH_SHORT).show();
-        }
-
-        urlwithParams.append("?os=android");
-        urlwithParams.append(con);
-        urlwithParams.append("&width=" + AndroidUtils.getWidthScreen(MainActivity.this));
-
-        GsonRequest<Banner[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, urlwithParams.toString(), Banner[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
-        jsonObjRequest.setRetryPolicy(new com.android.volley.DefaultRetryPolicy(15000, com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES, com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        this.requestQueue.add(jsonObjRequest);
-
-    }
-
-    private ConnectionSource getConnectionSource() {
-        return new DatabaseHelper(MainActivity.this).getConnectionSource();
-    }
-
-    /**
-    * Builds a GoogleApiClient. Uses the addApi() method to request the LocationServices API.
-    */
-
+    //Constroi uma GoogleApiClient. Usar o metodo addApi() para responder o LocationServices API.
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -288,7 +262,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
                 .addApi(LocationServices.API)
                 .build();
     }
-
 
     @Override
     public void onConnected(Bundle connectionHint) {
@@ -298,7 +271,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
             latitude = mLastLocation.getLatitude();
         }
     }
-
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
@@ -310,6 +282,5 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         Log.i(LOG_TAG, "Connection suspended");
         mGoogleApiClient.connect();
     }
-
 
 }

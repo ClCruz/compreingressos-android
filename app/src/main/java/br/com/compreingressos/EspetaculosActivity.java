@@ -40,8 +40,9 @@ import br.com.compreingressos.widget.RecyclerViewCustom;
 public class EspetaculosActivity extends ActionBarActivity {
 
     public static final String URL = "http://tokecompre-ci.herokuapp.com/espetaculos.json";
+    private static final String OBJ_LIST = "OBJ_LIST";
 
-    //    Numero de colunas a ser mostrada na recyclerView
+    // Numero de colunas a ser mostrada na recyclerView
     public static final int COLUMN_NUMBER = 2;
 
     private Toolbar toolbar;
@@ -51,18 +52,17 @@ public class EspetaculosActivity extends ActionBarActivity {
 
     private ArrayList<Espetaculo> espetaculos = new ArrayList<>();
     private ProgressBar progressBar;
-    private static final String OBJ_LIST = "OBJ_LIST";
+    private LinearLayout retryConnectionView;
+
+    private GridLayoutManager gridLayoutManager;
+
     String genero;
     String latitude, longitude;
-
-
-    private LinearLayout retryConnectionView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_espetaculos);
-
 
         if (getIntent().hasExtra("genero")){
             genero = getIntent().getStringExtra("genero");
@@ -90,7 +90,13 @@ public class EspetaculosActivity extends ActionBarActivity {
         recyclerView = (RecyclerViewCustom) findViewById(R.id.recycler_view_espetaculos);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
+        this.requestQueue = VolleySingleton.getInstance(EspetaculosActivity.this).getRequestQueue();
+
+        gridLayoutManager = new GridLayoutManager(EspetaculosActivity.this, COLUMN_NUMBER);
+
+
         showRecyclerEspetaculosView();
+
 
     }
 
@@ -98,12 +104,6 @@ public class EspetaculosActivity extends ActionBarActivity {
         if (ConnectionUtils.isInternetOn(EspetaculosActivity.this)) {
             progressBar.setVisibility(View.VISIBLE);
             retryConnectionView.setVisibility(View.GONE);
-
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(EspetaculosActivity.this, COLUMN_NUMBER);
-            recyclerView.setLayoutManager(gridLayoutManager);
-
-            if (this.requestQueue == null)
-                this.requestQueue = VolleySingleton.getInstance(EspetaculosActivity.this).getRequestQueue();
 
             startRequest();
 
@@ -120,10 +120,10 @@ public class EspetaculosActivity extends ActionBarActivity {
     }
 
     private void setResultAdapter(ArrayList<Espetaculo> listTablet) {
-
         EspetaculosAdapter adapter = new EspetaculosAdapter(this, listTablet);
 
         adapter.setOnItemClickListener(onItemClick);
+        recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(adapter);
     }
 

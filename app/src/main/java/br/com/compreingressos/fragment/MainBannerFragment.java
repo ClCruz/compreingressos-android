@@ -86,7 +86,6 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     public ArrayList<Banner> initList(){
         ArrayList<Banner> banners =  new ArrayList<>();
         Banner banner = new Banner("empty", "empty");
-
         banners.add(banner);
 
         return banners;
