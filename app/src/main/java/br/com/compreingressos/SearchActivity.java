@@ -48,7 +48,7 @@ public class SearchActivity extends ActionBarActivity {
 
     public static final String URL = "http://tokecompre-ci.herokuapp.com/espetaculos.json?keywords=";
 
-    //    Numero de colunas a ser mostrada na recyclerView
+    //Numero de colunas a ser mostrada na recyclerView
     public static final int COLUMN_NUMBER = 2;
 
     private Toolbar toolbar;
@@ -215,6 +215,7 @@ public class SearchActivity extends ActionBarActivity {
 
         urlCustom.append(query);
 
+        Log.e("--------->> " , urlCustom.toString());
         GsonRequest<Espetaculos> jsonObjRequest = new GsonRequest<>(Request.Method.GET, urlCustom.toString(), Espetaculos.class, headers, this.createSuccessListener(), this.createErrorListener(), "yyyy-MM-dd");
         this.requestQueue.add(jsonObjRequest);
     }

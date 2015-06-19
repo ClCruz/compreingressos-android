@@ -181,18 +181,28 @@ public class HistoryOrdersActivity extends ActionBarActivity {
     }
 
     private void startRequest() {
-        String envHomol = "&env=homol";
+        String clientId = UserHelper.retrieveUserIdOnSharedPreferences(HistoryOrdersActivity.this);
 
-        progressDialog = new ProgressDialog(HistoryOrdersActivity.this);
-        progressDialog.setMessage("Aguarde...");
-        progressDialog.show();
-        Map<String, String> headers = new HashMap<String, String>();
-        headers.put("Content-Type", "application/json");
+        Log.e(LOG_TAG, "---> " + clientId);
+
+        if (clientId.trim().length() > 0){
+            String envHomol = "";
+            if (CompreIngressosApplication.isRunnigOnEnvironmentDevelopment())
+                envHomol = "&env=homol";
+
+            progressDialog = new ProgressDialog(HistoryOrdersActivity.this);
+            progressDialog.setMessage("Aguarde...");
+            progressDialog.show();
+            Map<String, String> headers = new HashMap<String, String>();
+            headers.put("Content-Type", "application/json");
+
+            Log.e(LOG_TAG, "---> " + "http://tokecompre-ci.herokuapp.com/tickets.json?os=android"+envHomol+"&client_id="+ clientId);
 
 
-        GsonRequest<Order[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, "http://tokecompre-ci.herokuapp.com/tickets.json?os=android"+envHomol+"&client_id="+ UserHelper.retrieveUserIdOnSharedPreferences(HistoryOrdersActivity.this), Order[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
-        jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        this.requestQueue.add(jsonObjRequest);
+            GsonRequest<Order[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, "http://tokecompre-ci.herokuapp.com/tickets.json?os=android"+envHomol+"&client_id="+ clientId, Order[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
+            jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            this.requestQueue.add(jsonObjRequest);
+        }
 
     }
 
