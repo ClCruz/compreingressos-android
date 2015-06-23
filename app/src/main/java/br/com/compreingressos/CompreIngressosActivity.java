@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -119,7 +118,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 }
 
                 if (url.contains("pagamento_ok.php")){
-                    if ( countReading  > 0 ){
+                    if ( countReading  > 0){
                         if (url.contains("assinaturas")){
                             hasAssinatura = true;
                         }

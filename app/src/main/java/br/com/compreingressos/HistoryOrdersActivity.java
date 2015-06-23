@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -39,6 +40,7 @@ import br.com.compreingressos.interfaces.OnItemClickListener;
 import br.com.compreingressos.model.Order;
 import br.com.compreingressos.toolbox.GsonRequest;
 import br.com.compreingressos.toolbox.VolleySingleton;
+import br.com.compreingressos.utils.ConnectionUtils;
 
 /**
  * Created by luiszacheu on 15/04/15.
@@ -90,8 +92,12 @@ public class HistoryOrdersActivity extends ActionBarActivity {
 
         initRecyclerView();
 
-        requestQueue = VolleySingleton.getInstance(HistoryOrdersActivity.this).getRequestQueue();
-        startRequest();
+        if (ConnectionUtils.isInternetOn(HistoryOrdersActivity.this)) {
+            requestQueue = VolleySingleton.getInstance(HistoryOrdersActivity.this).getRequestQueue();
+            startRequest();
+        }else{
+            Toast.makeText(HistoryOrdersActivity.this, getResources().getString(R.string.message_sem_conexao), Toast.LENGTH_LONG).show();
+        }
 
     }
 
@@ -195,9 +201,6 @@ public class HistoryOrdersActivity extends ActionBarActivity {
             progressDialog.show();
             Map<String, String> headers = new HashMap<String, String>();
             headers.put("Content-Type", "application/json");
-
-            Log.e(LOG_TAG, "---> " + "http://tokecompre-ci.herokuapp.com/tickets.json?os=android"+envHomol+"&client_id="+ clientId);
-
 
             GsonRequest<Order[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, "http://tokecompre-ci.herokuapp.com/tickets.json?os=android"+envHomol+"&client_id="+ clientId, Order[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
             jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

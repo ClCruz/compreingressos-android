@@ -9,17 +9,29 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.analytics.Tracker;
 import com.j256.ormlite.stmt.QueryBuilder;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.dao.OrderDao;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.ParseHelper;
 import br.com.compreingressos.model.Order;
+import br.com.compreingressos.toolbox.VolleySingleton;
 
 /**
  * Created by luiszacheu on 28/04/15.
@@ -32,7 +44,8 @@ public class PaymentFinishedActivity extends ActionBarActivity {
     private OrderDao orderDao;
     private Order order;
     private Boolean hasAssinatura = false;
-
+    private RequestQueue requestQueue;
+    private boolean hasSendTrackPurchase = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,27 +73,37 @@ public class PaymentFinishedActivity extends ActionBarActivity {
         databaseHelper =  new DatabaseHelper(PaymentFinishedActivity.this);
 
         btnVerIngressos = (Button) findViewById(R.id.btn_ver_ingressos);
+
+        try {
+            orderDao = new OrderDao(databaseHelper.getConnectionSource());
+            QueryBuilder<Order, Integer> qb = orderDao.queryBuilder();
+            qb.orderBy("id", false);
+            order = orderDao.queryForFirst(qb.prepare());
+            order.setIngressos(new ArrayList<>(order.getIngressosCollection()));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        if (!ParseHelper.getIsClient(PaymentFinishedActivity.this)){
+            ParseHelper.setIsClient(PaymentFinishedActivity.this);
+            ParseHelper.setUnSubscribeParseChannel("prospect");
+            ParseHelper.setSubscribeParseChannel("client");
+        }
+
+        requestQueue = VolleySingleton.getInstance(PaymentFinishedActivity.this).getRequestQueue();
+        try {
+            if (!hasSendTrackPurchase){
+                startRequest(order);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         btnVerIngressos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                try {
-                    orderDao = new OrderDao(databaseHelper.getConnectionSource());
-                    QueryBuilder<Order, Integer> qb = orderDao.queryBuilder();
-                    qb.orderBy("id", false);
-                    order = orderDao.queryForFirst(qb.prepare());
-                    order.setIngressos(new ArrayList<>(order.getIngressosCollection()));
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-                if (!ParseHelper.getIsClient(PaymentFinishedActivity.this)){
-                    ParseHelper.setIsClient(PaymentFinishedActivity.this);
-                    ParseHelper.setUnSubscribeParseChannel("prospect");
-                    ParseHelper.setSubscribeParseChannel("client");
-                }
-
                 Intent intent = new Intent(PaymentFinishedActivity.this, DetailHistoryOrderActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("isFinishedOrder", true);
@@ -106,5 +129,42 @@ public class PaymentFinishedActivity extends ActionBarActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private Response.Listener<JSONObject> createSuccessListener() {
+        return new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(final JSONObject response) {
+                if (response != null){
+                    Log.e("---------- >> " , " "+ response);
+                    hasSendTrackPurchase = true;
+                }
+            }
+        };
+    }
+
+    private Response.ErrorListener createErrorListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("-----> ", error.toString());
+            }
+        };
+    }
+
+
+    private void startRequest(Order order) throws JSONException {
+
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/json");
+        JSONObject jsonBody = new JSONObject();
+        jsonBody.put("number", order.getNumber());
+        jsonBody.put("total", order.getTotal());
+
+        JsonObjectRequest jsonObjRequest = new JsonObjectRequest(Request.Method.POST, "http://tokecompre-ci.herokuapp.com/track_purchases.json?os=android", jsonBody, this.createSuccessListener(), this.createErrorListener());
+        jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        this.requestQueue.add(jsonObjRequest);
+
     }
 }

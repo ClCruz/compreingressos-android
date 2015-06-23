@@ -49,6 +49,7 @@ public class OrderDeserializer implements JsonDeserializer<Order> {
 
         order.setNumber(obj.get("number").getAsString());
         order.setDate(date);
+        order.setTotal(obj.get("total").getAsString());
         espetaculo.setTitulo(obj.get("espetaculo").getAsJsonObject().get("titulo").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("titulo").getAsString());
         espetaculo.setTeatro(obj.get("espetaculo").getAsJsonObject().get("nome_teatro").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("nome_teatro").getAsString());
         espetaculo.setEndereco(obj.get("espetaculo").getAsJsonObject().get("endereco").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("endereco").getAsString());

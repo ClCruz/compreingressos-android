@@ -54,6 +54,7 @@ public class OrderHelper {
 
         jsonOrder.addProperty("number", order.getNumber());
         jsonOrder.addProperty("date", sdf.format(order.getDate()));
+        jsonOrder.addProperty("total", order.getTotal());
 
         JsonObject jsonEspetaculo = new JsonObject();
         jsonEspetaculo.addProperty("titulo", order.getTituloEspetaculo());
