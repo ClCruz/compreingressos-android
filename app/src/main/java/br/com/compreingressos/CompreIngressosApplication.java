@@ -33,7 +33,7 @@ public class CompreIngressosApplication extends Application{
     //Credenciais para o Parse
     public static final String YOUR_APP_ID = "55QlR3PGrXE0YWWnld97UG7kksTlI6j8ioa0FUIN";
     public static final String YOUR_CLIENT_KEY = "PuVqOzx836qG4Ihv9rcy8kZNtsrU6yxTZJmfe4Uo";
-    public static final Boolean RUNMODE_DEVELOPMENT = true;
+    public static final Boolean RUNMODE_DEVELOPMENT = false;
 
     private static CompreIngressosApplication instance;
 
