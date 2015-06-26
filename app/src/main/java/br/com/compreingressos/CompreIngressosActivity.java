@@ -309,27 +309,31 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private void getCookies(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
         Map<String, String> mapCookies = new HashMap<>();
-        try {
-            String[] arrayCookies = cookies.split(";");
 
-            for (int i = 0; i < arrayCookies.length; i++) {
-                String[] temp = arrayCookies[i].split("=");
-                mapCookies.put(temp[0],temp[1]);
+        if (mapCookies != null){
+            try {
+                String[] arrayCookies = cookies.split(";");
+
+                for (int i = 0; i < arrayCookies.length; i++) {
+                    String[] temp = arrayCookies[i].split("=");
+                    mapCookies.put(temp[0],temp[1]);
+                }
+
+            }catch (Exception e){
+                Crashlytics.log(cookies);
+                Crashlytics.logException(e);
             }
 
-        }catch (Exception e){
-            Crashlytics.log(cookies);
-            Crashlytics.logException(e);
-        }
 
 
+            for (Object o : mapCookies.keySet()){
+                if (o.toString().contains("user")){
+                    UserHelper.saveUserIdOnSharedPreferences(CompreIngressosActivity.this, mapCookies.get(o.toString()));
+                }
 
-        for (Object o : mapCookies.keySet()){
-            if (o.toString().contains("user")){
-                UserHelper.saveUserIdOnSharedPreferences(CompreIngressosActivity.this, mapCookies.get(o.toString()));
             }
-
         }
+
     }
 
 

@@ -30,9 +30,8 @@ public class ParseReceiver extends ParsePushBroadcastReceiver {
 
     @Override
     public void onPushOpen(Context context, Intent intent) {
+        Bundle extras = intent.getExtras();
         try {
-            Bundle extras = intent.getExtras();
-
             String message = extras != null ? extras.getString("com.parse.Data") : "";
             JSONObject jObject;
 
@@ -68,9 +67,13 @@ public class ParseReceiver extends ParsePushBroadcastReceiver {
             context.startActivity(i);
 
         } catch (JSONException e) {
+            Crashlytics.log(extras.getString("com.parse.Data"));
             Crashlytics.logException(e);
-            e.printStackTrace();
         } catch (NullPointerException e){
+            Crashlytics.log(extras.getString("com.parse.Data"));
+            Crashlytics.logException(e);
+        } catch (Exception e){
+            Crashlytics.log(extras.getString("com.parse.Data"));
             Crashlytics.logException(e);
         }
 
