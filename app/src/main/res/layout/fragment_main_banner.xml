@@ -22,8 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_gravity="center|bottom"
-            android:padding="5dp"
-            android:gravity="center_horizontal">
+            android:gravity="center_horizontal"
+            android:padding="5dp">
 
             <com.viewpagerindicator.CirclePageIndicator
                 android:id="@+id/indicator"
@@ -31,13 +31,21 @@
                 android:layout_height="match_parent"
                 android:padding="10dp"
                 app:fillColor="@color/white"
+                app:paddingEnd="10dp"
+                app:paddingStart="10dp"
                 app:pageColor="@color/red_compreingressos"
                 app:strokeColor="@color/red_compreingressos"
-                app:strokeWidth="2dp"
-                app:paddingStart="10dp"
-                app:paddingEnd="10dp"/>
+                app:strokeWidth="2dp" />
         </LinearLayout>
+
+
     </FrameLayout>
 
-
+    <ImageView
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:background="@drawable/placeholder_banner"
+        android:visibility="visible" />
 </LinearLayout>
