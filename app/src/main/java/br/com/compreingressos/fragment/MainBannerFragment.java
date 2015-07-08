@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
 
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -26,10 +26,11 @@ import br.com.compreingressos.utils.ConnectionUtils;
  */
 public class MainBannerFragment extends Fragment implements BannerListener {
 
-    PageViewAdapter mAdapter;
-    ViewPager mPager;
-    CirclePageIndicator mIndicator;
-    FrameLayout viewBanner;
+    private PageViewAdapter mAdapter;
+    private ViewPager mPager;
+    private CirclePageIndicator mIndicator;
+    private FrameLayout viewBanner;
+    private ImageView placeholderView;
 
     private Handler handler = new Handler();
     private Runnable runnable;
@@ -43,6 +44,7 @@ public class MainBannerFragment extends Fragment implements BannerListener {
         mPager = (ViewPager) rootView.findViewById(R.id.pager);
         mIndicator = (CirclePageIndicator) rootView.findViewById(R.id.indicator);
         viewBanner = (FrameLayout) rootView.findViewById(R.id.view_banner);
+        placeholderView = (ImageView) rootView.findViewById(R.id.placeholder);
 
         return rootView;
     }
@@ -55,9 +57,8 @@ public class MainBannerFragment extends Fragment implements BannerListener {
             if (mPager.getAdapter() == null) {
                 mAdapter = new PageViewAdapter(getChildFragmentManager(), initList());
                 mPager.setAdapter(mAdapter);
+                mIndicator.setViewPager(mPager);
             }
-
-            mIndicator.setViewPager(mPager);
         }
     }
 
@@ -99,6 +100,8 @@ public class MainBannerFragment extends Fragment implements BannerListener {
 
         if (listBanner.size() > 0){
             viewBanner.setVisibility(View.VISIBLE);
+            placeholderView.setVisibility(View.GONE);
+
         }
 
         if (handler != null) {

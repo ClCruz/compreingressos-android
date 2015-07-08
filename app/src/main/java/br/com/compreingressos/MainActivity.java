@@ -249,7 +249,13 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("-----> ", error.toString());
+//                mListBanners = new ArrayList<>();
+//                Log.e("-----> ", error.toString());
+//                Banner banner = new Banner();
+//                banner.setImagem("placeholder");
+//                mListBanners.add(banner);
+//
+//                adapter.updateBanners(mListBanners);
             }
         };
     }
