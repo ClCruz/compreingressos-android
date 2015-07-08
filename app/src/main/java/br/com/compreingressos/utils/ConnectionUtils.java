@@ -14,23 +14,19 @@ public class ConnectionUtils {
 
         try {
             return connManager.getActiveNetworkInfo().getTypeName();
-        }catch (Exception e){
+        } catch (Exception e) {
             return "";
         }
     }
 
-
     public static boolean isInternetOn(Context context) {
-        ConnectivityManager connec = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connec.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTED
-                || connec.getNetworkInfo(0).getState() == NetworkInfo.State.CONNECTING
-                || connec.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTING
-                || connec.getNetworkInfo(1).getState() == NetworkInfo.State.CONNECTED) {
-            return true;
-        } else if (connec.getNetworkInfo(0).getState() == NetworkInfo.State.DISCONNECTED
-                || connec.getNetworkInfo(1).getState() == NetworkInfo.State.DISCONNECTED) {
-            return false;
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null) {
+            if (netInfo.isConnectedOrConnecting())
+                return true;
         }
         return false;
+
     }
 }

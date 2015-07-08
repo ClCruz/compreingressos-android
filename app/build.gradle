@@ -23,7 +23,7 @@ android {
         applicationId "br.com.compreingressos"
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 11
+        versionCode 12
         versionName "1.2"
     }
     buildTypes {

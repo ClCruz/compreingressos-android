@@ -51,7 +51,7 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     public void onResume() {
         super.onResume();
 
-        if (ConnectionUtils.isInternetOn(getActivity().getApplicationContext())){
+        if (ConnectionUtils.isInternetOn(getActivity())){
             if (mPager.getAdapter() == null) {
                 mAdapter = new PageViewAdapter(getChildFragmentManager(), initList());
                 mPager.setAdapter(mAdapter);
