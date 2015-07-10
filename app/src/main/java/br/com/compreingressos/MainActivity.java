@@ -165,7 +165,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
                     intent.putExtra("longitude", "" + longitude);
                     enableLocationGPS = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
                     if (!enableLocationGPS) {
-                        Dialogs.showDialogLocation(getApplicationContext(), MainActivity.this, getString(R.string.message_dialog_gps),
+                        Dialogs.showDialogLocation(MainActivity.this, MainActivity.this, getString(R.string.message_dialog_gps),
                                 getString(R.string.title_dialog_gps), getString(R.string.btn_gps_positive), getString(R.string.btn_gps_negative), intent);
 
                     } else {

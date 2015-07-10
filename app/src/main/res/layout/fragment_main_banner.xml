@@ -47,5 +47,5 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:background="@drawable/placeholder_banner"
-        android:visibility="visible" />
+        android:visibility="gone" />
 </LinearLayout>
