@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -309,22 +310,23 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private void getCookies(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
         Map<String, String> mapCookies = new HashMap<>();
+        Log.e(LOG_TAG, cookies);
 
         if (mapCookies != null){
             try {
                 String[] arrayCookies = cookies.split(";");
-
                 for (int i = 0; i < arrayCookies.length; i++) {
                     String[] temp = arrayCookies[i].split("=");
-                    mapCookies.put(temp[0],temp[1]);
+                    if (arrayCookies != null){
+                        if (temp.length > 1){
+                            mapCookies.put(temp[0],temp[1]);
+                        }
+                    }
                 }
-
             }catch (Exception e){
                 Crashlytics.log(cookies);
                 Crashlytics.logException(e);
             }
-
-
 
             for (Object o : mapCookies.keySet()){
                 if (o.toString().contains("user")){
