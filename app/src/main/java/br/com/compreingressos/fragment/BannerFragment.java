@@ -31,7 +31,7 @@ public class BannerFragment extends Fragment {
     private ImageView imgBanner;
     private ProgressBar progressBar;
 
-    public static BannerFragment newInstance(Banner banner){
+    public static BannerFragment newInstance(Banner banner) {
         BannerFragment fragment = new BannerFragment();
         Bundle args = new Bundle();
         args.putSerializable("banner", banner);
@@ -60,7 +60,8 @@ public class BannerFragment extends Fragment {
 
         Transformation transformation = new Transformation() {
 
-            @Override public Bitmap transform(Bitmap source) {
+            @Override
+            public Bitmap transform(Bitmap source) {
                 int targetWidth = imgBanner.getWidth();
 
                 double aspectRatio = (double) source.getHeight() / (double) source.getWidth();
@@ -73,25 +74,27 @@ public class BannerFragment extends Fragment {
                 return result;
             }
 
-            @Override public String key() {
+            @Override
+            public String key() {
                 return "transformation" + " desiredWidth";
             }
         };
 
 
         Picasso.with(getActivity())
-            .load(banner.getImagem())
-            .into(imgBanner, new Callback() {
-                @Override
-                public void onSuccess() {
-                    progressBar.setVisibility(View.GONE);
-                }
+                .load(banner.getImagem())
+                .placeholder(getActivity().getResources().getDrawable(R.drawable.placeholder_banner))
+                .into(imgBanner, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        progressBar.setVisibility(View.GONE);
+                    }
 
-                @Override
-                public void onError() {
+                    @Override
+                    public void onError() {
 //                  progressBar.setVisibility(View.GONE);
-                }
-            });
+                    }
+                });
 
 
         rootView.setOnClickListener(new View.OnClickListener() {

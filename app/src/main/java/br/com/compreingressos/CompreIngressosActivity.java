@@ -332,7 +332,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 if (o.toString().contains("user")){
                     UserHelper.saveUserIdOnSharedPreferences(CompreIngressosActivity.this, mapCookies.get(o.toString()));
                 }
-
             }
         }
 

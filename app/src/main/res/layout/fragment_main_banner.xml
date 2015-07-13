@@ -37,15 +37,7 @@
                 app:strokeColor="@color/red_compreingressos"
                 app:strokeWidth="2dp" />
         </LinearLayout>
-
-
     </FrameLayout>
 
-    <ImageView
-        android:id="@+id/placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:adjustViewBounds="true"
-        android:background="@drawable/placeholder_banner"
-        android:visibility="gone" />
+   <include layout="@layout/view_placeholder_banner"></include>
 </LinearLayout>

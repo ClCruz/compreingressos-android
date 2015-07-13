@@ -5,11 +5,13 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -26,6 +28,8 @@ import br.com.compreingressos.utils.ConnectionUtils;
  */
 public class MainBannerFragment extends Fragment implements BannerListener {
 
+    private static final String LOG_TAG = MainBannerFragment.class.getSimpleName();
+
     private PageViewAdapter mAdapter;
     private ViewPager mPager;
     private CirclePageIndicator mIndicator;
@@ -35,6 +39,7 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     private Handler handler = new Handler();
     private Runnable runnable;
     int position = 0;
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,6 +50,7 @@ public class MainBannerFragment extends Fragment implements BannerListener {
         mIndicator = (CirclePageIndicator) rootView.findViewById(R.id.indicator);
         viewBanner = (FrameLayout) rootView.findViewById(R.id.view_banner);
         placeholderView = (ImageView) rootView.findViewById(R.id.placeholder);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
         return rootView;
     }
@@ -59,6 +65,8 @@ public class MainBannerFragment extends Fragment implements BannerListener {
                 mPager.setAdapter(mAdapter);
                 mIndicator.setViewPager(mPager);
             }
+        }else{
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -95,20 +103,22 @@ public class MainBannerFragment extends Fragment implements BannerListener {
 
     @Override
     public void updateBannerAdapter(ArrayList<Banner> listBanner) {
-        mAdapter.setListBanners(listBanner);
-        mAdapter.notifyDataSetChanged();
+        if (listBanner != null){
+            mAdapter.setListBanners(listBanner);
+            mAdapter.notifyDataSetChanged();
 
-        if (listBanner.size() > 0){
-            viewBanner.setVisibility(View.VISIBLE);
-            placeholderView.setVisibility(View.GONE);
+            if (listBanner.size() > 0){
+                viewBanner.setVisibility(View.VISIBLE);
+                placeholderView.setVisibility(View.GONE);
+
+            }
+
+            if (handler != null) {
+                slideShow();
+                handler.postDelayed(runnable, 5000);
+            }
 
         }
-
-        if (handler != null) {
-            slideShow();
-            handler.postDelayed(runnable, 5000);
-        }
-
     }
 
     public void slideShow() {

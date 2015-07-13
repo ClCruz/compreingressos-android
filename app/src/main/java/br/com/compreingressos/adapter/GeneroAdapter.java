@@ -96,10 +96,12 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     public void updateBanners(ArrayList<Banner> banners){
         if (ConnectionUtils.isInternetOn(context)){
-            try {
-                ((MainBannerFragment) activity.getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(banners);
-            }catch (NullPointerException e){
-                Crashlytics.logException(e);
+            if (banners != null){
+                try {
+                    ((MainBannerFragment) activity.getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(banners);
+                }catch (NullPointerException e){
+                    Crashlytics.logException(e);
+                }
             }
         }
     }
