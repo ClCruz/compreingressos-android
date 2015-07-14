@@ -21,12 +21,11 @@ import br.com.compreingressos.model.Banner;
 
 public class PageViewAdapter extends FragmentStatePagerAdapter {
 
+    private static final String LOG_TAG = PageViewAdapter.class.getSimpleName();
+
     private int mCount;
     private List<Banner> mListBanners = Collections.emptyList();
     private FragmentManager fm = null;
-    int mHeight;
-    private static final String LOG_TAG = PageViewAdapter.class.getSimpleName();
-    private int mOrigin;
 
     public PageViewAdapter(FragmentManager fm, ArrayList<Banner> listBanners) {
         super(fm);
@@ -38,16 +37,14 @@ public class PageViewAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        BannerFragment frag;
         try {
-            frag = BannerFragment.newInstance(mListBanners.get(position % mListBanners.size()));
-            fm.beginTransaction().commitAllowingStateLoss();
+            return BannerFragment.newInstance(mListBanners.get(position % mListBanners.size()));
+//            fm.beginTransaction().commitAllowingStateLoss();
 
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-        return frag;
     }
 
     public void setListBanners(ArrayList<Banner> listBanners){

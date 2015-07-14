@@ -49,18 +49,18 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.mListGeneros = generos;
         this.context = context;
         this.mListBanners = banners;
-        activity  = (ActionBarActivity) context;
+        activity = (ActionBarActivity) context;
 
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        if (viewType == TYPE_HEADER){
+        if (viewType == TYPE_HEADER) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.header_generos, viewGroup, false);
 
             return new ViewHolderHeader(v);
 
-        }else if (viewType == TYPE_ITEM){
+        } else if (viewType == TYPE_ITEM) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_genero, viewGroup, false);
 
             return new ViewHolderItem(v);
@@ -72,12 +72,12 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
 
-        if (viewHolder instanceof  ViewHolderHeader){
-            MainBannerFragment  fragment = new MainBannerFragment();
+        if (viewHolder instanceof ViewHolderHeader) {
+            MainBannerFragment fragment = new MainBannerFragment();
             FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
             fragmentTransaction.add(R.id.view, fragment, "header");
             fragmentTransaction.commit();
-        }else if (viewHolder instanceof ViewHolderItem){
+        } else if (viewHolder instanceof ViewHolderItem) {
             Genero genero = getItem(position);
 
             ((ViewHolderItem) viewHolder).nomeView.setText(genero.getNome());
@@ -94,12 +94,12 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return TYPE_ITEM;
     }
 
-    public void updateBanners(ArrayList<Banner> banners){
-        if (ConnectionUtils.isInternetOn(context)){
-            if (banners != null){
+    public void updateBanners(ArrayList<Banner> banners) {
+        if (ConnectionUtils.isInternetOn(context)) {
+            if (banners != null) {
                 try {
                     ((MainBannerFragment) activity.getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(banners);
-                }catch (NullPointerException e){
+                } catch (NullPointerException e) {
                     Crashlytics.logException(e);
                 }
             }
@@ -116,14 +116,14 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return (mListGeneros == null ? 0 : mListGeneros.size()) +1 ;
+        return (mListGeneros == null ? 0 : mListGeneros.size()) + 1;
     }
 
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         public void onClickListener(View v, int position);
     }
 
-    public void SetOnItemClickListener(final OnItemClickListener onItemClickListener){
+    public void SetOnItemClickListener(final OnItemClickListener onItemClickListener) {
         GeneroAdapter.onItemClickListener = onItemClickListener;
     }
 
@@ -136,7 +136,7 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             nomeView = (TextView) itemView.findViewById(R.id.txt_nome);
 
             coverView = (ImageView) itemView.findViewById(R.id.img_cover);
-            itemView.setOnClickListener(new View.OnClickListener(){
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onClickListener(v, getPosition() - 1); //Foi inserido o (-1) pois a lista foi somado +1 para termos um item para adicionar o cabeçalho.
@@ -145,7 +145,7 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    public class ViewHolderHeader extends RecyclerView.ViewHolder{
+    public class ViewHolderHeader extends RecyclerView.ViewHolder {
 
         public ViewHolderHeader(View itemView) {
             super(itemView);

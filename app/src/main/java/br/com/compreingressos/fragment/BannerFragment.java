@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -30,6 +32,8 @@ public class BannerFragment extends Fragment {
     private View view;
     private ImageView imgBanner;
     private ProgressBar progressBar;
+    private TextView titleBanner;
+    private LinearLayout viewTitleBanner;
 
     public static BannerFragment newInstance(Banner banner) {
         BannerFragment fragment = new BannerFragment();
@@ -57,42 +61,28 @@ public class BannerFragment extends Fragment {
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
         imgBanner = (ImageView) rootView.findViewById(R.id.imageView);
-
-        Transformation transformation = new Transformation() {
-
-            @Override
-            public Bitmap transform(Bitmap source) {
-                int targetWidth = imgBanner.getWidth();
-
-                double aspectRatio = (double) source.getHeight() / (double) source.getWidth();
-                int targetHeight = (int) (targetWidth * aspectRatio);
-                Bitmap result = Bitmap.createScaledBitmap(source, targetWidth, targetHeight, false);
-                if (result != source) {
-                    // Same bitmap is returned if sizes are the same
-                    source.recycle();
-                }
-                return result;
-            }
-
-            @Override
-            public String key() {
-                return "transformation" + " desiredWidth";
-            }
-        };
+        titleBanner = (TextView) rootView.findViewById(R.id.title_banner);
+        viewTitleBanner = (LinearLayout) rootView.findViewById(R.id.view_title_banner);
 
 
-        Picasso.with(getActivity())
+        Picasso.with(getActivity().getApplicationContext())
                 .load(banner.getImagem())
                 .placeholder(getActivity().getResources().getDrawable(R.drawable.placeholder_banner))
                 .into(imgBanner, new Callback() {
+
                     @Override
                     public void onSuccess() {
                         progressBar.setVisibility(View.GONE);
+                        titleBanner.setVisibility(View.GONE);
+                        viewTitleBanner.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError() {
-//                  progressBar.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
+                        titleBanner.setVisibility(View.VISIBLE);
+                        titleBanner.setText(banner.getTitulo());
+                        viewTitleBanner.setVisibility(View.VISIBLE);
                     }
                 });
 
