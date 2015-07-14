@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -30,6 +31,7 @@ public class BannerFragment extends Fragment {
     private View view;
     private ImageView imgBanner;
     private ProgressBar progressBar;
+    private TextView titleBanner;
 
     public static BannerFragment newInstance(Banner banner) {
         BannerFragment fragment = new BannerFragment();
@@ -57,6 +59,7 @@ public class BannerFragment extends Fragment {
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
         imgBanner = (ImageView) rootView.findViewById(R.id.imageView);
+        titleBanner = (TextView) rootView.findViewById(R.id.title_banner);
 
         Transformation transformation = new Transformation() {
 
@@ -88,11 +91,12 @@ public class BannerFragment extends Fragment {
                     @Override
                     public void onSuccess() {
                         progressBar.setVisibility(View.GONE);
+                        titleBanner.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError() {
-//                  progressBar.setVisibility(View.GONE);
+                        titleBanner.setVisibility(View.VISIBLE);
                     }
                 });
 
