@@ -72,10 +72,21 @@ public class CompreIngressosActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null){
             toolbar.setTitle(tituloEspetaculo);
-            toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
             toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
             setSupportActionBar(toolbar);
-            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                this.setTheme(R.style.Base_ThemeOverlay_AppCompat_Dark);
+                toolbar.setBackgroundColor(getResources().getColor(R.color.red_compreingressos));
+                getWindow().setStatusBarColor(getResources().getColor(R.color.red_status_bar));
+                toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+                getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close_white));
+            }else{
+                toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
+                getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
+            }
+
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
@@ -180,8 +191,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
 
-//                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
-//                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
+                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
+                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
 
                 if (url.contains("etapa1.php")){
                     WebSettings webSettings = view.getSettings();
@@ -310,8 +321,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private void getCookies(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
         Map<String, String> mapCookies = new HashMap<>();
-        Log.e(LOG_TAG, cookies);
-
         if (mapCookies != null){
             try {
                 String[] arrayCookies = cookies.split(";");

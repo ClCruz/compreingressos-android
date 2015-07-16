@@ -1,5 +1,7 @@
 package br.com.compreingressos.deserializer;
 
+import android.util.Log;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -10,6 +12,7 @@ import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 
 import br.com.compreingressos.model.Espetaculo;
@@ -21,7 +24,7 @@ public class EspetaculoDeserializer implements JsonDeserializer<Espetaculo> {
 
     private static final String LOG_TAG = "EspetaculoDeserializer";
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", new Locale("pt", "BR"));
 
     @Override
     public Espetaculo deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
@@ -33,8 +36,7 @@ public class EspetaculoDeserializer implements JsonDeserializer<Espetaculo> {
         Date date;
 
         try {
-            date = dateFormat.parse(((JsonObject)json).get("data").getAsString());
-
+            date = dateFormat.parse(obj.get("data").getAsString());
         }catch (ParseException e){
             e.printStackTrace();
             date =  null;

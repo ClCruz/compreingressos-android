@@ -4,6 +4,7 @@ package br.com.compreingressos;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -29,7 +30,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import br.com.compreingressos.adapter.OrderAdapter;
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
@@ -47,7 +47,7 @@ import br.com.compreingressos.utils.ConnectionUtils;
  */
 public class HistoryOrdersActivity extends ActionBarActivity {
 
-    private static final String LOG_TAG  = "HistoryOrdersActivity";
+    private static final String LOG_TAG = "HistoryOrdersActivity";
 
     private DatabaseHelper databaseHelper;
     private Toolbar toolbar;
@@ -68,9 +68,18 @@ public class HistoryOrdersActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             toolbar.setTitle("Historico de Pedidos");
-            toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
             toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
             setSupportActionBar(toolbar);
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                this.setTheme(R.style.Base_ThemeOverlay_AppCompat_Dark);
+                toolbar.setBackgroundColor(getResources().getColor(R.color.red_compreingressos));
+                getWindow().setStatusBarColor(getResources().getColor(R.color.red_status_bar));
+                toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+            }else{
+                toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
+            }
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
@@ -95,14 +104,14 @@ public class HistoryOrdersActivity extends ActionBarActivity {
         if (ConnectionUtils.isInternetOn(HistoryOrdersActivity.this)) {
             requestQueue = VolleySingleton.getInstance(HistoryOrdersActivity.this).getRequestQueue();
             startRequest();
-        }else{
+        } else {
             Toast.makeText(HistoryOrdersActivity.this, getResources().getString(R.string.message_sem_conexao), Toast.LENGTH_LONG).show();
         }
 
     }
 
     private void getOrdersFromDatabase() {
-        databaseHelper =  new DatabaseHelper(HistoryOrdersActivity.this);
+        databaseHelper = new DatabaseHelper(HistoryOrdersActivity.this);
 
         try {
             orderDao = new OrderDao(databaseHelper.getConnectionSource());
@@ -113,13 +122,13 @@ public class HistoryOrdersActivity extends ActionBarActivity {
     }
 
     private void initRecyclerView() {
-        if (orders.size() > 0){
+        if (orders.size() > 0) {
 
             adapter.setOnItemClickListener(onItemClick);
             recyclerView.setAdapter(adapter);
             recyclerView.setVisibility(View.VISIBLE);
             emptyHistory.setVisibility(View.GONE);
-        }else{
+        } else {
             recyclerView.setVisibility(View.GONE);
             emptyHistory.setVisibility(View.VISIBLE);
         }
@@ -166,7 +175,7 @@ public class HistoryOrdersActivity extends ActionBarActivity {
             @Override
             public void onResponse(final Order[] response) {
 
-                if (response != null){
+                if (response != null) {
                     SaveOnDabaseAsyncTask saveOnDabaseAsyncTask = new SaveOnDabaseAsyncTask();
                     saveOnDabaseAsyncTask.execute(response);
 
@@ -188,10 +197,7 @@ public class HistoryOrdersActivity extends ActionBarActivity {
 
     private void startRequest() {
         String clientId = UserHelper.retrieveUserIdOnSharedPreferences(HistoryOrdersActivity.this);
-
-        Log.e(LOG_TAG, "---> " + clientId);
-
-        if (clientId.trim().length() > 0){
+        if (clientId.trim().length() > 0) {
             String envHomol = "";
             if (CompreIngressosApplication.isRunnigOnEnvironmentDevelopment())
                 envHomol = "&env=homol";
@@ -202,8 +208,8 @@ public class HistoryOrdersActivity extends ActionBarActivity {
             Map<String, String> headers = new HashMap<String, String>();
             headers.put("Content-Type", "application/json");
 
-            GsonRequest<Order[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, "http://tokecompre-ci.herokuapp.com/tickets.json?os=android"+envHomol+"&client_id="+ clientId, Order[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
-            jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000,DefaultRetryPolicy.DEFAULT_MAX_RETRIES,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            GsonRequest<Order[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, "http://tokecompre-ci.herokuapp.com/tickets.json?os=android" + envHomol + "&client_id=" + clientId, Order[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
+            jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             this.requestQueue.add(jsonObjRequest);
         }
 
@@ -244,7 +250,7 @@ public class HistoryOrdersActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(Boolean aBoolean) {
 
-            if (aBoolean){
+            if (aBoolean) {
                 adapter.updateList(orders);
                 progressDialog.dismiss();
                 initRecyclerView();

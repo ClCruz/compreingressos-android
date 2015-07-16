@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -68,6 +69,14 @@ public class SearchActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null){
             toolbar.setTitle("");
+            if (Build.VERSION.SDK_INT >= 21) {
+                this.setTheme(R.style.Base_ThemeOverlay_AppCompat_Dark);
+                toolbar.setBackgroundColor(getResources().getColor(R.color.red_compreingressos));
+                getWindow().setStatusBarColor(getResources().getColor(R.color.red_status_bar));
+                toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+            }else{
+                toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
+            }
             toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -129,7 +138,7 @@ public class SearchActivity extends ActionBarActivity {
 
         try {
             TextView textView = (TextView) searchView.findViewById(R.id.search_src_text);
-            textView.setTextColor(getResources().getColor(R.color.font_history_orders));
+            textView.setTextColor(getResources().getColor(R.color.white));
 
         }catch (Exception e){
             e.printStackTrace();

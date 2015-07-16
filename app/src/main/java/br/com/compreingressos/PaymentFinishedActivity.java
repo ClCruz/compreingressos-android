@@ -1,6 +1,7 @@
 package br.com.compreingressos;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -59,9 +60,19 @@ public class PaymentFinishedActivity extends ActionBarActivity {
         if (toolbar !=null){
             toolbar.setTitle("");
             toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
-//            toolbar.setBackgroundColor(getResources().getColor(R.color.red_compreingressos));
             setSupportActionBar(toolbar);
-            getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                this.setTheme(R.style.Base_ThemeOverlay_AppCompat_Dark);
+                toolbar.setBackgroundColor(getResources().getColor(R.color.red_compreingressos));
+                getWindow().setStatusBarColor(getResources().getColor(R.color.red_status_bar));
+                toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+                getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close_white));
+            }else{
+                toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
+                getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
+            }
+
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         }
@@ -93,7 +104,7 @@ public class PaymentFinishedActivity extends ActionBarActivity {
 
         requestQueue = VolleySingleton.getInstance(PaymentFinishedActivity.this).getRequestQueue();
         try {
-            if (!hasSendTrackPurchase){
+            if (hasSendTrackPurchase == false){
                 startRequest(order);
             }
 
@@ -105,16 +116,19 @@ public class PaymentFinishedActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PaymentFinishedActivity.this, DetailHistoryOrderActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("isFinishedOrder", true);
                 intent.putExtra("order", order);
                 startActivity(intent);
-                finish();
             }
         });
 
         if (hasAssinatura)
             btnVerIngressos.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -137,7 +151,6 @@ public class PaymentFinishedActivity extends ActionBarActivity {
             @Override
             public void onResponse(final JSONObject response) {
                 if (response != null){
-                    Log.e("---------- >> " , " "+ response);
                     hasSendTrackPurchase = true;
                 }
             }

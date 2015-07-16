@@ -33,7 +33,6 @@ import java.util.Map;
 import br.com.compreingressos.adapter.GeneroAdapter;
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.decoration.DividerItemDecoration;
-import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.toolbox.GsonRequest;
@@ -93,8 +92,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         buildGoogleApiClient();
 
         DatabaseManager.init(this);
-
-        Log.e(LOG_TAG, "client_id user -> " + UserHelper.retrieveUserIdOnSharedPreferences(MainActivity.this));
 
         this.requestQueue = VolleySingleton.getInstance(this).getRequestQueue();
     }
@@ -249,13 +246,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                mListBanners = new ArrayList<>();
-//                Log.e("-----> ", error.toString());
-//                Banner banner = new Banner();
-//                banner.setImagem("placeholder");
-//                mListBanners.add(banner);
-//
-//                adapter.updateBanners(mListBanners);
+                error.printStackTrace();
             }
         };
     }
