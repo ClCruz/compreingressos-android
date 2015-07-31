@@ -459,7 +459,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
     public void mappingScreenNameToAnalytics(String screenName){
 
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.enableAutoActivityTracking(true);
         t.setScreenName(screenName);
     }
 

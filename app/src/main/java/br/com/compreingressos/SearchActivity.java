@@ -83,7 +83,6 @@ public class SearchActivity extends ActionBarActivity {
         }
 
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.enableAutoActivityTracking(true);
         t.setScreenName(ConstantsGoogleAnalytics.BUSCA);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_espetaculos);

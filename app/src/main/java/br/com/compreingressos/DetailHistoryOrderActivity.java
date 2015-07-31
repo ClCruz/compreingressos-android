@@ -69,7 +69,6 @@ public class DetailHistoryOrderActivity extends ActionBarActivity {
         }
 
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.enableAutoActivityTracking(true);
         t.setScreenName(ConstantsGoogleAnalytics.DETALHE_INGRESSO);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tickts);

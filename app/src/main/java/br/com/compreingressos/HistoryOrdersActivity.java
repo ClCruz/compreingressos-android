@@ -84,7 +84,6 @@ public class HistoryOrdersActivity extends ActionBarActivity {
         }
 
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.enableAutoActivityTracking(true);
         t.setScreenName(ConstantsGoogleAnalytics.MEUS_INGRESSOS);
 
         emptyHistory = (LinearLayout) findViewById(R.id.empty_history);
