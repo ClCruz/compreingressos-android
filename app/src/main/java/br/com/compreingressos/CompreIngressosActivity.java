@@ -192,7 +192,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
 
                 if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
-                    url = "http://186.237.201.132:81/compreingressos2/comprar/etapa1.php?apresentacao=61596";
+                    url = "http://186.237.201.150:8081/compreingressos2/comprar/etapa1.php?apresentacao=61565";
 
                 if (url.contains("etapa1.php")){
                     WebSettings webSettings = view.getSettings();
