@@ -25,6 +25,7 @@ import android.widget.ProgressBar;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.analytics.ecommerce.Product;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,14 +55,13 @@ public class CompreIngressosActivity extends ActionBarActivity {
     boolean hasAssinatura = false;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compre_ingressos);
 
 
-        if (getIntent().hasExtra("u")){
+        if (getIntent().hasExtra("u")) {
             url = getIntent().getStringExtra("u");
             codePromo = getIntent().getStringExtra("c");
         }
@@ -70,7 +70,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
             tituloEspetaculo = getIntent().getStringExtra("titulo_espetaculo");
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (toolbar != null){
+        if (toolbar != null) {
             toolbar.setTitle(tituloEspetaculo);
             toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
             setSupportActionBar(toolbar);
@@ -81,7 +81,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 getWindow().setStatusBarColor(getResources().getColor(R.color.red_status_bar));
                 toolbar.setTitleTextColor(getResources().getColor(R.color.white));
                 getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close_white));
-            }else{
+            } else {
                 toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
                 getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
             }
@@ -111,7 +111,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
         webAppInterface = new WebAppInterface(this);
 
 
-
         webView.addJavascriptInterface(webAppInterface, "Android");
 
 
@@ -129,9 +128,9 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     exception.printStackTrace();
                 }
 
-                if (url.contains("pagamento_ok.php")){
-                    if ( countReading  > 0){
-                        if (url.contains("assinaturas")){
+                if (url.contains("pagamento_ok.php")) {
+                    if (countReading > 0) {
+                        if (url.contains("assinaturas")) {
                             hasAssinatura = true;
                         }
                         codePromo = "";
@@ -151,28 +150,28 @@ public class CompreIngressosActivity extends ActionBarActivity {
                         });
                     }
                     isFirstUrlLoading = false;
-                    countReading ++;
+                    countReading++;
                 }
 
-                if (url.contains("etapa5.php")){
+                if (url.contains("etapa5.php")) {
                     view.loadUrl("javascript:$(\".meu_codigo_cartao\").hide();");
                 }
 
-                if (url.contains("etapa1.php")){
-                    if (PreferenceManager.getDefaultSharedPreferences(CompreIngressosActivity.this).getBoolean("show_pinch_screen", true)){
-                        if ( countReading  == 1 ){
-                            if (hasSupportPinch){
-                                Intent i  = new Intent(CompreIngressosActivity.this, HowToPinchActivity.class);
+                if (url.contains("etapa1.php")) {
+                    if (PreferenceManager.getDefaultSharedPreferences(CompreIngressosActivity.this).getBoolean("show_pinch_screen", true)) {
+                        if (countReading == 1) {
+                            if (hasSupportPinch) {
+                                Intent i = new Intent(CompreIngressosActivity.this, HowToPinchActivity.class);
                                 startActivity(i);
                             }
                         }
 
                         isFirstUrlLoading = false;
-                        countReading ++;
+                        countReading++;
                     }
                 }
 
-                if (url.contains("etapa2.php")){
+                if (url.contains("etapa2.php")) {
                     view.loadUrl(injectPromoCode());
                 }
 
@@ -194,13 +193,13 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
                     url = "http://186.237.201.150:8081/compreingressos2/comprar/etapa1.php?apresentacao=61565";
 
-                if (url.contains("etapa1.php")){
+                if (url.contains("etapa1.php")) {
                     WebSettings webSettings = view.getSettings();
                     webSettings.setBuiltInZoomControls(true);
 
                     try {
                         webSettings.setDisplayZoomControls(false);
-                    }catch (NoSuchMethodError e ){
+                    } catch (NoSuchMethodError e) {
                         hasSupportPinch = false;
                         e.printStackTrace();
                     }
@@ -237,7 +236,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
                 if (url.contains("espetaculos")) {
                     webView.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     webView.setVisibility(View.GONE);
                 }
 
@@ -246,40 +245,40 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
                 hideNextButton();
 
-                if (url.contains("etapa1.php")){
+                if (url.contains("etapa1.php")) {
                     mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_SEUINGRESSO);
                     toolbar.setTitle("Escolha um assento");
                     showNextButton();
-                }else if (url.contains("etapa2.php")){
+                } else if (url.contains("etapa2.php")) {
                     mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_TIPO_INGRESSO);
                     showNextButton();
                     toolbar.setTitle("Tipo de ingresso");
-                }else if (url.contains("etapa3.php")){
+                } else if (url.contains("etapa3.php")) {
                     mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_LOGIN);
                     hideNextButton();
                     toolbar.setTitle("Login");
-                }else if (url.contains("etapa4.php")){
+                } else if (url.contains("etapa4.php")) {
                     mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_CONFIRMACAO);
                     showNextButton();
                     toolbar.setTitle("Confirmação");
-                }else if (url.contains("etapa5.php")){
+                } else if (url.contains("etapa5.php")) {
                     mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_PAGAMENTO);
                     showNextButton();
                     toolbar.setTitle("Pagamento");
                     btnAvancar.setText("Pagar");
-                }else if (url.contains("pagamento_ok.php")){
+                } else if (url.contains("pagamento_ok.php")) {
                     mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_FINAL_PAGAMENTO);
                     toolbar.setTitle("Compra Finalizada");
                     hideNextButton();
-                }else if (url.contains("espetaculos/")){
-                    if (tituloEspetaculo.equals("Destaque")){
+                } else if (url.contains("espetaculos/")) {
+                    if (tituloEspetaculo.equals("Destaque")) {
                         mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_DESTAQUE);
-                    }else{
+                    } else {
                         mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_ESPETACULO);
                     }
 
                     toolbar.setTitle(tituloEspetaculo);
-                }else if (url.contains("assinatura")){
+                } else if (url.contains("assinatura")) {
                     mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_ASSINATURAS);
                 }
 
@@ -291,15 +290,15 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 view.loadUrl("javascript:$(\"#menu_topo\").hide();$('.aba' && '.fechado').hide();$(\"#footer\").hide();$(\"#selos\").hide();");
                 view.loadUrl("javascript:$('.imprima_agora').hide();");
 
-                if (url.contains("etapa1.php")){
+                if (url.contains("etapa1.php")) {
                     view.loadUrl("javascript:Android.showToast($(\".destaque_menor_v2\").first().find(\"h3\").text());");
                 }
 
                 view.loadUrl("javascript:$(document).ready(function(){$('.voltar').hide();});");
 
-                if (AndroidUtils.isKitKatOrNewer(CompreIngressosActivity.this)){
+                if (AndroidUtils.isKitKatOrNewer(CompreIngressosActivity.this)) {
                     view.loadUrl("javascript:$(document).ready(function(){$('.container_botoes_etapas').hide();});");
-                }else{
+                } else {
                     view.loadUrl("javascript:$(document).ready(function(){$('.container_botoes_etapas').show();});");
 
                 }
@@ -311,9 +310,9 @@ public class CompreIngressosActivity extends ActionBarActivity {
             }
         });
 
-        if (getIntent().getStringExtra("url_flux_webview") == null){
+        if (getIntent().getStringExtra("url_flux_webview") == null) {
             webView.loadUrl(getUrlFromTokecompre(url));
-        }else{
+        } else {
             webView.loadUrl(getIntent().getStringExtra("url_flux_webview"));
         }
     }
@@ -321,24 +320,24 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private void getCookies(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
         Map<String, String> mapCookies = new HashMap<>();
-        if (mapCookies != null){
+        if (mapCookies != null) {
             try {
                 String[] arrayCookies = cookies.split(";");
                 for (int i = 0; i < arrayCookies.length; i++) {
                     String[] temp = arrayCookies[i].split("=");
-                    if (arrayCookies != null){
-                        if (temp.length > 1){
-                            mapCookies.put(temp[0],temp[1]);
+                    if (arrayCookies != null) {
+                        if (temp.length > 1) {
+                            mapCookies.put(temp[0], temp[1]);
                         }
                     }
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 Crashlytics.log(cookies);
                 Crashlytics.logException(e);
             }
 
-            for (Object o : mapCookies.keySet()){
-                if (o.toString().contains("user")){
+            for (Object o : mapCookies.keySet()) {
+                if (o.toString().contains("user")) {
                     UserHelper.saveUserIdOnSharedPreferences(CompreIngressosActivity.this, mapCookies.get(o.toString()));
                 }
             }
@@ -367,7 +366,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public String runScripGetInfoPayment(){
+    public String runScripGetInfoPayment() {
         StringBuilder scriptGetInfoPayment = new StringBuilder("javascript:var date_aux = new Array; \n");
         scriptGetInfoPayment.append("$('.data').children().each(function(){date_aux.push($(this).html())}); \n");
         scriptGetInfoPayment.append("var order_date = date_aux.join(' '); \n");
@@ -416,8 +415,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
         return scriptGetInfoPayment.toString();
     }
 
-    public String injectPromoCode(){
-        StringBuilder script = new StringBuilder("javascript:var codigo = "+ codePromo +";\n");
+    public String injectPromoCode() {
+        StringBuilder script = new StringBuilder("javascript:var codigo = " + codePromo + ";\n");
         script.append("var groups = /<a href=\\\"#([\\d]+)\\\" rel=\\\"[\\d]+\\\">PROMO APP<\\/a>/.exec(document.documentElement.outerHTML);\n");
         script.append("var ref;\n");
         script.append("if (groups.length == 2) ref = groups[1];\n");
@@ -431,24 +430,32 @@ public class CompreIngressosActivity extends ActionBarActivity {
         return script.toString();
     }
 
+    public String runScriptGetItemsGoogleAnalytics(){
+        StringBuilder stringBuilder = new StringBuilder("javascript:var regex = /_gaq.push\\(\\['_addItem',[\\W]+'([\\d]+)',[\\W]+'([\\d_]+)',[\\W]+'([\\w \\-\\u00C0-\\u017F]+)',[\\W]+'([\\w \\-\\u00C0-\\u017F]+)',[\\W]+'([\\d\\.,]*)',[\\W]+'(\\d)'/g; \n");
+        stringBuilder.append("var match; \n");
+        stringBuilder.append("var ret = ''; \n");
+        stringBuilder.append("while (match = regex.exec(document.documentElement.outerHTML)) { \n");
+        return "";
+    }
 
-    private void showNextButton(){
-        if (AndroidUtils.isKitKatOrNewer(CompreIngressosActivity.this)){
-            if (!btnAvancar.isShown()){
+
+    private void showNextButton() {
+        if (AndroidUtils.isKitKatOrNewer(CompreIngressosActivity.this)) {
+            if (!btnAvancar.isShown()) {
                 btnAvancar.setVisibility(View.VISIBLE);
             }
         }
 
     }
 
-    private void hideNextButton(){
-        if (btnAvancar.isShown()){
+    private void hideNextButton() {
+        if (btnAvancar.isShown()) {
             btnAvancar.setVisibility(View.GONE);
         }
     }
 
-    private String getUrlFromTokecompre(String mUrl){
-        Uri.Builder urlResult =  Uri.parse(mUrl).buildUpon();
+    private String getUrlFromTokecompre(String mUrl) {
+        Uri.Builder urlResult = Uri.parse(mUrl).buildUpon();
 
         urlResult.appendQueryParameter("os", "android");
         urlResult.appendQueryParameter("app", "tokecompre");
@@ -456,11 +463,15 @@ public class CompreIngressosActivity extends ActionBarActivity {
     }
 
 
-    public void mappingScreenNameToAnalytics(String screenName){
-
+    public void mappingScreenNameToAnalytics(String screenName) {
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.enableAutoActivityTracking(true);
         t.setScreenName(screenName);
+    }
+
+    public void onPurchaseComplete() {
+
+//        Product product = new Product();
+
     }
 
 }
