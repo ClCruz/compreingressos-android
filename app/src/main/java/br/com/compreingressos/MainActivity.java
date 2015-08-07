@@ -84,7 +84,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
         //Tracking do google analytics, enviando o nome amigave da classe
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.enableAutoActivityTracking(true);
         t.setScreenName(ConstantsGoogleAnalytics.HOME);
 
         mLocationManager =  (LocationManager) getSystemService(Context.LOCATION_SERVICE);

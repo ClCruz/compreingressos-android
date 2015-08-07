@@ -41,5 +41,12 @@
         </LinearLayout>
 
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New TextTextTextTextTextTextTextText"
+            android:id="@+id/title_banner"
+            android:layout_gravity="center_horizontal|top" />
+
     </FrameLayout>
 </LinearLayout>

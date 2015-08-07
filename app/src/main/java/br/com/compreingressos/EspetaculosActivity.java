@@ -92,7 +92,6 @@ public class EspetaculosActivity extends ActionBarActivity {
         }
 
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.enableAutoActivityTracking(true);
         t.setScreenName(ConstantsGoogleAnalytics.ESPETACULOS.replace("<#>", genero));
 
         retryConnectionView = (LinearLayout) findViewById(R.id.retry_connection);
