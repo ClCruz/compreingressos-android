@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,7 +24,6 @@ import android.widget.ProgressBar;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.Tracker;
-import com.google.android.gms.analytics.ecommerce.Product;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,12 +44,12 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
     private Toolbar toolbar;
     private Button btnAvancar;
-    private boolean isFirstUrlLoading = true;
     private int countReading = 0;
     private ProgressBar progressBar;
-    private boolean hasSupportPinch = true;
     private String codePromo;
     public WebAppInterface webAppInterface;
+    boolean hasSupportPinch = true;
+    boolean isFirstUrlLoading = true;
     boolean hasAssinatura = false;
 
 
@@ -217,7 +215,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
                 }
 
-                if (Uri.parse(url).getHost().equals("www.compreingressos.com") || Uri.parse(url).getHost().equals("compra.compreingressos.com") || Uri.parse(url).getHost().equals("186.237.201.132")) {
+                if (Uri.parse(url).getHost().equals("www.compreingressos.com") || Uri.parse(url).getHost().equals("compra.compreingressos.com") || Uri.parse(url).getHost().equals("186.237.201.150")) {
                     view.loadUrl(getUrlFromTokecompre(url));
                     return false;
                 }
