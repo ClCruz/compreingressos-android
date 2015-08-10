@@ -27,6 +27,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
@@ -84,6 +85,8 @@ public class SearchActivity extends ActionBarActivity {
 
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
         t.setScreenName(ConstantsGoogleAnalytics.BUSCA);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
+
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_espetaculos);
         recyclerView.addItemDecoration(new DividerItemDecoration(this));

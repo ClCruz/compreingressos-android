@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import br.com.compreingressos.adapter.OrderDetailAdapter;
@@ -70,6 +71,7 @@ public class DetailHistoryOrderActivity extends ActionBarActivity {
 
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
         t.setScreenName(ConstantsGoogleAnalytics.DETALHE_INGRESSO);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tickts);
         recyclerView.setHasFixedSize(true);

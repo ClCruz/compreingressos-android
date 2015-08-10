@@ -504,6 +504,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     public void trackScreenNameOnGA(String screenName) {
 
         t.setScreenName(screenName);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     public void trackOrderWithItemsOnGA(String resultData) {
@@ -547,20 +548,20 @@ public class CompreIngressosActivity extends ActionBarActivity {
             products.add(product);
         }
 
-        ProductAction productAction = new ProductAction(ProductAction.ACTION_CHECKOUT)
+        ProductAction productAction = new ProductAction(ProductAction.ACTION_PURCHASE)
                 .setTransactionId(TransactionId)
                 .setTransactionAffiliation("compreingressos")
-                .setTransactionRevenue(0)
+                .setTransactionRevenue(Integer.parseInt(order.getTotal().replace(",", "")) / 100.0f)
                 .setTransactionTax(0)
                 .setTransactionShipping(0);
 
 
         for (Product product : products) {
-            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder()
+            HitBuilders.EventBuilder eventBuilder = new HitBuilders.EventBuilder()
                     .addProduct(product)
                     .setProductAction(productAction);
 
-            t.send(screenViewBuilder.build());
+            t.send(eventBuilder.build());
         }
 
 

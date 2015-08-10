@@ -17,6 +17,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import java.util.ArrayList;
@@ -93,6 +94,8 @@ public class EspetaculosActivity extends ActionBarActivity {
 
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
         t.setScreenName(ConstantsGoogleAnalytics.ESPETACULOS.replace("<#>", genero));
+        t.send(new HitBuilders.ScreenViewBuilder().build());
+
 
         retryConnectionView = (LinearLayout) findViewById(R.id.retry_connection);
         recyclerView = (RecyclerViewCustom) findViewById(R.id.recycler_view_espetaculos);

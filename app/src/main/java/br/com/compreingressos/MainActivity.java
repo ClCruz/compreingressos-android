@@ -19,6 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -85,6 +86,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         //Tracking do google analytics, enviando o nome amigave da classe
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
         t.setScreenName(ConstantsGoogleAnalytics.HOME);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         mLocationManager =  (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 

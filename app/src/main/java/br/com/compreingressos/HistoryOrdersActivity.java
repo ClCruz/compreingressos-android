@@ -22,6 +22,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import java.sql.SQLException;
@@ -85,6 +86,7 @@ public class HistoryOrdersActivity extends ActionBarActivity {
 
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
         t.setScreenName(ConstantsGoogleAnalytics.MEUS_INGRESSOS);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         emptyHistory = (LinearLayout) findViewById(R.id.empty_history);
 

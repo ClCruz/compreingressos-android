@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.j256.ormlite.stmt.QueryBuilder;
 
@@ -79,6 +80,7 @@ public class PaymentFinishedActivity extends ActionBarActivity {
 
         Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
         t.setScreenName(ConstantsGoogleAnalytics.FINALIZACAO_PAGAMENTO);
+        t.send(new HitBuilders.ScreenViewBuilder().build());
 
         databaseHelper =  new DatabaseHelper(PaymentFinishedActivity.this);
 

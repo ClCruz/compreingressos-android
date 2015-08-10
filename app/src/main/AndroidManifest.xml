@@ -74,65 +74,77 @@
             </intent-filter>
         </receiver>
 
+        <!-- Optionally, register AnalyticsReceiver and AnalyticsService to support background
+       dispatching on non-Google Play devices -->
+      <receiver android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+          android:enabled="true">
+          <intent-filter>
+              <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
+          </intent-filter>
+      </receiver>
+      <service android:name="com.google.android.gms.analytics.AnalyticsService"
+          android:enabled="true"
+          android:exported="false"/>
 
-        <activity
-            android:name=".SplashScreenActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
+      <activity
+          android:name=".SplashScreenActivity"
+          android:label="@string/app_name"
+          android:screenOrientation="portrait"
+          android:theme="@style/Theme.AppCompat.NoActionBar">
+          <intent-filter>
+              <action android:name="android.intent.action.MAIN" />
 
-        </activity>
+              <category android:name="android.intent.category.LAUNCHER" />
+          </intent-filter>
+      </activity>
+      <activity
+          android:name=".MainActivity"
+          android:label="@string/app_name"
+          android:screenOrientation="portrait">
 
-        <activity
-            android:name=".EspetaculosActivity"
-            android:label="@string/title_activity_compre_ingressos"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".CompreIngressosActivity"
-            android:label="@string/title_activity_compre_ingressos"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".HistoryOrdersActivity"
-            android:label="HistoryOrdersActivity"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".DetailHistoryOrderActivity"
-            android:label="DetailHistoryOrderActivity"
-            android:parentActivityName=".HistoryOrdersActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".PaymentFinishedActivity"
-            android:label="PaymentFinishedActivity"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".SearchActivity"
-            android:label="SearchActivity"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".HowToPinchActivity"
-            android:label="HowToPinchActivity"
-            android:parentActivityName=".CompreIngressosActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent"></activity>
+      </activity>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="87c8b5e30a4128bde2d542f32ba16ba302ae696e" />
-    </application>
+      <activity
+          android:name=".EspetaculosActivity"
+          android:label="@string/title_activity_compre_ingressos"
+          android:parentActivityName=".MainActivity"
+          android:screenOrientation="portrait"></activity>
+      <activity
+          android:name=".CompreIngressosActivity"
+          android:label="@string/title_activity_compre_ingressos"
+          android:parentActivityName=".MainActivity"
+          android:screenOrientation="portrait"></activity>
+      <activity
+          android:name=".HistoryOrdersActivity"
+          android:label="HistoryOrdersActivity"
+          android:parentActivityName=".MainActivity"
+          android:screenOrientation="portrait"></activity>
+      <activity
+          android:name=".DetailHistoryOrderActivity"
+          android:label="DetailHistoryOrderActivity"
+          android:parentActivityName=".HistoryOrdersActivity"
+          android:screenOrientation="portrait"></activity>
+      <activity
+          android:name=".PaymentFinishedActivity"
+          android:label="PaymentFinishedActivity"
+          android:parentActivityName=".MainActivity"
+          android:screenOrientation="portrait"></activity>
+      <activity
+          android:name=".SearchActivity"
+          android:label="SearchActivity"
+          android:parentActivityName=".MainActivity"
+          android:screenOrientation="portrait"></activity>
+      <activity
+          android:name=".HowToPinchActivity"
+          android:label="HowToPinchActivity"
+          android:parentActivityName=".CompreIngressosActivity"
+          android:screenOrientation="portrait"
+          android:theme="@style/Theme.AppCompat.Translucent"></activity>
+
+      <meta-data
+          android:name="io.fabric.ApiKey"
+          android:value="87c8b5e30a4128bde2d542f32ba16ba302ae696e" />
+  </application>
 
 </manifest>
