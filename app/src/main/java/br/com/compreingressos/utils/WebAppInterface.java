@@ -3,15 +3,13 @@ package br.com.compreingressos.utils;
 import android.content.Context;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
-import android.widget.Toast;
 
 import java.sql.SQLException;
 
 import br.com.compreingressos.dao.OrderDao;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.OrderHelper;
-import br.com.compreingressos.interfaces.LoadDataResultFromWebviewListener;
-import br.com.compreingressos.model.Order;
+import br.com.compreingressos.interfaces.WebAppInterfaceListener;
 
 /**
  * Created by luiszacheu on 17/03/15.
@@ -21,21 +19,10 @@ public class WebAppInterface {
     Context context;
     private OrderDao orderDao;
     private DatabaseHelper databaseHelper;
-    public static LoadDataResultFromWebviewListener loadDataResultFromWebviewListener;
+    public static WebAppInterfaceListener webAppInterfaceListener;
 
     public WebAppInterface(Context c){
         context = c;
-    }
-
-    @JavascriptInterface
-    public void showToast(String toast){
-//        Toast.makeText(context, toast, Toast.LENGTH_SHORT).show();
-    }
-
-    @JavascriptInterface
-    public void getLogin(String user, String password){
-//        Log.e("-------- User ----", user.toString());
-//        Log.e("-------- Password ----", password.toString());
     }
 
     @JavascriptInterface
@@ -58,12 +45,18 @@ public class WebAppInterface {
         print(resultJson);
     }
 
-    public void setHelloInterface(LoadDataResultFromWebviewListener listener){
-        loadDataResultFromWebviewListener=listener;
+    public void loadDataResultFromWebviewListener(WebAppInterfaceListener listener){
+        webAppInterfaceListener=listener;
     }
 
     public void print(String result){
-        System.out.println(loadDataResultFromWebviewListener.finishLoadResultData(result));
+        System.out.println(webAppInterfaceListener.onFinishLoadResultData(result));
+    }
+
+    @JavascriptInterface
+    public void getItemsGoogleAnalytics(String result){
+        webAppInterfaceListener.onLoadItemsGoogleAnalytics(result);
+
     }
 
 

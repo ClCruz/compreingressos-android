@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,14 +24,24 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.analytics.ecommerce.ProductAction;
+import com.j256.ormlite.stmt.QueryBuilder;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
+import br.com.compreingressos.dao.OrderDao;
+import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.UserHelper;
-import br.com.compreingressos.interfaces.LoadDataResultFromWebviewListener;
+import br.com.compreingressos.interfaces.WebAppInterfaceListener;
+import br.com.compreingressos.model.Order;
 import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.WebAppInterface;
 
@@ -51,13 +62,17 @@ public class CompreIngressosActivity extends ActionBarActivity {
     boolean hasSupportPinch = true;
     boolean isFirstUrlLoading = true;
     boolean hasAssinatura = false;
+    private DatabaseHelper databaseHelper;
+    private OrderDao orderDao;
 
+
+    Tracker t = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compre_ingressos);
-
+        t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
 
         if (getIntent().hasExtra("u")) {
             url = getIntent().getStringExtra("u");
@@ -96,7 +111,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
         webView.setWebChromeClient(new WebChromeClient());
 
-        WebSettings webSettings = webView.getSettings();
+        final WebSettings webSettings = webView.getSettings();
 
         webSettings.setJavaScriptEnabled(true);
 
@@ -136,13 +151,22 @@ public class CompreIngressosActivity extends ActionBarActivity {
                         progressBar.setVisibility(View.VISIBLE);
                         view.loadUrl(runScripGetInfoPayment());
 
-                        webAppInterface.setHelloInterface(new LoadDataResultFromWebviewListener() {
+
+                        webAppInterface.loadDataResultFromWebviewListener(new WebAppInterfaceListener() {
                             @Override
-                            public String finishLoadResultData(String resultData) {
+                            public String onFinishLoadResultData(String resultData) {
                                 Intent intent = new Intent(CompreIngressosActivity.this, PaymentFinishedActivity.class);
                                 intent.putExtra("assinatura", hasAssinatura);
                                 startActivity(intent);
                                 finish();
+                                return resultData;
+                            }
+
+                            @Override
+                            public String onLoadItemsGoogleAnalytics(String resultData) {
+                                Log.e(LOG_TAG, "--->> " + resultData);
+                                trackOrderWithItemsOnGA(resultData);
+
                                 return resultData;
                             }
                         });
@@ -244,40 +268,40 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 hideNextButton();
 
                 if (url.contains("etapa1.php")) {
-                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_SEUINGRESSO);
+                    trackScreenNameOnGA(ConstantsGoogleAnalytics.WEBVIEW_SEUINGRESSO);
                     toolbar.setTitle("Escolha um assento");
                     showNextButton();
                 } else if (url.contains("etapa2.php")) {
-                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_TIPO_INGRESSO);
+                    trackScreenNameOnGA(ConstantsGoogleAnalytics.WEBVIEW_TIPO_INGRESSO);
                     showNextButton();
                     toolbar.setTitle("Tipo de ingresso");
                 } else if (url.contains("etapa3.php")) {
-                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_LOGIN);
+                    trackScreenNameOnGA(ConstantsGoogleAnalytics.WEBVIEW_LOGIN);
                     hideNextButton();
                     toolbar.setTitle("Login");
                 } else if (url.contains("etapa4.php")) {
-                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_CONFIRMACAO);
+                    trackScreenNameOnGA(ConstantsGoogleAnalytics.WEBVIEW_CONFIRMACAO);
                     showNextButton();
                     toolbar.setTitle("Confirmação");
                 } else if (url.contains("etapa5.php")) {
-                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_PAGAMENTO);
+                    trackScreenNameOnGA(ConstantsGoogleAnalytics.WEBVIEW_PAGAMENTO);
                     showNextButton();
                     toolbar.setTitle("Pagamento");
                     btnAvancar.setText("Pagar");
                 } else if (url.contains("pagamento_ok.php")) {
-                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_FINAL_PAGAMENTO);
+                    trackScreenNameOnGA(ConstantsGoogleAnalytics.WEBVIEW_FINAL_PAGAMENTO);
                     toolbar.setTitle("Compra Finalizada");
                     hideNextButton();
                 } else if (url.contains("espetaculos/")) {
                     if (tituloEspetaculo.equals("Destaque")) {
-                        mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_DESTAQUE);
+                        trackScreenNameOnGA(ConstantsGoogleAnalytics.WEBVIEW_DESTAQUE);
                     } else {
-                        mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_ESPETACULO);
+                        trackScreenNameOnGA(ConstantsGoogleAnalytics.WEBVIEW_ESPETACULO);
                     }
 
                     toolbar.setTitle(tituloEspetaculo);
                 } else if (url.contains("assinatura")) {
-                    mappingScreenNameToAnalytics(ConstantsGoogleAnalytics.WEBVIEW_ASSINATURAS);
+                    trackScreenNameOnGA(ConstantsGoogleAnalytics.WEBVIEW_ASSINATURAS);
                 }
 
             }
@@ -409,6 +433,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
         scriptGetInfoPayment.append("}; \n");
         scriptGetInfoPayment.append("Android.getInfoPagamento(JSON.stringify(payload));");
         scriptGetInfoPayment.append("$('.imprima_agora').hide();");
+        scriptGetInfoPayment.append(runScriptGetItemsGoogleAnalytics());
 
         return scriptGetInfoPayment.toString();
     }
@@ -428,12 +453,27 @@ public class CompreIngressosActivity extends ActionBarActivity {
         return script.toString();
     }
 
-    public String runScriptGetItemsGoogleAnalytics(){
-        StringBuilder stringBuilder = new StringBuilder("javascript:var regex = /_gaq.push\\(\\['_addItem',[\\W]+'([\\d]+)',[\\W]+'([\\d_]+)',[\\W]+'([\\w \\-\\u00C0-\\u017F]+)',[\\W]+'([\\w \\-\\u00C0-\\u017F]+)',[\\W]+'([\\d\\.,]*)',[\\W]+'(\\d)'/g; \n");
-        stringBuilder.append("var match; \n");
-        stringBuilder.append("var ret = ''; \n");
-        stringBuilder.append("while (match = regex.exec(document.documentElement.outerHTML)) { \n");
-        return "";
+    public String runScriptGetItemsGoogleAnalytics() {
+        Log.e(LOG_TAG, "entre aqui");
+        StringBuilder stringBuilder = new StringBuilder("var regex = /_gaq.push\\(\\['_addItem',[\\W]+'([\\d]+)',[\\W]+'([\\d_]+)',[\\W]+'([\\w \\-\\u00C0-\\u017F]+)',[\\W]+'([\\w \\-\\u00C0-\\u017F]+)',[\\W]+'([\\d\\.,]*)',[\\W]+'(\\d)'/g; var match;var ret = ''; while (match = regex.exec(document.documentElement.outerHTML)) {var i;for(i=1; i<= 6; i++) {ret += match[i]; if (i != 6) { ret += '<.elem,>'}} ret = ret + '<.item,>';}Android.getItemsGoogleAnalytics(ret);");
+//        stringBuilder.append("var match; \n");
+//        stringBuilder.append("var ret = ''; \n");
+//        stringBuilder.append("while (match = regex.exec(document.documentElement.outerHTML)) { \n");
+//        stringBuilder.append("var i; \n");
+//        stringBuilder.append("for(i=1; i<= 6; i++) { \n");
+//        stringBuilder.append("ret += match[i]\n");
+//        stringBuilder.append("if (i != 6) {\n");
+//        stringBuilder.append("ret += '<.elem,>'\n");
+//        stringBuilder.append("}\n");
+//        stringBuilder.append("}\n");
+//        stringBuilder.append("ret = ret + '<.item,>';\n");
+////        stringBuilder.append("console.log('Add Item: ', match[1],', ', match[2],', ', match[3],', ', match[4],', ', match[5],', ', match[6]);\n");
+//        stringBuilder.append("}\n");
+//        stringBuilder.append("Android.getItemsGoogleAnalytics(ret);");
+
+        Log.e(LOG_TAG, "-> " + stringBuilder.toString());
+
+        return stringBuilder.toString();
     }
 
 
@@ -461,14 +501,68 @@ public class CompreIngressosActivity extends ActionBarActivity {
     }
 
 
-    public void mappingScreenNameToAnalytics(String screenName) {
-        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
+    public void trackScreenNameOnGA(String screenName) {
+
         t.setScreenName(screenName);
     }
 
-    public void onPurchaseComplete() {
+    public void trackOrderWithItemsOnGA(String resultData) {
+        databaseHelper = new DatabaseHelper(CompreIngressosActivity.this);
+        Order order = null;
 
-//        Product product = new Product();
+        try {
+            orderDao = new OrderDao(databaseHelper.getConnectionSource());
+            QueryBuilder<Order, Integer> qb = orderDao.queryBuilder();
+            qb.orderBy("id", false);
+            order = orderDao.queryForFirst(qb.prepare());
+            order.setIngressos(new ArrayList<>(order.getIngressosCollection()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Log.e(LOG_TAG, "-> " + order.getTotal());
+
+        List<Product> products = new ArrayList<>();
+        String TransactionId = null;
+
+        String[] items = resultData.split("<.item,>");
+        for (int i = 0; i < items.length; i++) {
+            String[] elements = items[i].split("<.elem,>");
+            Log.e(LOG_TAG, "trans - " + elements[0]);
+            Log.e(LOG_TAG, "sku - " + elements[1]);
+            Log.e(LOG_TAG, "name - " + elements[2]);
+            Log.e(LOG_TAG, "category - " + elements[3]);
+            Log.e(LOG_TAG, "price - " + elements[4]);
+            Log.e(LOG_TAG, "quantity - " + elements[5]);
+
+            TransactionId = elements[0];
+
+            Product product = new Product();
+            product.setId(elements[1]);
+            product.setName(elements[2]);
+            product.setCategory(elements[3]);
+            product.setPrice(Integer.parseInt(elements[4]));
+            product.setQuantity(Integer.parseInt(elements[5]));
+
+            products.add(product);
+        }
+
+        ProductAction productAction = new ProductAction(ProductAction.ACTION_CHECKOUT)
+                .setTransactionId(TransactionId)
+                .setTransactionAffiliation("compreingressos")
+                .setTransactionRevenue(0)
+                .setTransactionTax(0)
+                .setTransactionShipping(0);
+
+
+        for (Product product : products) {
+            HitBuilders.ScreenViewBuilder screenViewBuilder = new HitBuilders.ScreenViewBuilder()
+                    .addProduct(product)
+                    .setProductAction(productAction);
+
+            t.send(screenViewBuilder.build());
+        }
+
 
     }
 
