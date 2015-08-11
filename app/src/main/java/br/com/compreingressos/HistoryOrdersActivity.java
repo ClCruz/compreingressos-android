@@ -84,9 +84,9 @@ public class HistoryOrdersActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.setScreenName(ConstantsGoogleAnalytics.MEUS_INGRESSOS);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+        Tracker mTracker = ((CompreIngressosApplication) getApplication()).getTracker();
+        mTracker.setScreenName(ConstantsGoogleAnalytics.MEUS_INGRESSOS);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         emptyHistory = (LinearLayout) findViewById(R.id.empty_history);
 

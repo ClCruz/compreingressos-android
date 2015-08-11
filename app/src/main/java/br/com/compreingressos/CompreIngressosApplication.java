@@ -8,8 +8,6 @@ import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 import com.parse.Parse;
 
-import java.util.HashMap;
-
 import br.com.compreingressos.helper.ParseHelper;
 import io.fabric.sdk.android.Fabric;
 
@@ -20,16 +18,7 @@ public class CompreIngressosApplication extends Application{
 
     //Google Analytics
     private static final String PROPERTY_ID = "UA-16656615-2";
-
-    public static int GENERAL_TRACKER = 0;
-
-    public enum TrackerName {
-        APP_TRACKER, // Tracker used only in this app.
-        GLOBAL_TRACKER // Tracker used by all the apps from a company. eg: roll-up tracking.
-
-    }
-
-    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+    private Tracker mTracker;
 
     //Credenciais para o Parse
     public static final String YOUR_APP_ID = "55QlR3PGrXE0YWWnld97UG7kksTlI6j8ioa0FUIN";
@@ -63,20 +52,16 @@ public class CompreIngressosApplication extends Application{
         return RUNMODE_DEVELOPMENT;
     }
 
-    synchronized Tracker getTracker(TrackerName trackerId) {
-        if (!mTrackers.containsKey(trackerId)) {
-
+    synchronized public Tracker getTracker() {
+        if (mTracker == null) {
             GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-            analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
-            Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(PROPERTY_ID)
-                    : (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(
-                    R.xml.global_tracker)
-                    : analytics.newTracker(R.xml.ecommerce_tracker);
-            t.enableAdvertisingIdCollection(true);
-            mTrackers.put(trackerId, t);
+//            analytics.getLogger().setLogLevel(Logger.LogLevel.VERBOSE);
+            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+            mTracker = analytics.newTracker(R.xml.global_tracker);
         }
-        return mTrackers.get(trackerId);
+        return mTracker;
     }
+
 
 
 }

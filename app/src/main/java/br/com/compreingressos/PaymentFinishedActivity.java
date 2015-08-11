@@ -78,9 +78,9 @@ public class PaymentFinishedActivity extends ActionBarActivity {
 
         }
 
-        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.setScreenName(ConstantsGoogleAnalytics.FINALIZACAO_PAGAMENTO);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+        Tracker mTracker = ((CompreIngressosApplication) getApplication()).getTracker();
+        mTracker.setScreenName(ConstantsGoogleAnalytics.FINALIZACAO_PAGAMENTO);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         databaseHelper =  new DatabaseHelper(PaymentFinishedActivity.this);
 

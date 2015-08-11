@@ -69,9 +69,9 @@ public class DetailHistoryOrderActivity extends ActionBarActivity {
             }
         }
 
-        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.setScreenName(ConstantsGoogleAnalytics.DETALHE_INGRESSO);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+        Tracker mTracker = ((CompreIngressosApplication) getApplication()).getTracker();
+        mTracker.setScreenName(ConstantsGoogleAnalytics.DETALHE_INGRESSO);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_tickts);
         recyclerView.setHasFixedSize(true);

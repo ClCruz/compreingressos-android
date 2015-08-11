@@ -92,9 +92,9 @@ public class EspetaculosActivity extends ActionBarActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        Tracker t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
-        t.setScreenName(ConstantsGoogleAnalytics.ESPETACULOS.replace("<#>", genero));
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+        Tracker mTracker = ((CompreIngressosApplication) getApplication()).getTracker();
+        mTracker.setScreenName(ConstantsGoogleAnalytics.ESPETACULOS.replace("<#>", genero));
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
 
         retryConnectionView = (LinearLayout) findViewById(R.id.retry_connection);

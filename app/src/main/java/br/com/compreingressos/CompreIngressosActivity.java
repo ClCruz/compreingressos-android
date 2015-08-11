@@ -66,13 +66,13 @@ public class CompreIngressosActivity extends ActionBarActivity {
     private OrderDao orderDao;
 
 
-    Tracker t = null;
+    Tracker mTracker = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compre_ingressos);
-        t = ((CompreIngressosApplication) getApplication()).getTracker(CompreIngressosApplication.TrackerName.APP_TRACKER);
+        mTracker = ((CompreIngressosApplication) getApplication()).getTracker();
 
         if (getIntent().hasExtra("u")) {
             url = getIntent().getStringExtra("u");
@@ -503,8 +503,9 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
     public void trackScreenNameOnGA(String screenName) {
 
-        t.setScreenName(screenName);
-        t.send(new HitBuilders.ScreenViewBuilder().build());
+        Log.e(LOG_TAG, screenName);
+        mTracker.setScreenName(screenName);
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
     public void trackOrderWithItemsOnGA(String resultData) {
@@ -561,7 +562,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     .addProduct(product)
                     .setProductAction(productAction);
 
-            t.send(eventBuilder.build());
+            mTracker.send(eventBuilder.build());
         }
 
 
