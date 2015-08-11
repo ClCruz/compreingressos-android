@@ -39,8 +39,6 @@ public class PageViewAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         try {
             return BannerFragment.newInstance(mListBanners.get(position % mListBanners.size()));
-//            fm.beginTransaction().commitAllowingStateLoss();
-
         } catch (Exception e) {
             e.printStackTrace();
             return null;

@@ -190,7 +190,6 @@ public class HistoryOrdersActivity extends ActionBarActivity {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("-----> ", error.toString());
                 progressDialog.dismiss();
             }
         };

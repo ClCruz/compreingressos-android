@@ -63,10 +63,6 @@ public class GsonRequest<T> extends Request<T> {
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
             String json = new String(response.data,HttpHeaderParser.parseCharset(response.headers));
-//
-//            if (!formatString.isEmpty()){
-//                gsonBuilder.registerTypeAdapter(Espetaculo.class, new EspetaculoDeserializer());
-//            }
 
             gsonBuilder.registerTypeAdapter(Espetaculo.class, new EspetaculoDeserializer());
             gsonBuilder.registerTypeAdapter(Order.class, new OrderDeserializer());

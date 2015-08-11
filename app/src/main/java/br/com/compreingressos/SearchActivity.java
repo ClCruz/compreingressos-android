@@ -223,10 +223,7 @@ public class SearchActivity extends ActionBarActivity {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "application/json");
         StringBuilder urlCustom = new StringBuilder(URL);
-
         urlCustom.append(query);
-
-        Log.e("--------->> " , urlCustom.toString());
         GsonRequest<Espetaculos> jsonObjRequest = new GsonRequest<>(Request.Method.GET, urlCustom.toString(), Espetaculos.class, headers, this.createSuccessListener(), this.createErrorListener(), "yyyy-MM-dd");
         this.requestQueue.add(jsonObjRequest);
     }

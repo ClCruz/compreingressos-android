@@ -35,19 +35,12 @@ public class OrderDao extends BaseDaoImpl<Order, Integer> {
         order.setNomeTeatroEspetaculo(data.getEspetaculo().getTeatro());
         order.setHorarioEspetaculo(data.getEspetaculo().getHorario());
 
-
         int result = super.create(order);
 
         if (result == 1 ){
-//            Espetaculo espetaculo = data.getEspetaculo();
-//            espetaculo.setOrder(data);
-//            int espetaculoResult = espetaculoDao.create(espetaculo);
-//            Log.e(LOG_TAG, "espetaculoResult - " + espetaculoResult + " title " + espetaculo.getTitulo());
-
             for (Ingresso ingresso : data.getIngressos()){
                 ingresso.setOrder(data);
                 int x = ingressoDao.create(ingresso);
-
             }
         }
 

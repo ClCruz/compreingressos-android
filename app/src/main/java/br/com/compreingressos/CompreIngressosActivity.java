@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -164,9 +163,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
                             @Override
                             public String onLoadItemsGoogleAnalytics(String resultData) {
-                                Log.e(LOG_TAG, "--->> " + resultData);
                                 trackOrderWithItemsOnGA(resultData);
-
                                 return resultData;
                             }
                         });
@@ -212,8 +209,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
 
-                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
-                    url = "http://186.237.201.150:8081/compreingressos2/comprar/etapa1.php?apresentacao=61565";
+//                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
+//                    url = "http://186.237.201.150:8081/compreingressos2/comprar/etapa1.php?apresentacao=61565";
 
                 if (url.contains("etapa1.php")) {
                     WebSettings webSettings = view.getSettings();
@@ -454,24 +451,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     }
 
     public String runScriptGetItemsGoogleAnalytics() {
-        Log.e(LOG_TAG, "entre aqui");
         StringBuilder stringBuilder = new StringBuilder("var regex = /_gaq.push\\(\\['_addItem',[\\W]+'([\\d]+)',[\\W]+'([\\d_]+)',[\\W]+'([\\w \\-\\u00C0-\\u017F]+)',[\\W]+'([\\w \\-\\u00C0-\\u017F]+)',[\\W]+'([\\d\\.,]*)',[\\W]+'(\\d)'/g; var match;var ret = ''; while (match = regex.exec(document.documentElement.outerHTML)) {var i;for(i=1; i<= 6; i++) {ret += match[i]; if (i != 6) { ret += '<.elem,>'}} ret = ret + '<.item,>';}Android.getItemsGoogleAnalytics(ret);");
-//        stringBuilder.append("var match; \n");
-//        stringBuilder.append("var ret = ''; \n");
-//        stringBuilder.append("while (match = regex.exec(document.documentElement.outerHTML)) { \n");
-//        stringBuilder.append("var i; \n");
-//        stringBuilder.append("for(i=1; i<= 6; i++) { \n");
-//        stringBuilder.append("ret += match[i]\n");
-//        stringBuilder.append("if (i != 6) {\n");
-//        stringBuilder.append("ret += '<.elem,>'\n");
-//        stringBuilder.append("}\n");
-//        stringBuilder.append("}\n");
-//        stringBuilder.append("ret = ret + '<.item,>';\n");
-////        stringBuilder.append("console.log('Add Item: ', match[1],', ', match[2],', ', match[3],', ', match[4],', ', match[5],', ', match[6]);\n");
-//        stringBuilder.append("}\n");
-//        stringBuilder.append("Android.getItemsGoogleAnalytics(ret);");
-
-        Log.e(LOG_TAG, "-> " + stringBuilder.toString());
 
         return stringBuilder.toString();
     }
@@ -494,7 +474,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
     private String getUrlFromTokecompre(String mUrl) {
         Uri.Builder urlResult = Uri.parse(mUrl).buildUpon();
-
         urlResult.appendQueryParameter("os", "android");
         urlResult.appendQueryParameter("app", "tokecompre");
         return urlResult.toString();
@@ -502,8 +481,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
 
     public void trackScreenNameOnGA(String screenName) {
-
-        Log.e(LOG_TAG, screenName);
         mTracker.setScreenName(screenName);
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
@@ -522,21 +499,12 @@ public class CompreIngressosActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
-        Log.e(LOG_TAG, "-> " + order.getTotal());
-
         List<Product> products = new ArrayList<>();
         String TransactionId = null;
 
         String[] items = resultData.split("<.item,>");
         for (int i = 0; i < items.length; i++) {
             String[] elements = items[i].split("<.elem,>");
-            Log.e(LOG_TAG, "trans - " + elements[0]);
-            Log.e(LOG_TAG, "sku - " + elements[1]);
-            Log.e(LOG_TAG, "name - " + elements[2]);
-            Log.e(LOG_TAG, "category - " + elements[3]);
-            Log.e(LOG_TAG, "price - " + elements[4]);
-            Log.e(LOG_TAG, "quantity - " + elements[5]);
-
             TransactionId = elements[0];
 
             Product product = new Product();
