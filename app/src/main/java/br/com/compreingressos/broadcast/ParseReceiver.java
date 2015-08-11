@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.parse.ParseAnalytics;
 import com.parse.ParsePushBroadcastReceiver;
 
 import org.json.JSONException;
@@ -31,6 +32,8 @@ public class ParseReceiver extends ParsePushBroadcastReceiver {
     @Override
     public void onPushOpen(Context context, Intent intent) {
         Bundle extras = intent.getExtras();
+        ParseAnalytics.trackAppOpenedInBackground(intent);
+
         try {
             String message = extras != null ? extras.getString("com.parse.Data") : "";
             JSONObject jObject;
