@@ -1,33 +1,21 @@
 package br.com.compreingressos.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 
 import br.com.compreingressos.R;
 import br.com.compreingressos.fragment.MainBannerFragment;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
-import br.com.compreingressos.utils.AndroidUtils;
-import br.com.compreingressos.utils.ConnectionUtils;
-import br.com.compreingressos.utils.CustomTypeFace;
 
 /**
  * Created by luiszacheu on 30/03/15.
@@ -37,7 +25,6 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final String LOG_TAG = "GeneroAdapter";
 
     private ArrayList<Genero> mListGeneros = new ArrayList<>();
-    private ArrayList<Banner> mListBanners = new ArrayList<>();
     private Context context;
     public static OnItemClickListener onItemClickListener;
     private static final int TYPE_HEADER = 0;
@@ -45,11 +32,10 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private ActionBarActivity activity;
 
 
-    public GeneroAdapter(Context context, ArrayList<Genero> generos, ArrayList<Banner> banners) {
+    public GeneroAdapter(Context context, ArrayList<Genero> generos) {
         this.mListGeneros = generos;
         this.context = context;
-        this.mListBanners = banners;
-        activity = (ActionBarActivity) context;
+        this.activity = (ActionBarActivity) context;
 
     }
 
@@ -57,6 +43,17 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if (viewType == TYPE_HEADER) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.header_generos, viewGroup, false);
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MainBannerFragment fragment = new MainBannerFragment();
+                    FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.add(R.id.view, fragment, "header");
+                    fragmentTransaction.commit();
+                }
+            });
+
 
             return new ViewHolderHeader(v);
 
@@ -73,10 +70,10 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
 
         if (viewHolder instanceof ViewHolderHeader) {
-            MainBannerFragment fragment = new MainBannerFragment();
-            FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.add(R.id.view, fragment, "header");
-            fragmentTransaction.commit();
+
+
+
+
         } else if (viewHolder instanceof ViewHolderItem) {
             Genero genero = getItem(position);
 
@@ -94,17 +91,7 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return TYPE_ITEM;
     }
 
-    public void updateBanners(ArrayList<Banner> banners) {
-        if (ConnectionUtils.isInternetOn(context)) {
-            if (banners != null) {
-                try {
-                    ((MainBannerFragment) activity.getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(banners);
-                } catch (NullPointerException e) {
-                    Crashlytics.logException(e);
-                }
-            }
-        }
-    }
+
 
     private boolean isPositionHeader(int position) {
         return position == 0;

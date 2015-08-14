@@ -19,6 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
@@ -34,6 +35,8 @@ import java.util.Map;
 import br.com.compreingressos.adapter.GeneroAdapter;
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.decoration.DividerItemDecoration;
+import br.com.compreingressos.fragment.MainBannerFragment;
+import br.com.compreingressos.interfaces.BannerListener;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.toolbox.GsonRequest;
@@ -44,7 +47,7 @@ import br.com.compreingressos.utils.DatabaseManager;
 import br.com.compreingressos.utils.Dialogs;
 import br.com.compreingressos.widget.RecyclerViewCustom;
 
-public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener{
+public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener {
 
     public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/lista.json";
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -75,7 +78,6 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mRecyclerView = (RecyclerViewCustom) findViewById(R.id.recycler_view_generos);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -88,25 +90,34 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         mTracker.setScreenName(ConstantsGoogleAnalytics.HOME);
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
-        mLocationManager =  (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         buildGoogleApiClient();
 
         DatabaseManager.init(this);
 
         this.requestQueue = VolleySingleton.getInstance(this).getRequestQueue();
+
+        mRecyclerView = (RecyclerViewCustom) findViewById(R.id.recycler_view_generos);
+        showRecyclerHomeView();
     }
 
     @Override
     protected void onStart() {
         mGoogleApiClient.connect();
-        showRecyclerHomeView();
+        startRequest();
         super.onStart();
     }
 
     @Override
+    protected void onResume() {
+
+        super.onResume();
+    }
+
+    @Override
     protected void onStop() {
-        if (mGoogleApiClient.isConnected()){
+        if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
         super.onStop();
@@ -133,24 +144,12 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         return super.onOptionsItemSelected(item);
     }
 
-    public ArrayList<Genero> initGeneros() {
-        ArrayList<Genero> generos = new ArrayList<>();
-        generos.add(new Genero("Perto de mim", R.drawable.ic_perto_de_mim));
-        generos.add(new Genero("Shows", R.drawable.ic_show));
-        generos.add(new Genero("Clássicos", R.drawable.ic_classico));
-        generos.add(new Genero("Teatros", R.drawable.ic_teatro));
-        generos.add(new Genero("Muito mais", R.drawable.ic_muito_mais));
-
-
-        return generos;
-    }
-
     private void showRecyclerHomeView() {
-        startRequest();
+
 
         mListGeneros = initGeneros();
-        if (adapter == null){
-            adapter = new GeneroAdapter(this, mListGeneros, mListBanners);
+        if (adapter == null) {
+            adapter = new GeneroAdapter(this, mListGeneros);
         }
 
         adapter.SetOnItemClickListener(new GeneroAdapter.OnItemClickListener() {
@@ -204,7 +203,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
             } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("mobile")) {
                 con = "&con=wwan";
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(MainActivity.this, getResources().getString(R.string.message_sem_conexao), Toast.LENGTH_SHORT).show();
         }
 
@@ -230,12 +229,16 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
                         Banner banner = new Banner();
                         banner.setImagem(response[i].getImagem());
                         banner.setUrl(response[i].getUrl());
+                        banner.setTitulo(response[i].getUrl().toString());
 
                         mListBanners.add(banner);
 
                     }
-
-                    adapter.updateBanners(mListBanners);
+                    try {
+                    ((MainBannerFragment) getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(mListBanners);
+                    } catch (NullPointerException e) {
+                        Crashlytics.logException(e);
+                    }
                 }
 
 
@@ -264,7 +267,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
     @Override
     public void onConnected(Bundle connectionHint) {
         mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null){
+        if (mLastLocation != null) {
             longitude = mLastLocation.getLongitude();
             latitude = mLastLocation.getLatitude();
         }
@@ -280,5 +283,18 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
         Log.i(LOG_TAG, "Connection suspended");
         mGoogleApiClient.connect();
     }
+
+    public ArrayList<Genero> initGeneros() {
+        ArrayList<Genero> generos = new ArrayList<>();
+        generos.add(new Genero("Perto de mim", R.drawable.ic_perto_de_mim));
+        generos.add(new Genero("Shows", R.drawable.ic_show));
+        generos.add(new Genero("Clássicos", R.drawable.ic_classico));
+        generos.add(new Genero("Teatros", R.drawable.ic_teatro));
+        generos.add(new Genero("Muito mais", R.drawable.ic_muito_mais));
+
+
+        return generos;
+    }
+
 
 }
