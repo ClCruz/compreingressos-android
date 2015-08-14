@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -72,8 +73,13 @@ public class GsonRequest<T> extends Request<T> {
 
             return Response.success(gson.fromJson(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
+            Crashlytics.logException(e);
             return Response.error(new ParseError(e));
         } catch (JsonSyntaxException e) {
+            Crashlytics.logException(e);
+            return Response.error(new ParseError(e));
+        } catch (Exception e){
+            Crashlytics.logException(e);
             return Response.error(new ParseError(e));
         }
     }
