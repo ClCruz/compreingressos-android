@@ -25,12 +25,19 @@ public class AndroidUtils {
     }
 
 
-    public static boolean isKitKatOrNewer(Context context) {
+    public static boolean isKitKatOrNewer() {
         int apiLevel = Build.VERSION.SDK_INT;
         if (apiLevel >= Build.VERSION_CODES.KITKAT) {
             return true;
         }
+        return false;
+    }
 
+    public static boolean isHoneyCombOrNewer(){
+        int apiLevel = Build.VERSION.SDK_INT;
+        if (apiLevel >= Build.VERSION_CODES.HONEYCOMB_MR1) {
+            return true;
+        }
         return false;
     }
 
