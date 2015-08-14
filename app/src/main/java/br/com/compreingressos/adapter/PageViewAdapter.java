@@ -13,8 +13,11 @@ import android.database.DataSetObserver;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import br.com.compreingressos.fragment.BannerFragment;
 import br.com.compreingressos.model.Banner;
@@ -23,16 +26,11 @@ public class PageViewAdapter extends FragmentStatePagerAdapter {
 
     private static final String LOG_TAG = PageViewAdapter.class.getSimpleName();
 
-    private int mCount;
     private List<Banner> mListBanners = Collections.emptyList();
-    private FragmentManager fm = null;
 
     public PageViewAdapter(FragmentManager fm, ArrayList<Banner> listBanners) {
         super(fm);
         this.mListBanners = listBanners;
-        this.mCount = listBanners.size();
-        this.fm = fm;
-
     }
 
     @Override
@@ -59,12 +57,6 @@ public class PageViewAdapter extends FragmentStatePagerAdapter {
         return null;
     }
 
-    public void setCount(int count) {
-        if (count > 0 && count <= 10) {
-            mCount = count;
-            notifyDataSetChanged();
-        }
-    }
 
     @Override
     public void unregisterDataSetObserver(DataSetObserver observer) {
@@ -74,9 +66,11 @@ public class PageViewAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public void destroyItem(View container, int position, Object object) {
-        ((ViewPager) container).removeView((View) object);
+    public void destroyItem(ViewGroup container, int position, Object object) {
+//        FragmentManager manager = ((Fragment) object).getFragmentManager();
+//        FragmentTransaction trans = manager.beginTransaction();
+//        trans.remove((Fragment) object);
+//        trans.commit();
+        super.destroyItem(container, position, object);
     }
-
-
 }
