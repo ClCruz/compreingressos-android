@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="AppTheme.Base">
+    <style name="AppTheme" parent="android:Theme.Material">
         <item name="android:colorPrimary">#ff3a3a3a</item>
         <!-- colorPrimaryDark is used for the status bar -->
         <item name="android:colorPrimaryDark">#8d0a0c</item>

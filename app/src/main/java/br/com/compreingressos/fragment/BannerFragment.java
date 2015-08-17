@@ -64,9 +64,8 @@ public class BannerFragment extends Fragment {
         titleBanner = (TextView) rootView.findViewById(R.id.title_banner);
         viewTitleBanner = (LinearLayout) rootView.findViewById(R.id.view_title_banner);
 
-
         Picasso.with(getActivity().getApplicationContext())
-                .load(banner.getImagem())
+                .load(banner.getImagem().isEmpty()== true ? "compreingressos" : banner.getImagem())
                 .placeholder(getActivity().getResources().getDrawable(R.drawable.placeholder_banner))
                 .into(imgBanner, new Callback() {
 
@@ -85,7 +84,6 @@ public class BannerFragment extends Fragment {
                         viewTitleBanner.setVisibility(View.VISIBLE);
                     }
                 });
-
 
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override

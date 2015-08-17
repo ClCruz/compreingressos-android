@@ -39,5 +39,6 @@
         </LinearLayout>
     </FrameLayout>
 
-   <include layout="@layout/view_placeholder_banner"></include>
+   <include layout="@layout/view_placeholder_banner"
+       android:animateLayoutChanges="true"></include>
 </LinearLayout>

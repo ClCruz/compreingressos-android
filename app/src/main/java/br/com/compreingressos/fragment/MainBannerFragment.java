@@ -1,5 +1,7 @@
 package br.com.compreingressos.fragment;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -9,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -21,6 +24,7 @@ import br.com.compreingressos.R;
 import br.com.compreingressos.adapter.PageViewAdapter;
 import br.com.compreingressos.interfaces.BannerListener;
 import br.com.compreingressos.model.Banner;
+import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.ConnectionUtils;
 
 /**
@@ -40,6 +44,8 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     private Runnable runnable;
     int position = 0;
     private ProgressBar progressBar;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -92,15 +98,23 @@ public class MainBannerFragment extends Fragment implements BannerListener {
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt("position", position);
+        super.onSaveInstanceState(outState);
+    }
+
+
+
     public ArrayList<Banner> initList(){
         ArrayList<Banner> banners =  new ArrayList<>();
         Banner banner = new Banner("empty", "empty");
         banners.add(banner);
-
         return banners;
     }
 
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
     @Override
     public void updateBannerAdapter(ArrayList<Banner> listBanner) {
         if (listBanner != null){
@@ -110,7 +124,8 @@ public class MainBannerFragment extends Fragment implements BannerListener {
             if (listBanner.size() > 0){
                 viewBanner.setVisibility(View.VISIBLE);
                 placeholderView.setVisibility(View.GONE);
-
+                if (AndroidUtils.isHoneyCombOrNewer())
+                    placeholderView.animate().alpha(1.0f);
             }
 
             if (handler != null) {

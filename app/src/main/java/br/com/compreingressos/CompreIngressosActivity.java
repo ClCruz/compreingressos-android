@@ -315,7 +315,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
                 view.loadUrl("javascript:$(document).ready(function(){$('.voltar').hide();});");
 
-                if (AndroidUtils.isKitKatOrNewer(CompreIngressosActivity.this)) {
+                if (AndroidUtils.isKitKatOrNewer()) {
                     view.loadUrl("javascript:$(document).ready(function(){$('.container_botoes_etapas').hide();});");
                 } else {
                     view.loadUrl("javascript:$(document).ready(function(){$('.container_botoes_etapas').show();});");
@@ -458,7 +458,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
 
 
     private void showNextButton() {
-        if (AndroidUtils.isKitKatOrNewer(CompreIngressosActivity.this)) {
+        if (AndroidUtils.isKitKatOrNewer()) {
             if (!btnAvancar.isShown()) {
                 btnAvancar.setVisibility(View.VISIBLE);
             }
