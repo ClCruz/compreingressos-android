@@ -1,5 +1,7 @@
 package br.com.compreingressos.dao;
 
+import android.util.Log;
+
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 
@@ -28,12 +30,11 @@ public class OrderDao extends BaseDaoImpl<Order, Integer> {
     public int create(Order data) throws SQLException {
         espetaculoDao =  new EspetaculoDao(getConnectionSource());
         ingressoDao = new IngressoDao(getConnectionSource());
-
         Order order = data;
-        order.setTituloEspetaculo(data.getEspetaculo().getTitulo());
-        order.setEnderecoEspetaculo(data.getEspetaculo().getEndereco());
-        order.setNomeTeatroEspetaculo(data.getEspetaculo().getTeatro());
-        order.setHorarioEspetaculo(data.getEspetaculo().getHorario());
+        order.setTituloEspetaculo(data.getEspetaculo().getTitulo() == null ? "" : data.getEspetaculo().getTitulo());
+        order.setEnderecoEspetaculo(data.getEspetaculo().getEndereco() == null ? "" : data.getEspetaculo().getEndereco());
+        order.setNomeTeatroEspetaculo(data.getEspetaculo().getTeatro() == null ? "" : data.getEspetaculo().getTeatro());
+        order.setHorarioEspetaculo(data.getEspetaculo().getHorario() == null ? "" : data.getEspetaculo().getHorario());
 
         int result = super.create(order);
 
