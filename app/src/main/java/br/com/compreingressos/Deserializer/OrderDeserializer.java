@@ -1,5 +1,8 @@
 package br.com.compreingressos.deserializer;
 
+import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -42,6 +45,8 @@ public class OrderDeserializer implements JsonDeserializer<Order> {
 
         }catch (ParseException e){
             e.printStackTrace();
+            Crashlytics.logException(e);
+            Crashlytics.log(Log.ERROR, "OrderDeserializer", "json -> \n " + json);
             date =  null;
         }
         Order order = new Order();

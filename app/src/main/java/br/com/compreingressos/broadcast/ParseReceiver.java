@@ -43,6 +43,8 @@ public class ParseReceiver extends ParsePushBroadcastReceiver {
             try {
                 url = jObject.getString("u");
             }catch (Exception e){
+                Crashlytics.logException(e);
+                Crashlytics.log(Log.ERROR, ParseReceiver.class.getSimpleName(), "url -> " + url);
                 url = null;
                 e.printStackTrace();
             }
@@ -50,6 +52,8 @@ public class ParseReceiver extends ParsePushBroadcastReceiver {
             try {
                 codePromo = jObject.getString("c");
             }catch (Exception e){
+                Crashlytics.logException(e);
+                Crashlytics.log(Log.ERROR, ParseReceiver.class.getSimpleName(), "codePromo -> " + codePromo);
                 codePromo = null;
                 e.printStackTrace();
             }

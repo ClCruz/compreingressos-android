@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -137,6 +138,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
                         progressBar.setVisibility(View.GONE);
                     }
                 } catch (Exception exception) {
+                    Crashlytics.log(Log.ERROR, CompreIngressosActivity.class.getSimpleName()+"(onPageFinished)", url);
+                    Crashlytics.logException(exception);
                     exception.printStackTrace();
                 }
 
@@ -219,6 +222,8 @@ public class CompreIngressosActivity extends ActionBarActivity {
                     try {
                         webSettings.setDisplayZoomControls(false);
                     } catch (NoSuchMethodError e) {
+                        Crashlytics.log(Log.ERROR, CompreIngressosActivity.class.getSimpleName()+"(onPageFinished)", url);
+                        Crashlytics.logException(e);
                         hasSupportPinch = false;
                         e.printStackTrace();
                     }

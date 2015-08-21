@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -186,6 +187,8 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 PassWalletHelper.launchPassWallet(context, Uri.parse( context.getString(R.string.url_mpassbook) + strNamePkPassresponse), true);
 
                             } catch (JSONException e) {
+                                Crashlytics.logException(e);
+                                Crashlytics.log(Log.ERROR, OrderDetailAdapter.class.getSimpleName(), "json -> " + response.toString());
                                 progressDialog.dismiss();
                                 e.printStackTrace();
                                 Toast.makeText(context, context.getString(R.string.message_erro_envio_passwallet), Toast.LENGTH_LONG).show();

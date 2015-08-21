@@ -2,6 +2,7 @@ package br.com.compreingressos.helper;
 
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -43,6 +44,8 @@ public class OrderHelper {
                 return gson.fromJson(jsonString, Order.class);
             }catch (Exception e ){
                 e.printStackTrace();
+                Crashlytics.logException(e);
+                Crashlytics.log("jsonString -> \n " + jsonString);
                 return  null;
             }
     }

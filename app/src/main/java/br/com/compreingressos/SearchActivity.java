@@ -27,6 +27,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -143,6 +144,7 @@ public class SearchActivity extends ActionBarActivity {
             textView.setTextColor(getResources().getColor(R.color.white));
 
         }catch (Exception e){
+            Crashlytics.logException(e);
             e.printStackTrace();
         }
 

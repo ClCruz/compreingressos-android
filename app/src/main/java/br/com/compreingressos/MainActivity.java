@@ -204,6 +204,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
                 con = "&con=wwan";
             }
         } catch (Exception e) {
+            Crashlytics.logException(e);
             Toast.makeText(MainActivity.this, getResources().getString(R.string.message_sem_conexao), Toast.LENGTH_SHORT).show();
         }
 

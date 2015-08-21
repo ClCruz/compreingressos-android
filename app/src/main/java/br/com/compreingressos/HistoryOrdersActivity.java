@@ -22,6 +22,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -118,6 +119,7 @@ public class HistoryOrdersActivity extends ActionBarActivity {
             orderDao = new OrderDao(databaseHelper.getConnectionSource());
             orders = orderDao.queryForAll();
         } catch (SQLException e) {
+            Crashlytics.logException(e);
             e.printStackTrace();
         }
     }
@@ -229,6 +231,8 @@ public class HistoryOrdersActivity extends ActionBarActivity {
             try {
                 orderDao.delete(orderDao.queryForAll());
             } catch (SQLException e) {
+                Crashlytics.log(Log.ERROR, HistoryOrdersActivity.class.getSimpleName() + "(doInBackground)", params.toString());
+                Crashlytics.logException(e);
                 e.printStackTrace();
                 return false;
             }
@@ -237,6 +241,8 @@ public class HistoryOrdersActivity extends ActionBarActivity {
                 try {
                     orderDao.create(params[i]);
                 } catch (SQLException e) {
+                    Crashlytics.log(Log.ERROR, HistoryOrdersActivity.class.getSimpleName() + "(doInBackground)", params[i].toString());
+                    Crashlytics.logException(e);
                     e.printStackTrace();
                     return false;
                 }

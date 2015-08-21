@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
+
 import br.com.compreingressos.fragment.BannerFragment;
 import br.com.compreingressos.model.Banner;
 
@@ -38,6 +40,7 @@ public class PageViewAdapter extends FragmentStatePagerAdapter {
         try {
             return BannerFragment.newInstance(mListBanners.get(position % mListBanners.size()));
         } catch (Exception e) {
+            Crashlytics.logException(e);
             e.printStackTrace();
             return null;
         }

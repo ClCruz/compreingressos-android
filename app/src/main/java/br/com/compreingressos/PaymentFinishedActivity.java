@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -94,6 +95,7 @@ public class PaymentFinishedActivity extends ActionBarActivity {
             order.setIngressos(new ArrayList<>(order.getIngressosCollection()));
 
         } catch (SQLException e) {
+            Crashlytics.logException(e);
             e.printStackTrace();
         }
 
@@ -110,6 +112,8 @@ public class PaymentFinishedActivity extends ActionBarActivity {
             }
 
         } catch (JSONException e) {
+            Crashlytics.logException(e);
+            Crashlytics.log(Log.ERROR, PaymentFinishedActivity.class.getSimpleName(), "order -> " + order.toString());
             e.printStackTrace();
         }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -57,6 +58,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Espetaculo.class);
             TableUtils.createTable(connectionSource, Ingresso.class);
         } catch (SQLException e) {
+            Crashlytics.logException(e);
             Log.e(LOG_TAG, "Não foi possivel criar a tabela");
             e.printStackTrace();
         }
@@ -71,6 +73,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
             onCreate(sqLiteDatabase, connectionSource);
         } catch (SQLException e) {
+            Crashlytics.logException(e);
             e.printStackTrace();
         }
     }

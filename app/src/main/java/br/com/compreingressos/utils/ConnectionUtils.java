@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.crashlytics.android.Crashlytics;
+
 /**
  * Created by zaca on 6/2/15.
  */
@@ -15,6 +17,7 @@ public class ConnectionUtils {
         try {
             return connManager.getActiveNetworkInfo().getTypeName();
         } catch (Exception e) {
+            Crashlytics.logException(e);
             return "";
         }
     }

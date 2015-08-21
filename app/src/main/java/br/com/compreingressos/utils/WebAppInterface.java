@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.sql.SQLException;
 
 import br.com.compreingressos.dao.OrderDao;
@@ -32,6 +34,7 @@ public class WebAppInterface {
         try {
             orderDao = new OrderDao(databaseHelper.getConnectionSource());
         } catch (SQLException e) {
+            Crashlytics.logException(e);
             e.printStackTrace();
         }
 
@@ -39,6 +42,8 @@ public class WebAppInterface {
             orderDao.create(OrderHelper.loadOrderFromJSON(resultJson));
             print(resultJson);
         } catch (SQLException e) {
+            Crashlytics.logException(e);
+            Crashlytics.log(Log.ERROR, WebAppInterface.class.getSimpleName(), "json -> " + resultJson);
             Log.e(LOG_TAG, "nao foi possivel salvar o pedido");
             e.printStackTrace();
         }
