@@ -30,7 +30,6 @@ public class RecyclerViewCustom extends RecyclerView{
         }
         catch( NullPointerException exception )
         {
-            Crashlytics.logException(exception);
             exception.printStackTrace();
             /**
              *  The mLayout has been disposed of before the
