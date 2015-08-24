@@ -39,14 +39,10 @@ public class OrderDeserializer implements JsonDeserializer<Order> {
         if (entry == null) return null;
 
         Date date;
-
         try {
             date = dateFormat.parse(((JsonObject)json).get("date").getAsString());
-
         }catch (ParseException e){
             e.printStackTrace();
-            Crashlytics.logException(e);
-            Crashlytics.log(Log.ERROR, "OrderDeserializer", "json -> \n " + json);
             date =  null;
         }
         Order order = new Order();
@@ -54,7 +50,6 @@ public class OrderDeserializer implements JsonDeserializer<Order> {
 
         order.setNumber(obj.get("number").getAsString());
         order.setDate(date);
-        order.setTotal(obj.get("total").getAsString());
         espetaculo.setTitulo(obj.get("espetaculo").getAsJsonObject().get("titulo").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("titulo").getAsString());
         espetaculo.setTeatro(obj.get("espetaculo").getAsJsonObject().get("nome_teatro").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("nome_teatro").getAsString());
         espetaculo.setEndereco(obj.get("espetaculo").getAsJsonObject().get("endereco").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("endereco").getAsString());

@@ -42,10 +42,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_order, viewGroup, false);
-
-
         return new ViewHolderItem(v);
 
     }
@@ -54,7 +51,7 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         Order order = getItem(position);
         ((ViewHolderItem) viewHolder).tituloView.setText(order.getTituloEspetaculo());
-        ((ViewHolderItem) viewHolder).dataView.setText(sdf.format(order.getDate()));
+        ((ViewHolderItem) viewHolder).dataView.setText(sdf.format(order.getDate()).toString());
         ((ViewHolderItem) viewHolder).numberOrderView.setText(order.getNumber());
 
     }

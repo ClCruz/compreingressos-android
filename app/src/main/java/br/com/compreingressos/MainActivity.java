@@ -49,7 +49,7 @@ import br.com.compreingressos.widget.RecyclerViewCustom;
 
 public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener {
 
-    public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/listas.json";
+    public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/lista.json";
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private Toolbar toolbar;
