@@ -236,7 +236,7 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
 
                     }
                     try {
-                    ((MainBannerFragment) getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(mListBanners);
+                        ((MainBannerFragment) getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(mListBanners);
                     } catch (NullPointerException e) {
                         Crashlytics.logException(e);
                     }

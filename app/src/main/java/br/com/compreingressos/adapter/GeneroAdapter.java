@@ -69,12 +69,7 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
 
-        if (viewHolder instanceof ViewHolderHeader) {
-
-
-
-
-        } else if (viewHolder instanceof ViewHolderItem) {
+        if (viewHolder instanceof ViewHolderItem) {
             Genero genero = getItem(position);
 
             ((ViewHolderItem) viewHolder).nomeView.setText(genero.getNome());
