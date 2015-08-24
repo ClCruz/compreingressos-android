@@ -43,7 +43,7 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     private Handler handler = new Handler();
     private Runnable runnable;
     int position = 0;
-    private ProgressBar progressBar;
+    public ProgressBar progressBar;
 
 
 

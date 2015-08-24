@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -36,7 +37,6 @@ import br.com.compreingressos.adapter.GeneroAdapter;
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.decoration.DividerItemDecoration;
 import br.com.compreingressos.fragment.MainBannerFragment;
-import br.com.compreingressos.interfaces.BannerListener;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.toolbox.GsonRequest;
@@ -49,7 +49,7 @@ import br.com.compreingressos.widget.RecyclerViewCustom;
 
 public class MainActivity extends ActionBarActivity implements ConnectionCallbacks, OnConnectionFailedListener {
 
-    public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/lista.json";
+    public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/listas.json";
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
     private Toolbar toolbar;
@@ -233,16 +233,12 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
                         banner.setTitulo(response[i].getUrl().toString());
 
                         mListBanners.add(banner);
-
                     }
-                    try {
+
+                    if (mListBanners != null) {
                         ((MainBannerFragment) getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(mListBanners);
-                    } catch (NullPointerException e) {
-                        Crashlytics.logException(e);
                     }
                 }
-
-
             }
         };
     }
@@ -252,6 +248,9 @@ public class MainActivity extends ActionBarActivity implements ConnectionCallbac
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                //Remove o progress bar do placeholder do cabeçalho da lista quando houver algum erro.
+                ProgressBar progressBar = (ProgressBar) mRecyclerView.findViewById(R.id.progressBar);
+                progressBar.setVisibility(View.GONE);
             }
         };
     }
