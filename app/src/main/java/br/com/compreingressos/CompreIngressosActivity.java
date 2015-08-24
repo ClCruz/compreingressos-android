@@ -345,7 +345,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
         String cookies = CookieManager.getInstance().getCookie(url);
         Map<String, String> mapCookies = new HashMap<>();
         if (mapCookies != null) {
-            try {
+            if (cookies.contains(";")) {
                 String[] arrayCookies = cookies.split(";");
                 for (int i = 0; i < arrayCookies.length; i++) {
                     String[] temp = arrayCookies[i].split("=");
@@ -355,9 +355,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
                         }
                     }
                 }
-            } catch (Exception e) {
-                Crashlytics.log(cookies);
-                Crashlytics.logException(e);
             }
 
             for (Object o : mapCookies.keySet()) {
