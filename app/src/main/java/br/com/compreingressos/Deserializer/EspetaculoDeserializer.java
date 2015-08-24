@@ -1,8 +1,5 @@
 package br.com.compreingressos.deserializer;
 
-import android.util.Log;
-
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -40,8 +37,6 @@ public class EspetaculoDeserializer implements JsonDeserializer<Espetaculo> {
             date = dateFormat.parse(obj.get("data").getAsString());
         }catch (ParseException e){
             e.printStackTrace();
-            Crashlytics.logException(e);
-            Crashlytics.log(Log.ERROR, "EspetaculoDeserializer", "json -> \n " + json);
             date =  null;
         }
 
