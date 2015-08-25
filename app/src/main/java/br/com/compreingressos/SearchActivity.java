@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -47,7 +48,7 @@ import br.com.compreingressos.toolbox.VolleySingleton;
 /**
  * Created by zaca on 5/8/15.
  */
-public class SearchActivity extends ActionBarActivity {
+public class SearchActivity extends AppCompatActivity {
 
     public static final String URL = "http://tokecompre-ci.herokuapp.com/espetaculos.json?keywords=";
 
@@ -141,7 +142,12 @@ public class SearchActivity extends ActionBarActivity {
 
         try {
             TextView textView = (TextView) searchView.findViewById(R.id.search_src_text);
-            textView.setTextColor(getResources().getColor(R.color.white));
+            if (Build.VERSION.SDK_INT >= 21) {
+                textView.setTextColor(getResources().getColor(R.color.white));
+            }else{
+                textView.setTextColor(getResources().getColor(R.color.red_compreingressos));
+            }
+
 
         }catch (Exception e){
             Crashlytics.logException(e);
