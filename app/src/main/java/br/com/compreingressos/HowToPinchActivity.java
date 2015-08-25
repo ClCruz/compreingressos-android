@@ -2,14 +2,14 @@ package br.com.compreingressos;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
 /**
  * Created by zaca on 5/14/15.
  */
-public class HowToPinchActivity extends ActionBarActivity {
+public class HowToPinchActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

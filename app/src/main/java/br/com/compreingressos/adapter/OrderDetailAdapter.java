@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -55,7 +55,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-    private ActionBarActivity activity;
+    private AppCompatActivity activity;
     private SimpleDateFormat sdf = new SimpleDateFormat("EEE dd MMM");
     private RequestQueue requestQueue;
 
@@ -64,7 +64,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.mListIngressos = order.getIngressos();
         this.context = context;
 
-        activity  = (ActionBarActivity) context;
+        this.activity  = (AppCompatActivity) context;
     }
 
     @Override

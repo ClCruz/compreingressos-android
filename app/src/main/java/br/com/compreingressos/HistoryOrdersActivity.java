@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -47,7 +47,7 @@ import br.com.compreingressos.utils.ConnectionUtils;
 /**
  * Created by luiszacheu on 15/04/15.
  */
-public class HistoryOrdersActivity extends ActionBarActivity {
+public class HistoryOrdersActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "HistoryOrdersActivity";
 

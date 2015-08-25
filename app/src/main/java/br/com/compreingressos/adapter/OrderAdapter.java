@@ -1,9 +1,8 @@
 package br.com.compreingressos.adapter;
 
 import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,13 +29,13 @@ public class OrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context context;
     public static OnItemClickListener onItemClickListener;
     private static final int TYPE_ITEM = 1;
-    private ActionBarActivity activity;
+    private AppCompatActivity activity;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd MMM");
 
     public OrderAdapter(Context context, List<Order> orders) {
         this.mListOrders = orders;
         this.context = context;
-        activity  = (ActionBarActivity) context;
+        this.activity  = (AppCompatActivity) context;
     }
 
     @Override

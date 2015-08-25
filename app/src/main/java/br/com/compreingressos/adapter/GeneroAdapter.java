@@ -2,7 +2,7 @@ package br.com.compreingressos.adapter;
 
 import android.content.Context;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 import br.com.compreingressos.R;
 import br.com.compreingressos.fragment.MainBannerFragment;
-import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
 
 /**
@@ -29,13 +28,13 @@ public class GeneroAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public static OnItemClickListener onItemClickListener;
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_ITEM = 1;
-    private ActionBarActivity activity;
+    private AppCompatActivity activity;
 
 
     public GeneroAdapter(Context context, ArrayList<Genero> generos) {
         this.mListGeneros = generos;
         this.context = context;
-        this.activity = (ActionBarActivity) context;
+        this.activity = (AppCompatActivity) context;
 
     }
 

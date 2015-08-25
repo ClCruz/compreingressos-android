@@ -3,7 +3,7 @@ package br.com.compreingressos;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -39,7 +39,7 @@ import br.com.compreingressos.toolbox.VolleySingleton;
 /**
  * Created by luiszacheu on 28/04/15.
  */
-public class PaymentFinishedActivity extends ActionBarActivity {
+public class PaymentFinishedActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private Button btnVerIngressos;

@@ -8,7 +8,7 @@ import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -46,7 +46,7 @@ import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.WebAppInterface;
 
 
-public class CompreIngressosActivity extends ActionBarActivity {
+public class CompreIngressosActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = CompreIngressosActivity.class.getSimpleName();
     private WebView webView;
@@ -212,13 +212,13 @@ public class CompreIngressosActivity extends ActionBarActivity {
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
 
-//                if (Uri.parse(url).getHost().equals("compra.compreingressos.com") && !url.contains("CHAVES"))
-//                    url = "http://186.237.201.150:8081/compreingressos2/comprar/etapa1.php?apresentacao=61565";
-
+                if (CompreIngressosApplication.isRunnigOnEnvironmentDevelopment() == true) {
+                    if (Uri.parse(url).getHost().equals("compra.compreingressos.com"))
+                        url = "http://186.237.201.150:8081/compreingressos2/comprar/etapa1.php?apresentacao=61565";
+                }
                 if (url.contains("etapa1.php")) {
                     WebSettings webSettings = view.getSettings();
                     webSettings.setBuiltInZoomControls(true);
-
                     try {
                         webSettings.setDisplayZoomControls(false);
                     } catch (NoSuchMethodError e) {
@@ -237,8 +237,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
                             view.loadUrl(scriptOnClick.toString());
                         }
                     });
-
-
                 }
 
                 if (Uri.parse(url).getHost().equals("www.compreingressos.com") || Uri.parse(url).getHost().equals("compra.compreingressos.com") || Uri.parse(url).getHost().equals("186.237.201.150")) {
@@ -263,8 +261,6 @@ public class CompreIngressosActivity extends ActionBarActivity {
                 } else {
                     webView.setVisibility(View.GONE);
                 }
-
-
                 progressBar.setVisibility(View.VISIBLE);
 
                 hideNextButton();
@@ -432,7 +428,9 @@ public class CompreIngressosActivity extends ActionBarActivity {
         scriptGetInfoPayment.append("}; \n");
         scriptGetInfoPayment.append("Android.getInfoPagamento(JSON.stringify(payload));");
         scriptGetInfoPayment.append("$('.imprima_agora').hide();");
-        scriptGetInfoPayment.append(runScriptGetItemsGoogleAnalytics());
+        if (CompreIngressosApplication.isRunnigOnEnvironmentDevelopment() == false) {
+            scriptGetInfoPayment.append(runScriptGetItemsGoogleAnalytics());
+        }
 
         return scriptGetInfoPayment.toString();
     }

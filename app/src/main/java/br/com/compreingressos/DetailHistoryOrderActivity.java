@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,7 +22,7 @@ import br.com.compreingressos.model.Order;
 /**
  * Created by luiszacheu on 15/04/15.
  */
-public class DetailHistoryOrderActivity extends ActionBarActivity {
+public class DetailHistoryOrderActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "DetailHistoryOrderActivity";
 

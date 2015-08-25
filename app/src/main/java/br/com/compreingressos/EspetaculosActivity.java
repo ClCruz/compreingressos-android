@@ -3,7 +3,7 @@ package br.com.compreingressos;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -37,7 +37,7 @@ import br.com.compreingressos.widget.RecyclerViewCustom;
 /**
  * Created by luiszacheu on 01/04/15.
  */
-public class EspetaculosActivity extends ActionBarActivity {
+public class EspetaculosActivity extends AppCompatActivity {
 
     public static final String URL = "http://tokecompre-ci.herokuapp.com/espetaculos.json";
     private static final String OBJ_LIST = "OBJ_LIST";
