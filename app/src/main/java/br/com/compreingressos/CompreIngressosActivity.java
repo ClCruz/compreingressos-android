@@ -438,7 +438,7 @@ public class CompreIngressosActivity extends ActionBarActivity {
     }
 
     public String injectPromoCode() {
-        StringBuilder script = new StringBuilder("javascript:var codigo = " + codePromo + ";\n");
+        StringBuilder script = new StringBuilder("javascript:var codigo = \" " + codePromo + " \";\n");
         script.append("var groups = /<a href=\\\"#([\\d]+)\\\" rel=\\\"[\\d]+\\\">PROMO APP<\\/a>/.exec(document.documentElement.outerHTML);\n");
         script.append("var ref;\n");
         script.append("if (groups.length == 2) ref = groups[1];\n");
