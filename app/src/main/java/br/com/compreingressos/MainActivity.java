@@ -236,8 +236,11 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                     }
 
                     if (mListBanners != null) {
-                        ((MainBannerFragment) getSupportFragmentManager().findFragmentByTag("header")).updateBannerAdapter(mListBanners);
-                    }
+                        MainBannerFragment bannerFragment = ((MainBannerFragment) getSupportFragmentManager().findFragmentByTag("header"));
+                        if (bannerFragment != null){
+                            bannerFragment.updateBannerAdapter(mListBanners);
+                        }
+                        }
                 }
             }
         };

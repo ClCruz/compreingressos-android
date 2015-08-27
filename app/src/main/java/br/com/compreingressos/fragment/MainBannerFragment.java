@@ -64,7 +64,6 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     @Override
     public void onResume() {
         super.onResume();
-
         if (ConnectionUtils.isInternetOn(getActivity())){
             if (mPager.getAdapter() == null) {
                 mAdapter = new PageViewAdapter(getChildFragmentManager(), initList());
@@ -74,17 +73,35 @@ public class MainBannerFragment extends Fragment implements BannerListener {
         }else{
             progressBar.setVisibility(View.GONE);
         }
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (handler != null) {
+            handler.removeCallbacks(runnable);
+        }
+
     }
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
+            super.onDestroyView();
         if (mPager.getAdapter() == null) {
             if (handler != null) {
                 handler.removeCallbacks(runnable);
                 handler = null;
             }
         }
+
+
     }
 
     @Override
@@ -96,6 +113,7 @@ public class MainBannerFragment extends Fragment implements BannerListener {
                 handler = null;
             }
         }
+
     }
 
     @Override
