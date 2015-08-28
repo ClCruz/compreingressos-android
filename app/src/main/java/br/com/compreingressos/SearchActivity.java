@@ -24,9 +24,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -220,7 +223,18 @@ public class SearchActivity extends AppCompatActivity {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (error instanceof TimeoutError){
+                    Crashlytics.logException(error);
+                }else if (error instanceof NetworkError){
+                    Crashlytics.logException(error);
+                }else if (error instanceof NoConnectionError){
+                    Crashlytics.logException(error);
+                }
+
+
                 Toast.makeText(SearchActivity.this, "Houve um erro!", Toast.LENGTH_SHORT).show();
+                error.printStackTrace();
+
             }
         };
     }
@@ -228,11 +242,12 @@ public class SearchActivity extends AppCompatActivity {
     private void startRequest(String query) {
         progressBar.setVisibility(View.VISIBLE);
         txtNoDataResult.setVisibility(View.GONE);
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
         StringBuilder urlCustom = new StringBuilder(URL);
         urlCustom.append(query);
         GsonRequest<Espetaculos> jsonObjRequest = new GsonRequest<>(Request.Method.GET, urlCustom.toString(), Espetaculos.class, headers, this.createSuccessListener(), this.createErrorListener(), "yyyy-MM-dd");
+        jsonObjRequest.setRetryPolicy(new com.android.volley.DefaultRetryPolicy(15000, com.android.volley.DefaultRetryPolicy.DEFAULT_MAX_RETRIES, com.android.volley.DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         this.requestQueue.add(jsonObjRequest);
     }
 }
