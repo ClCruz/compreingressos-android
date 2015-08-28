@@ -4,25 +4,22 @@ package br.com.compreingressos;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.NetworkError;
 import com.android.volley.NoConnectionError;
@@ -223,6 +220,9 @@ public class SearchActivity extends AppCompatActivity {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) SearchActivity.this.findViewById(android.R.id.content)).getChildAt(0);
+                Snackbar.make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG).show();
+
                 if (error instanceof TimeoutError){
                     Crashlytics.logException(error);
                 }else if (error instanceof NetworkError){
@@ -230,10 +230,6 @@ public class SearchActivity extends AppCompatActivity {
                 }else if (error instanceof NoConnectionError){
                     Crashlytics.logException(error);
                 }
-
-
-                Toast.makeText(SearchActivity.this, "Houve um erro!", Toast.LENGTH_SHORT).show();
-                error.printStackTrace();
 
             }
         };

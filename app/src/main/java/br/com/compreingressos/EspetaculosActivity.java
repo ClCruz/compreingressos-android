@@ -3,20 +3,25 @@ package br.com.compreingressos;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -166,7 +171,6 @@ public class EspetaculosActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Espetaculos response) {
-
                 if (response.getEspetaculos().size() > 0) {
                     progressBar.setVisibility(View.GONE);
                     recyclerView.setVisibility(View.VISIBLE);
@@ -184,7 +188,15 @@ public class EspetaculosActivity extends AppCompatActivity {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(EspetaculosActivity.this, getResources().getString(R.string.message_sem_conexao), Toast.LENGTH_SHORT).show();
+                final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) EspetaculosActivity.this.findViewById(android.R.id.content)).getChildAt(0);
+                Snackbar.make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG).show();
+                if (error instanceof TimeoutError){
+                    Crashlytics.logException(error);
+                }else if (error instanceof NetworkError){
+                    Crashlytics.logException(error);
+                }else if (error instanceof NoConnectionError){
+                    Crashlytics.logException(error);
+                }
             }
         };
     }

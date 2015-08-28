@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,8 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -107,7 +108,8 @@ public class HistoryOrdersActivity extends AppCompatActivity {
             requestQueue = VolleySingleton.getInstance(HistoryOrdersActivity.this).getRequestQueue();
             startRequest();
         } else {
-            Toast.makeText(HistoryOrdersActivity.this, getResources().getString(R.string.message_sem_conexao), Toast.LENGTH_LONG).show();
+            final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
+            Snackbar.make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG).show();
         }
 
     }
@@ -177,11 +179,9 @@ public class HistoryOrdersActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(final Order[] response) {
-
                 if (response != null) {
                     SaveOnDabaseAsyncTask saveOnDabaseAsyncTask = new SaveOnDabaseAsyncTask();
                     saveOnDabaseAsyncTask.execute(response);
-
                 }
 
             }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -105,7 +106,18 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     @Override
     protected void onStart() {
         mGoogleApiClient.connect();
-        startRequest();
+
+
+        if (ConnectionUtils.getTypeNameConnection(MainActivity.this) != "?" && ConnectionUtils.getTypeNameConnection(MainActivity.this) != "-") {
+            startRequest();
+        } else {
+            final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
+                    .findViewById(android.R.id.content)).getChildAt(0);
+            Snackbar
+                    .make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG)
+                   .show();
+
+        }
         super.onStart();
     }
 
@@ -200,12 +212,13 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         try {
             if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")) {
                 con = "&con=wifi";
-            } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("mobile")) {
+            } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this) != "?" && ConnectionUtils.getTypeNameConnection(MainActivity.this) != "-"){
                 con = "&con=wwan";
             }
         } catch (Exception e) {
             Crashlytics.logException(e);
-            Toast.makeText(MainActivity.this, getResources().getString(R.string.message_sem_conexao), Toast.LENGTH_SHORT).show();
+            final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
+            Snackbar.make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG).show();
         }
 
         urlwithParams.append("?os=android");
@@ -237,10 +250,10 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
                     if (mListBanners != null) {
                         MainBannerFragment bannerFragment = ((MainBannerFragment) getSupportFragmentManager().findFragmentByTag("header"));
-                        if (bannerFragment != null){
+                        if (bannerFragment != null) {
                             bannerFragment.updateBannerAdapter(mListBanners);
                         }
-                        }
+                    }
                 }
             }
         };
@@ -251,9 +264,24 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                final ProgressBar progressBar;
                 //Remove o progress bar do placeholder do cabeçalho da lista quando houver algum erro.
-                ProgressBar progressBar = (ProgressBar) mRecyclerView.findViewById(R.id.progressBar);
-                progressBar.setVisibility(View.GONE);
+                //Verifica se encontra a progresse barr
+                if (mRecyclerView != null) {
+                    progressBar = (ProgressBar) mRecyclerView.findViewById(R.id.progressBar);
+                    if (progressBar != null) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+
+//                if (error instanceof TimeoutError){
+//                    Crashlytics.logException(error);
+//                }else if (error instanceof NetworkError){
+//                    Crashlytics.logException(error);
+//                }else if (error instanceof NoConnectionError){
+//                    Crashlytics.logException(error);
+//                }
+
             }
         };
     }
