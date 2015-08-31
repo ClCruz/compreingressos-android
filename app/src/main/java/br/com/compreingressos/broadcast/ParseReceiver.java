@@ -20,73 +20,55 @@ import br.com.compreingressos.MainActivity;
  */
 public class ParseReceiver extends ParsePushBroadcastReceiver {
 
-    String title = "";
-    String url = "";
-    String codePromo = "";
+    private String title = "";
+    private String url = "";
+    private String codePromo = "";
 
     public ParseReceiver() {
         // TODO Auto-generated constructor stub
     }
-
 
     @Override
     public void onPushOpen(Context context, Intent intent) {
         Bundle extras = intent.getExtras();
         ParseAnalytics.trackAppOpenedInBackground(intent);
 
+        String message = extras != null ? extras.getString("com.parse.Data") : "";
+        JSONObject jObject = null;
+
         try {
-            String message = extras != null ? extras.getString("com.parse.Data") : "";
-            JSONObject jObject;
-
             jObject = new JSONObject(message);
-            title = jObject.getString("alert");
-            try {
+
+            if (jObject.has("alert"))
+                title = jObject.getString("alert");
+
+            if (jObject.has("u"))
                 url = jObject.getString("u");
-            }catch (Exception e){
-                Crashlytics.logException(e);
-                Crashlytics.log(Log.ERROR, ParseReceiver.class.getSimpleName(), "url -> " + url);
-                url = null;
-                e.printStackTrace();
-            }
 
-            try {
+            if (jObject.has("c"))
                 codePromo = jObject.getString("c");
-            }catch (Exception e){
-                Crashlytics.logException(e);
-                Crashlytics.log(Log.ERROR, ParseReceiver.class.getSimpleName(), "codePromo -> " + codePromo);
-                codePromo = null;
-                e.printStackTrace();
-            }
-
-            Intent i;
-
-            if (url != null){
-                i = new Intent(context, CompreIngressosActivity.class);
-                i.putExtras(intent.getExtras());
-                i.putExtra("titulo_espetaculo", title);
-                i.putExtra("u", url);
-                i.putExtra("c", codePromo);
-            }else{
-                i = new Intent(context, MainActivity.class);
-            }
-
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(i);
 
         } catch (JSONException e) {
-            Crashlytics.log(extras.getString("com.parse.Data"));
-            Crashlytics.logException(e);
-        } catch (NullPointerException e){
-            Crashlytics.log(extras.getString("com.parse.Data"));
-            Crashlytics.logException(e);
-        } catch (Exception e){
-            Crashlytics.log(extras.getString("com.parse.Data"));
-            Crashlytics.logException(e);
+            e.printStackTrace();
         }
+
+        Intent i;
+
+        if (url == null || url.isEmpty()) {
+            i = new Intent(context, MainActivity.class);
+        } else {
+            i = new Intent(context, CompreIngressosActivity.class);
+            i.putExtras(intent.getExtras());
+            i.putExtra("titulo_espetaculo", title);
+            i.putExtra("u", url);
+            i.putExtra("c", codePromo);
+        }
+
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(i);
 
 
     }
-
 
 
 }
