@@ -136,20 +136,23 @@ public class MainBannerFragment extends Fragment implements BannerListener {
     @Override
     public void updateBannerAdapter(ArrayList<Banner> listBanner) {
         if (listBanner != null){
-            mAdapter.setListBanners(listBanner);
-            mAdapter.notifyDataSetChanged();
+            if (mAdapter != null){
+                mAdapter.setListBanners(listBanner);
+                mAdapter.notifyDataSetChanged();
 
-            if (listBanner.size() > 0){
-                viewBanner.setVisibility(View.VISIBLE);
-                placeholderView.setVisibility(View.GONE);
-                if (AndroidUtils.isHoneyCombOrNewer())
-                    placeholderView.animate().alpha(1.0f);
+                if (listBanner.size() > 0){
+                    viewBanner.setVisibility(View.VISIBLE);
+                    placeholderView.setVisibility(View.GONE);
+                    if (AndroidUtils.isHoneyCombOrNewer())
+                        placeholderView.animate().alpha(1.0f);
+                }
+
+                if (handler != null) {
+                    slideShow();
+                    handler.postDelayed(runnable, 5000);
+                }
             }
 
-            if (handler != null) {
-                slideShow();
-                handler.postDelayed(runnable, 5000);
-            }
 
         }
     }
