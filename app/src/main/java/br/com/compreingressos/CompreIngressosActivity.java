@@ -194,7 +194,9 @@ public class CompreIngressosActivity extends AppCompatActivity {
                 }
 
                 if (url.contains("etapa2.php")) {
-                    view.loadUrl(injectPromoCode());
+                    if (codePromo != null && codePromo.trim().length() > 0){
+                        view.loadUrl(injectPromoCode());
+                    }
                 }
 
                 getCookies(url);
@@ -436,7 +438,7 @@ public class CompreIngressosActivity extends AppCompatActivity {
     }
 
     public String injectPromoCode() {
-        StringBuilder script = new StringBuilder("javascript:var codigo = \" " + codePromo + " \";\n");
+        StringBuilder script = new StringBuilder("javascript:var codigo=\""+codePromo+"\";\n");
         script.append("var groups = /<a href=\\\"#([\\d]+)\\\" rel=\\\"[\\d]+\\\">PROMO APP<\\/a>/.exec(document.documentElement.outerHTML);\n");
         script.append("var ref;\n");
         script.append("if (groups.length == 2) ref = groups[1];\n");
@@ -445,9 +447,9 @@ public class CompreIngressosActivity extends AppCompatActivity {
         script.append("$('.container_beneficio').find('input[type=\"text\"]').val(codigo);\n");
         script.append("$('a[class^=\"validarBin\"]').click();\n");
         script.append("}");
-
-
         return script.toString();
+
+
     }
 
     public String runScriptGetItemsGoogleAnalytics() {
