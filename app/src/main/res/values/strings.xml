@@ -21,4 +21,9 @@
     <string name="message_sem_conexao">Por favor verifique sua conexão!</string>
 
     <string name="snackbar_text">Por favor verifique sua conexão</string>
+
+    <string name="prompt_email">E-mail</string>
+    <string name="prompt_password">Senha</string>
+    <string name="btn_signin">Logar</string>
+
 </resources>
