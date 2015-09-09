@@ -249,6 +249,12 @@ public class CompreIngressosActivity extends AppCompatActivity {
                     return false;
                 }
 
+                if (url.contains("etapa3.php")){
+                    Log.e(LOG_TAG, "injeta cookie");
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Cookie", "user=kt898Benfy9gPvwXoIhgwj1NNflwI28AuMNxhC8OibY; PHPSESSID=k8j0bnutctbcafdtokl8dkctm1;domain=compreingressos.com.br;path=/comprar;Expires=Thu, 2 Aug 2021 20:47:11 UTC;");
+                    view.loadUrl(url, headers);
+                }
                 return true;
 
             }
@@ -366,12 +372,8 @@ public class CompreIngressosActivity extends AppCompatActivity {
             for (Object o : mapCookies.keySet()) {
                 if (o.toString().contains("user")) {
                     UserHelper.saveUserIdOnSharedPreferences(CompreIngressosActivity.this, mapCookies.get(o.toString()));
-                    Log.e(LOG_TAG, "tem user ainda");
-                }else{
-                    Log.e(LOG_TAG, "nao tem user ainda");
                 }
             }
-            createCookies();
         }
 
     }
@@ -379,10 +381,8 @@ public class CompreIngressosActivity extends AppCompatActivity {
     private void createCookies(){
         if (User.getInstance().getUserId() != null){
 
-            SessionManager session = new SessionManager(getApplicationContext());
-
             Log.e(LOG_TAG, "Tem user - " + User.getInstance().toString());
-            Log.e(LOG_TAG, "Tem user details from pref - " + session.getUserDetails());
+
             if(AndroidUtils.isLollipopOrNewer()){
                 CookieManager.getInstance().removeAllCookies(null);
                 CookieManager.getInstance().acceptThirdPartyCookies(webView);
