@@ -17,10 +17,10 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.compreingressos.model.User;
 import br.com.compreingressos.session.SessionManager;
 import br.com.compreingressos.toolbox.GsonRequest;
 import br.com.compreingressos.toolbox.VolleySingleton;
@@ -55,12 +55,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private Response.Listener<JSONObject> createSuccessListener() {
-        return new Response.Listener<JSONObject>() {
+    private Response.Listener<User> createSuccessListener() {
+        return new Response.Listener<User>() {
 
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(User response) {
                 Log.e("---------", response.toString());
+                session.createLoginSession(edtEmail.getText().toString(),response.getUserId(), response.getPhpSession() );
             }
         };
     }
@@ -90,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.e("------->> ", userJson.toString());
 
         if (email.trim().length() > 0 && password.trim().length() > 0) {
-            GsonRequest<JSONObject> gsonRequest = new GsonRequest<>(Request.Method.POST, "http://tokecompre-ci.herokuapp.com/sessions", JSONObject.class, headers, createSuccessListener(), createErrorListener(), null, userJson);
+            GsonRequest<User> gsonRequest = new GsonRequest<>(Request.Method.POST, "http://tokecompre-ci.herokuapp.com/sessions", User.class, headers, createSuccessListener(), createErrorListener(), null, userJson);
             gsonRequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             this.requestQueue.add(gsonRequest);
         } else {

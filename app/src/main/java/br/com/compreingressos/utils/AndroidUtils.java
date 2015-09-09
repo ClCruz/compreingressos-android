@@ -33,6 +33,14 @@ public class AndroidUtils {
         return false;
     }
 
+    public static boolean isLollipopOrNewer() {
+        int apiLevel = Build.VERSION.SDK_INT;
+        if (apiLevel >= Build.VERSION_CODES.LOLLIPOP) {
+            return true;
+        }
+        return false;
+    }
+
     public static boolean isHoneyCombOrNewer(){
         int apiLevel = Build.VERSION.SDK_INT;
         if (apiLevel >= Build.VERSION_CODES.HONEYCOMB_MR1) {

@@ -15,7 +15,9 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -42,6 +44,8 @@ import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.interfaces.WebAppInterfaceListener;
 import br.com.compreingressos.model.Order;
+import br.com.compreingressos.model.User;
+import br.com.compreingressos.session.SessionManager;
 import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.WebAppInterface;
 
@@ -125,7 +129,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
 
 
         webView.addJavascriptInterface(webAppInterface, "Android");
-
 
         webView.setWebViewClient(new WebViewClient() {
 
@@ -258,6 +261,8 @@ public class CompreIngressosActivity extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
+
+
                 if (url.contains("espetaculos")) {
                     webView.setVisibility(View.VISIBLE);
                 } else {
@@ -266,6 +271,7 @@ public class CompreIngressosActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
 
                 hideNextButton();
+
 
                 if (url.contains("etapa1.php")) {
                     trackScreenNameOnGA(ConstantsGoogleAnalytics.WEBVIEW_SEUINGRESSO);
@@ -339,8 +345,10 @@ public class CompreIngressosActivity extends AppCompatActivity {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void getCookies(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
+        Log.e(LOG_TAG, "getCookies --> + " + CookieManager.getInstance().getCookie(url));
         Map<String, String> mapCookies = new HashMap<>();
         if (mapCookies != null) {
             if (cookies.contains(";")) {
@@ -358,9 +366,35 @@ public class CompreIngressosActivity extends AppCompatActivity {
             for (Object o : mapCookies.keySet()) {
                 if (o.toString().contains("user")) {
                     UserHelper.saveUserIdOnSharedPreferences(CompreIngressosActivity.this, mapCookies.get(o.toString()));
+                    Log.e(LOG_TAG, "tem user ainda");
+                }else{
+                    Log.e(LOG_TAG, "nao tem user ainda");
                 }
             }
+            createCookies();
         }
+
+    }
+
+    private void createCookies(){
+        if (User.getInstance().getUserId() != null){
+
+            SessionManager session = new SessionManager(getApplicationContext());
+
+            Log.e(LOG_TAG, "Tem user - " + User.getInstance().toString());
+            Log.e(LOG_TAG, "Tem user details from pref - " + session.getUserDetails());
+            if(AndroidUtils.isLollipopOrNewer()){
+                CookieManager.getInstance().removeAllCookies(null);
+                CookieManager.getInstance().acceptThirdPartyCookies(webView);
+            }else{
+                CookieManager.getInstance().removeAllCookie();
+            }
+            CookieManager.getInstance().setCookie("compra.compreingressos.com", "user="+User.getInstance().getUserId());
+            CookieManager.getInstance().setCookie("compra.compreingressos.com", "PHPSESSID="+User.getInstance().getPhpSession());
+            CookieManager.getInstance().setAcceptCookie(true);
+        }
+
+
 
     }
 
