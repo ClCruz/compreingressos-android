@@ -10,20 +10,27 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
-    <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
-
-
-    <WebView
-        android:id="@+id/webview_login"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></WebView>
+        android:layout_height="match_parent">
+
+        <!-- Login progress -->
+        <ProgressBar
+            android:id="@+id/login_progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_gravity="center"
+            android:visibility="visible" />
+
+
+        <WebView
+            android:id="@+id/webview_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"></WebView>
+    </FrameLayout>
 
 </LinearLayout>
 

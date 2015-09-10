@@ -99,22 +99,20 @@ public class GsonRequest<T> extends Request<T> {
             gsonBuilder.registerTypeAdapter(Order.class, new OrderDeserializer());
             gsonBuilder.serializeNulls();
 
-            Log.e(LOG_TAG, json.toString());
-
             Gson gson = gsonBuilder.create();
 
             return Response.success(gson.fromJson(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
-//            Crashlytics.logException(e);
-//            Crashlytics.log(Log.ERROR, "GsonRequest(UnsupportedEncodingException)", "json -> " + json);
+            Crashlytics.logException(e);
+            Crashlytics.log(Log.ERROR, "GsonRequest(UnsupportedEncodingException)", "json -> " + json);
             return Response.error(new ParseError(e));
         } catch (JsonSyntaxException e) {
-//            Crashlytics.log(Log.ERROR, "GsonRequest(JsonSyntaxException)", "json -> " + json);
-//            Crashlytics.logException(e);
+            Crashlytics.log(Log.ERROR, "GsonRequest(JsonSyntaxException)", "json -> " + json);
+            Crashlytics.logException(e);
             return Response.error(new ParseError(e));
         } catch (Exception e) {
-//            Crashlytics.log(Log.ERROR, "GsonRequest(Exception)", "json -> " + json);
-//            Crashlytics.logException(e);
+            Crashlytics.log(Log.ERROR, "GsonRequest(Exception)", "json -> " + json);
+            Crashlytics.logException(e);
             return Response.error(new ParseError(e));
         }
     }

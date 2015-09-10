@@ -66,6 +66,7 @@ public class HistoryOrdersActivity extends AppCompatActivity {
     private Handler handler;
 
     SessionManager session;
+    String clientId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,8 @@ public class HistoryOrdersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_history_orders);
 
         session =  new SessionManager(getApplicationContext());
+
+        clientId = UserHelper.retrieveUserIdOnSharedPreferences(HistoryOrdersActivity.this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -117,7 +120,6 @@ public class HistoryOrdersActivity extends AppCompatActivity {
             final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
             Snackbar.make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG).show();
         }
-
     }
 
     private void getOrdersFromDatabase() {
@@ -143,25 +145,20 @@ public class HistoryOrdersActivity extends AppCompatActivity {
             recyclerView.setVisibility(View.GONE);
             emptyHistory.setVisibility(View.VISIBLE);
         }
-
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-
+        this.invalidateOptionsMenu();
     }
 
     private OnItemClickListener onItemClick = new OnItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
             Intent intent = new Intent(HistoryOrdersActivity.this, DetailHistoryOrderActivity.class);
-
             Order order = orders.get(position);
             order.setIngressos(new ArrayList<>(order.getIngressosCollection()));
-
             intent.putExtra("order", orders.get(position));
 
             startActivity(intent);
@@ -171,10 +168,12 @@ public class HistoryOrdersActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        clientId = UserHelper.retrieveUserIdOnSharedPreferences(HistoryOrdersActivity.this);
         getMenuInflater().inflate(R.menu.authentication, menu);
-        Log.e(LOG_TAG, "lgin - " + session.checkLogin());
-        if (session.checkLogin()){
+        if (!clientId.isEmpty()){
             menu.getItem(0).setTitle("Logout");
+        }else{
+            menu.getItem(0).setTitle("Login");
         }
 
         return true;
@@ -187,7 +186,16 @@ public class HistoryOrdersActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.login:
-                startActivity(new Intent(this, LoginActivity.class));
+                Intent intent = new Intent(this, LoginActivity.class);
+                if (!clientId.isEmpty()){
+                    intent.putExtra("path","/comprar/logout.php");
+                    intent.putExtra("title","Logout");
+                }else{
+                    intent.putExtra("path","/comprar/login.php");
+                    intent.putExtra("title","Login");
+                }
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -217,7 +225,6 @@ public class HistoryOrdersActivity extends AppCompatActivity {
     }
 
     private void startRequest() {
-        String clientId = UserHelper.retrieveUserIdOnSharedPreferences(HistoryOrdersActivity.this);
         if (clientId.trim().length() > 0) {
             String envHomol = "";
             if (CompreIngressosApplication.isRunnigOnEnvironmentDevelopment())

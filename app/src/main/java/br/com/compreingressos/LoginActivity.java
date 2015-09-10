@@ -1,6 +1,6 @@
 package br.com.compreingressos;
 
-import android.annotation.TargetApi;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ProgressBar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,18 +31,26 @@ public class LoginActivity extends AppCompatActivity {
     private SessionManager session;
     private WebView webView;
     private Toolbar toolbar;
-
+    private ProgressBar progressBar;
+    String pathUrl;
+    String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        final Intent intent = getIntent();
+        if (!intent.getStringExtra("path").isEmpty()){
+            pathUrl = intent.getStringExtra("path");
+            title = intent.getStringExtra("title");
+        }
         session = new SessionManager(getApplicationContext());
 
+        progressBar = (ProgressBar) findViewById(R.id.login_progress);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
-            toolbar.setTitle("Login");
+            toolbar.setTitle(title);
             toolbar.findViewById(R.id.toolbar_title).setVisibility(View.GONE);
             setSupportActionBar(toolbar);
 
@@ -82,31 +91,49 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                if (view.isShown()){
+                    view.setVisibility(View.INVISIBLE);
+                }
 
-//                view.loadUrl("javascript:$(\"#selos\").remove();");
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
+                if (url.contains("login.php")){
+                    view.setVisibility(View.VISIBLE);
+                    view.loadUrl("javascript:$(\"#selos\").remove();");
+                }else if (url.contains("minha_conta.php")){
+                     finish();
+                }else if (url.contains("espetaculos?auto=true")){
+                    UserHelper.cleanUserId(LoginActivity.this);
+                    finish();
+                }
+
+                getCookies(url);
+
             }
 
             @Override
             public void onLoadResource(WebView view, String url) {
-                view.loadUrl("javascript:$(\"#identificacaoForm\").children()[1].remove();");
-                view.loadUrl("javascript:$(\"#footer\").remove();");
+                removeHtml(view);
             }
         });
 
-        webView.loadUrl("https://compra.compreingressos.com/comprar/login.php");
+        webView.loadUrl("https://compra.compreingressos.com"+pathUrl);
 
     }
 
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void removeHtml(WebView view) {
+        view.loadUrl("javascript:$(\"#identificacaoForm\").children()[1].remove();");
+        view.loadUrl("javascript:$(\"#footer\").remove();");
+        view.loadUrl("javascript:$(\"#top\").remove();");
+
+    }
+
+
     private void getCookies(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
-        Log.e(LOG_TAG, "getCookies --> + " + CookieManager.getInstance().getCookie(url));
         Map<String, String> mapCookies = new HashMap<>();
         if (mapCookies != null) {
             if (cookies.contains(";")) {

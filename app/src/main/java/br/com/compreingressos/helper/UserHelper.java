@@ -1,6 +1,7 @@
 package br.com.compreingressos.helper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 /**
@@ -13,8 +14,11 @@ public class UserHelper {
     }
 
     public static String retrieveUserIdOnSharedPreferences(Context context){
-
         return (PreferenceManager.getDefaultSharedPreferences(context).getString("user", ""));
+    }
 
+    public static boolean cleanUserId(Context context){
+        PreferenceManager.getDefaultSharedPreferences(context).edit().remove("user").commit();
+        return true;
     }
 }
