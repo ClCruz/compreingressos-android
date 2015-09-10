@@ -351,7 +351,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void getCookies(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
         Log.e(LOG_TAG, "getCookies --> + " + CookieManager.getInstance().getCookie(url));
@@ -377,27 +376,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
         }
 
     }
-
-    private void createCookies(){
-        if (User.getInstance().getUserId() != null){
-
-            Log.e(LOG_TAG, "Tem user - " + User.getInstance().toString());
-
-            if(AndroidUtils.isLollipopOrNewer()){
-                CookieManager.getInstance().removeAllCookies(null);
-                CookieManager.getInstance().acceptThirdPartyCookies(webView);
-            }else{
-                CookieManager.getInstance().removeAllCookie();
-            }
-            CookieManager.getInstance().setCookie("compra.compreingressos.com", "user="+User.getInstance().getUserId());
-            CookieManager.getInstance().setCookie("compra.compreingressos.com", "PHPSESSID="+User.getInstance().getPhpSession());
-            CookieManager.getInstance().setAcceptCookie(true);
-        }
-
-
-
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
