@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.compreingressos.helper.UserHelper;
-import br.com.compreingressos.session.SessionManager;
 
 /**
  * Created by zaca on 9/4/15.
@@ -28,7 +27,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private final static String LOG_TAG = LoginActivity.class.getSimpleName();
 
-    private SessionManager session;
     private WebView webView;
     private Toolbar toolbar;
     private ProgressBar progressBar;
@@ -45,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
             pathUrl = intent.getStringExtra("path");
             title = intent.getStringExtra("title");
         }
-        session = new SessionManager(getApplicationContext());
 
         progressBar = (ProgressBar) findViewById(R.id.login_progress);
         toolbar = (Toolbar) findViewById(R.id.toolbar);

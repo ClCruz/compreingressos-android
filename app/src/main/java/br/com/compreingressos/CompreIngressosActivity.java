@@ -15,9 +15,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
-import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -44,8 +42,6 @@ import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.interfaces.WebAppInterfaceListener;
 import br.com.compreingressos.model.Order;
-import br.com.compreingressos.model.User;
-import br.com.compreingressos.session.SessionManager;
 import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.WebAppInterface;
 

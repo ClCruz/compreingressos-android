@@ -42,7 +42,6 @@ import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.interfaces.OnItemClickListener;
 import br.com.compreingressos.model.Order;
-import br.com.compreingressos.session.SessionManager;
 import br.com.compreingressos.toolbox.GsonRequest;
 import br.com.compreingressos.toolbox.VolleySingleton;
 import br.com.compreingressos.utils.ConnectionUtils;
@@ -65,15 +64,12 @@ public class HistoryOrdersActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private Handler handler;
 
-    SessionManager session;
     String clientId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_orders);
-
-        session =  new SessionManager(getApplicationContext());
 
         clientId = UserHelper.retrieveUserIdOnSharedPreferences(HistoryOrdersActivity.this);
 
