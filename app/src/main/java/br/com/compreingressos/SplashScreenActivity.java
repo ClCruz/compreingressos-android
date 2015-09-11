@@ -61,7 +61,7 @@ public class SplashScreenActivity extends Activity {
 
     private void startRequest(){
         String versionName = BuildConfig.VERSION_NAME;
-        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest("http://192.168.55.67:5001/force_update?version="+ versionName +"&os=android", new Response.Listener<JSONObject>() {
+        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest("http://tokecompre-ci.herokuapp.com/force_update?version="+ versionName +"&os=android", new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -69,17 +69,7 @@ public class SplashScreenActivity extends Activity {
                     if (has_update){
                         checkForceUpdate();
                     }else{
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
-                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                                startActivity(i);
-                                finish();
-
-                            }
-                        }, SPLASH_TIME_OUT);
+                        initSplash();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -89,9 +79,24 @@ public class SplashScreenActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                initSplash();
             }
         });
         requestQueue.add(jsonRequest);
+    }
+
+    private void initSplash() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                startActivity(i);
+                finish();
+
+            }
+        }, SPLASH_TIME_OUT);
     }
 
 }
