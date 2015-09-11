@@ -26,4 +26,7 @@
     <string name="prompt_password">Senha</string>
     <string name="btn_signin">Logar</string>
 
+    <string name="force_update_dialog_text">Por favor, seu App precisa ser atualizado!</string>
+    <string name="force_update_dialog_title">Atualização</string>
+
 </resources>

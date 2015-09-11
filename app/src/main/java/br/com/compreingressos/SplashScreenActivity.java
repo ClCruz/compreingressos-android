@@ -4,15 +4,31 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import br.com.compreingressos.toolbox.VolleySingleton;
+import br.com.compreingressos.utils.Dialogs;
 
 
 public class SplashScreenActivity extends Activity {
 
     private static int SPLASH_TIME_OUT = 4000;
     private static String TAG_LOG = SplashScreenActivity.class.getSimpleName();
-
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,17 +37,9 @@ public class SplashScreenActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-            Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.requestQueue = VolleySingleton.getInstance(this).getRequestQueue();
+        startRequest();
 
-            startActivity(i);
-            finish();
-
-            }
-        }, SPLASH_TIME_OUT);
     }
 
 
@@ -45,4 +53,46 @@ public class SplashScreenActivity extends Activity {
         super.onResume();
     }
 
+
+    private void checkForceUpdate(){
+        Dialogs.showDialogForceUpdate(this, SplashScreenActivity.this, getString(R.string.force_update_dialog_text), getString(R.string.force_update_dialog_title), getApplicationContext().getPackageName());
+    }
+
+
+    private void startRequest(){
+        String versionName = BuildConfig.VERSION_NAME;
+        JsonRequest<JSONObject> jsonRequest = new JsonObjectRequest("http://192.168.55.67:5001/force_update?version="+ versionName +"&os=android", new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    boolean has_update = response.getBoolean("force_update");
+                    if (has_update){
+                        checkForceUpdate();
+                    }else{
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent i = new Intent(SplashScreenActivity.this, MainActivity.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                startActivity(i);
+                                finish();
+
+                            }
+                        }, SPLASH_TIME_OUT);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+        requestQueue.add(jsonRequest);
+    }
+
 }
+
