@@ -2,6 +2,8 @@ package br.com.compreingressos;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -30,14 +32,18 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import br.com.compreingressos.adapter.GeneroAdapter;
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.decoration.DividerItemDecoration;
 import br.com.compreingressos.fragment.MainBannerFragment;
+import br.com.compreingressos.helper.ParseHelper;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.toolbox.GsonRequest;
@@ -107,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     protected void onStart() {
         mGoogleApiClient.connect();
 
-
         if (ConnectionUtils.getTypeNameConnection(MainActivity.this) != "?" && ConnectionUtils.getTypeNameConnection(MainActivity.this) != "-") {
             startRequest();
         } else {
@@ -115,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                     .findViewById(android.R.id.content)).getChildAt(0);
             Snackbar
                     .make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG)
-                   .show();
+                    .show();
 
         }
         super.onStart();
@@ -212,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         try {
             if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")) {
                 con = "&con=wifi";
-            } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this) != "?" && ConnectionUtils.getTypeNameConnection(MainActivity.this) != "-"){
+            } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this) != "?" && ConnectionUtils.getTypeNameConnection(MainActivity.this) != "-") {
                 con = "&con=wwan";
             }
         } catch (Exception e) {
@@ -273,15 +278,6 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                         progressBar.setVisibility(View.GONE);
                     }
                 }
-
-//                if (error instanceof TimeoutError){
-//                    Crashlytics.logException(error);
-//                }else if (error instanceof NetworkError){
-//                    Crashlytics.logException(error);
-//                }else if (error instanceof NoConnectionError){
-//                    Crashlytics.logException(error);
-//                }
-
             }
         };
     }
@@ -301,6 +297,17 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         if (mLastLocation != null) {
             longitude = mLastLocation.getLongitude();
             latitude = mLastLocation.getLatitude();
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            try {
+                List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+                if (addressList.size() > 0){
+                    String temp[] = addressList.get(0).getAddressLine(1).split("-");
+                    ParseHelper.setSubscribeParseChannelToLocation(temp[1].trim());
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
