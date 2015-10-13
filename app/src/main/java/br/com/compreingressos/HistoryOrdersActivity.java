@@ -71,7 +71,7 @@ public class HistoryOrdersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_orders);
 
-        clientId = UserHelper.retrieveUserIdOnSharedPreferences(HistoryOrdersActivity.this);
+
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
@@ -103,19 +103,7 @@ public class HistoryOrdersActivity extends AppCompatActivity {
 
         handler = new Handler();
 
-        getOrdersFromDatabase();
 
-        adapter = new OrderAdapter(HistoryOrdersActivity.this, orders);
-
-        initRecyclerView();
-
-        if (ConnectionUtils.isInternetOn(HistoryOrdersActivity.this)) {
-            requestQueue = VolleySingleton.getInstance(HistoryOrdersActivity.this).getRequestQueue();
-            startRequest();
-        } else {
-            final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
-            Snackbar.make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG).show();
-        }
     }
 
     private void getOrdersFromDatabase() {
@@ -124,10 +112,14 @@ public class HistoryOrdersActivity extends AppCompatActivity {
         try {
             orderDao = new OrderDao(databaseHelper.getConnectionSource());
             orders = orderDao.queryForAll();
+
+            Log.e("orders", "orders - " +orders.size());
         } catch (SQLException e) {
             Crashlytics.logException(e);
             e.printStackTrace();
         }
+
+        adapter = new OrderAdapter(HistoryOrdersActivity.this, orders);
     }
 
     private void initRecyclerView() {
@@ -145,8 +137,23 @@ public class HistoryOrdersActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
+        clientId = UserHelper.retrieveUserIdOnSharedPreferences(HistoryOrdersActivity.this);
+
+        getOrdersFromDatabase();
+        initRecyclerView();
+
+        if (ConnectionUtils.isInternetOn(HistoryOrdersActivity.this)) {
+            requestQueue = VolleySingleton.getInstance(HistoryOrdersActivity.this).getRequestQueue();
+            startRequest();
+        } else {
+            final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
+            Snackbar.make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG).show();
+        }
+
+        adapter.notifyDataSetChanged();
         this.invalidateOptionsMenu();
+
+        super.onResume();
     }
 
     private OnItemClickListener onItemClick = new OnItemClickListener() {
@@ -232,6 +239,7 @@ public class HistoryOrdersActivity extends AppCompatActivity {
             Map<String, String> headers = new HashMap<String, String>();
             headers.put("Content-Type", "application/json");
 
+            Log.e(LOG_TAG, "clientId = " +clientId);
             GsonRequest<Order[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, "http://tokecompre-ci.herokuapp.com/tickets.json?os=android" + envHomol + "&client_id=" + clientId, Order[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
             jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             this.requestQueue.add(jsonObjRequest);
@@ -242,10 +250,6 @@ public class HistoryOrdersActivity extends AppCompatActivity {
 
     public class SaveOnDabaseAsyncTask extends AsyncTask<Order, Void, Boolean> {
 
-        @Override
-        protected void onPreExecute() {
-
-        }
 
         @Override
         protected Boolean doInBackground(Order... params) {
