@@ -15,9 +15,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.com.compreingressos.dao.OrderDao;
+import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.UserHelper;
 
 /**
@@ -32,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     String pathUrl;
     String title;
+    private DatabaseHelper databaseHelper;
+    private OrderDao orderDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             pathUrl = intent.getStringExtra("path");
             title = intent.getStringExtra("title");
         }
+        databaseHelper = new DatabaseHelper(LoginActivity.this);
 
         progressBar = (ProgressBar) findViewById(R.id.login_progress);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -88,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                if (view.isShown()){
+                if (view.isShown()) {
                     view.setVisibility(View.INVISIBLE);
                 }
 
@@ -96,13 +102,21 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onPageFinished(WebView view, String url) {
-                if (url.contains("login.php")){
+                if (url.contains("login.php")) {
                     view.setVisibility(View.VISIBLE);
                     view.loadUrl("javascript:$(\"#selos\").remove();");
-                }else if (url.contains("minha_conta.php")){
-                     finish();
-                }else if (url.contains("espetaculos?auto=true")){
+                } else if (url.contains("minha_conta.php")) {
+                    finish();
+                } else if (url.contains("espetaculos?auto=true")) {
                     UserHelper.cleanUserId(LoginActivity.this);
+                    try {
+                        orderDao = new OrderDao(databaseHelper.getConnectionSource());
+                        orderDao.delete(orderDao.queryForAll());
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+
                     finish();
                 }
 
@@ -116,8 +130,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        webView.loadUrl("https://compra.compreingressos.com"+pathUrl);
-
+        webView.loadUrl("https://compra.compreingressos.com" + pathUrl);
     }
 
 
