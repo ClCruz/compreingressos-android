@@ -109,6 +109,7 @@ public class ParseHelper {
         states.put("SP", "SAO_PAULO");
         states.put("TO", "TOCANTINS");
 
+        Log.e("---> " , "--> " + getParseChannel());
         if (!checkClientSubscribeParseChannel(states.get(state))){
             setSubscribeParseChannel(states.get(state));
         }

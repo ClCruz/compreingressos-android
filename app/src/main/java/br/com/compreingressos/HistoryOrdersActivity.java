@@ -112,8 +112,6 @@ public class HistoryOrdersActivity extends AppCompatActivity {
         try {
             orderDao = new OrderDao(databaseHelper.getConnectionSource());
             orders = orderDao.queryForAll();
-
-            Log.e("orders", "orders - " +orders.size());
         } catch (SQLException e) {
             Crashlytics.logException(e);
             e.printStackTrace();
@@ -239,7 +237,6 @@ public class HistoryOrdersActivity extends AppCompatActivity {
             Map<String, String> headers = new HashMap<String, String>();
             headers.put("Content-Type", "application/json");
 
-            Log.e(LOG_TAG, "clientId = " +clientId);
             GsonRequest<Order[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, "http://tokecompre-ci.herokuapp.com/tickets.json?os=android" + envHomol + "&client_id=" + clientId, Order[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
             jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             this.requestQueue.add(jsonObjRequest);
