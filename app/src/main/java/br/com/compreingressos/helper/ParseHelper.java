@@ -40,7 +40,7 @@ public class ParseHelper {
     }
 
     public static String getParseChannel() {
-        return ParseInstallation.getCurrentInstallation().getInstallationId();
+        return ParseInstallation.getCurrentInstallation().get("channels").toString();
     }
 
     public static void setUnSubscribeParseChannel(final String parseChannel) {
@@ -56,9 +56,8 @@ public class ParseHelper {
         });
     }
 
-
-    public static boolean checkClientSubscribeParseChannel() {
-        if (ParseInstallation.getCurrentInstallation().containsKey("client")) {
+    public static boolean checkClientSubscribeParseChannel(String channel) {
+        if (getParseChannel().contains(channel)) {
             return true;
         } else {
             return false;
@@ -110,7 +109,9 @@ public class ParseHelper {
         states.put("SP", "SAO_PAULO");
         states.put("TO", "TOCANTINS");
 
-      setSubscribeParseChannel(states.get(state));
+        if (!checkClientSubscribeParseChannel(states.get(state))){
+            setSubscribeParseChannel(states.get(state));
+        }
 
     }
 }
