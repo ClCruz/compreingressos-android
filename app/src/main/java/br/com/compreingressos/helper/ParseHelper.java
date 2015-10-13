@@ -10,6 +10,9 @@ import com.parse.ParseInstallation;
 import com.parse.ParsePush;
 import com.parse.SaveCallback;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by zaca on 5/11/15.
  */
@@ -40,7 +43,7 @@ public class ParseHelper {
         return ParseInstallation.getCurrentInstallation().getInstallationId();
     }
 
-    public static void setUnSubscribeParseChannel(final String parseChannel){
+    public static void setUnSubscribeParseChannel(final String parseChannel) {
         ParsePush.unsubscribeInBackground(parseChannel, new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -54,26 +57,61 @@ public class ParseHelper {
     }
 
 
-    public static boolean checkClientSubscribeParseChannel(){
-        if (ParseInstallation.getCurrentInstallation().containsKey("client")){
+    public static boolean checkClientSubscribeParseChannel() {
+        if (ParseInstallation.getCurrentInstallation().containsKey("client")) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
 
-    public static void setIsClient(Context context){
+    public static void setIsClient(Context context) {
         PreferenceManager.getDefaultSharedPreferences(context).edit().putBoolean("isclient", true).commit();
     }
 
-    public static boolean getIsClient(Context context){
+    public static boolean getIsClient(Context context) {
 
-        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("isclient", false)){
+        if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("isclient", false)) {
             return true;
-        }else{
+        } else {
             return false;
         }
+    }
+
+    public static void setSubscribeParseChannelToLocation(String state) {
+        Map<String, String> states = new HashMap<>();
+
+        states.put("AC", "ACRE");
+        states.put("AL", "ALAGOAS");
+        states.put("AM", "AMAZONAS");
+        states.put("AP", "AMAPA");
+        states.put("BA", "BAHIA");
+        states.put("CE", "CEARA");
+        states.put("DF", "DISTRITO_FEDERAL");
+        states.put("ES", "ESPIRITO_SANTO");
+        states.put("GO", "GOIAS");
+        states.put("MA", "MARANHAO");
+        states.put("MG", "MINAS_GERAIS");
+        states.put("MS", "MATO_GROSSO_DO_SUL");
+        states.put("MT", "MATO_GROSSO");
+        states.put("PA", "PARA");
+        states.put("PB", "PARAIBA");
+        states.put("PE", "PERNAMBUCO");
+        states.put("PI", "PIAUI");
+        states.put("PR", "PARANA");
+        states.put("RJ", "RIO_DE_JANEIRO");
+        states.put("RN", "RIO_GRANDE_DO_NORTE");
+        states.put("RO", "RONDONIA");
+        states.put("RR", "RORAIMA");
+        states.put("RS", "RIO_GRANDE_DO_SUL");
+        states.put("SC", "SANTA_CATARINA");
+        states.put("SE", "SERGIPE");
+        states.put("SP", "SAO_PAULO");
+        states.put("TO", "TOCANTINS");
+
+      setSubscribeParseChannel(states.get(state));
+
     }
 }
 
