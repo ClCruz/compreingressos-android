@@ -46,7 +46,6 @@ public class OrderDeserializer implements JsonDeserializer<Order> {
 
             order.setNumber(obj.get("number").getAsString());
             order.setDate(date);
-            order.setTotal(obj.get("total").getAsString());
             espetaculo.setTitulo(obj.get("espetaculo").getAsJsonObject().get("titulo").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("titulo").getAsString());
             espetaculo.setTeatro(obj.get("espetaculo").getAsJsonObject().get("nome_teatro").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("nome_teatro").getAsString());
             espetaculo.setEndereco(obj.get("espetaculo").getAsJsonObject().get("endereco").isJsonNull() ? "" : obj.get("espetaculo").getAsJsonObject().get("endereco").getAsString());
@@ -67,7 +66,6 @@ public class OrderDeserializer implements JsonDeserializer<Order> {
                 ingresso.setPrice(ingressosArray.get(i).getAsJsonObject().get("price").isJsonNull() ? "" : ingressosArray.get(i).getAsJsonObject().get("price").getAsString());
                 ingresso.setService_price(ingressosArray.get(i).getAsJsonObject().get("service_price").isJsonNull() ? "" : ingressosArray.get(i).getAsJsonObject().get("service_price").getAsString());
                 ingresso.setTotal(ingressosArray.get(i).getAsJsonObject().get("total").isJsonNull() ? "" : ingressosArray.get(i).getAsJsonObject().get("total").getAsString());
-
                 ingressos.add(ingresso);
             }
 
