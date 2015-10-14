@@ -297,17 +297,22 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         if (mLastLocation != null) {
             longitude = mLastLocation.getLongitude();
             latitude = mLastLocation.getLatitude();
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            try {
-                List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
-                if (addressList.size() > 0){
-                    String temp[] = addressList.get(0).getAddressLine(1).split("-");
-                    ParseHelper.setSubscribeParseChannelToLocation(temp[1].trim());
-                }
+            geocoderToSaveOnParseChannel(latitude, longitude);
+        }
+    }
 
-            } catch (IOException e) {
-                e.printStackTrace();
+    private void geocoderToSaveOnParseChannel(Double lat, Double lon) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addressList = geocoder.getFromLocation(lat, lon, 1);
+            if (addressList.size() > 0){
+                String temp[] = addressList.get(0).getAddressLine(1).split("-");
+                if (temp.length > 0)
+                    ParseHelper.setSubscribeParseChannelToLocation(temp[1].trim());
             }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
