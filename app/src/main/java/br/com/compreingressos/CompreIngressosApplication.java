@@ -40,7 +40,9 @@ public class CompreIngressosApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+        if (BuildConfig.ENABLE_CRASHLYTICS){
+            Fabric.with(this, new Crashlytics());
+        }
         Parse.initialize(this, YOUR_APP_ID, YOUR_CLIENT_KEY);
 
         if (!ParseHelper.getIsClient(this)){

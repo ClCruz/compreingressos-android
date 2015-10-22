@@ -33,6 +33,24 @@ android {
         }
     }
 
+    productFlavors {
+        stagging {
+            applicationId 'br.com.compreingressos.stagging'
+            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
+        }
+
+        development {
+            applicationId "br.com.compreingressos.dev"
+            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
+        }
+
+        production {
+            applicationId "br.com.compreingressos"
+            buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'true'
+        }
+
+    }
+
 }
 
 dependencies {
