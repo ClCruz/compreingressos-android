@@ -29,7 +29,7 @@
     <string name="force_update_dialog_text">Por favor, seu App precisa ser atualizado!</string>
     <string name="force_update_dialog_title">Atualização</string>
 
-    <string name="message_text_update_location">Por favor sua localização alterou muito!</string>
+    <string name="message_text_update_location">Por favor sua localizacao pode ter alterado!</string>
     <string name="snackbar_text_button_location">Atualizar</string>
 
 </resources>

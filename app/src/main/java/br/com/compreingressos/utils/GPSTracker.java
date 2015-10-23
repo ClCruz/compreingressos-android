@@ -15,7 +15,7 @@ public class GPSTracker {
 
     private static final String LOG_TAG = GPSTracker.class.getSimpleName();
 
-    private static final int TWO_MINUTES = 1000 * 60 * 2;
+    private static final int FIFTEEN_MINUTES = 1000 * 60 * 15;
 
     // Minima distancia para fazer update (em metros)
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
@@ -167,8 +167,8 @@ public class GPSTracker {
         boolean result = false;
         // Verifica se a nova localizacao é mais velha do que a nova
         long timeDelta = mLocation.getTime() - currentTimeBestLocation;
-        boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-        boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+        boolean isSignificantlyNewer = timeDelta > FIFTEEN_MINUTES;
+        boolean isSignificantlyOlder = timeDelta < -FIFTEEN_MINUTES;
         boolean isNewer = timeDelta > 0;
 
 //        Se for maior do que 2 minutos desde a ultima localizacao
