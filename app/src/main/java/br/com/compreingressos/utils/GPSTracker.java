@@ -6,15 +6,15 @@ import android.content.DialogInterface;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.util.Log;
 
 /**
  * Created by luiszacheu on 23/10/15.
  */
-public class GPSTracker implements LocationListener {
+public class GPSTracker {
 
     private static final String LOG_TAG = GPSTracker.class.getSimpleName();
+    private static final int TWO_MINUTES = 1000 * 60 * 2;
     private final Context context;
 
     boolean isGPSEnable = false;
@@ -33,9 +33,12 @@ public class GPSTracker implements LocationListener {
 
     protected LocationManager locationManager;
 
+    private LocationListener locationListener;
+    long currentTimeBestLocation;
 
-    public GPSTracker(Context context) {
+    public GPSTracker(Context context, LocationListener listener) {
         this.context = context;
+        this.locationListener = listener;
         getLocation();
         Log.e("initialize gsptracker", "initialize gsptracker");
     }
@@ -75,10 +78,11 @@ public class GPSTracker implements LocationListener {
         // habilitando location usando o provider gps
         if (isGPSEnable) {
             if (location == null) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, locationListener);
                 Log.e(LOG_TAG, "gps");
                 if (locationManager != null) {
                     location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    currentTimeBestLocation = location.getTime();
                     if (location != null) {
                         latitude = location.getLatitude();
                         longitude = location.getLongitude();
@@ -91,10 +95,11 @@ public class GPSTracker implements LocationListener {
     private void initNetworkProvider() {
         // habilitando location usando o provider network
         if (isNetworkEnable) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, locationListener);
             Log.e(LOG_TAG, "network");
             if (locationManager != null) {
                 location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                currentTimeBestLocation = location.getTime();
                 if (location != null) {
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
@@ -106,7 +111,7 @@ public class GPSTracker implements LocationListener {
     //Parar o listener do GPS
     public void stopGPSTracker(){
         if (locationManager != null){
-            locationManager.removeUpdates(this);
+            locationManager.removeUpdates(locationListener);
             Log.e(LOG_TAG, "stop GPSTracker");
         }
     }
@@ -156,25 +161,22 @@ public class GPSTracker implements LocationListener {
     }
 
 
-    @Override
-    public void onLocationChanged(Location location) {
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-    }
+    public boolean fixLocation(Location mLocation){
+        boolean result = false;
+        // Verifica se a nova localizacao é mais velha do que a nova
+        long timeDelta = mLocation.getTime() - currentTimeBestLocation;
+        boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
+        boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+        boolean isNewer = timeDelta > 0;
 
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
+//        Se for maior do que 2 minutos desde a ultima localizacao
+        if (isSignificantlyNewer) {
+            result = true;
+        } else if (isSignificantlyOlder) {
+            result = false;
+        }
 
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
+        return result;
     }
 
 }
