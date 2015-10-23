@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ import br.com.compreingressos.model.Espetaculos;
 import br.com.compreingressos.toolbox.GsonRequest;
 import br.com.compreingressos.toolbox.VolleySingleton;
 import br.com.compreingressos.utils.ConnectionUtils;
+import br.com.compreingressos.utils.GPSTracker;
 import br.com.compreingressos.widget.RecyclerViewCustom;
 
 /**
@@ -64,18 +66,24 @@ public class EspetaculosActivity extends AppCompatActivity {
     String genero;
     String latitude, longitude;
 
+    GPSTracker gpsTracker;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_espetaculos);
 
-        if (getIntent().hasExtra("genero")){
+        if (getIntent().hasExtra("genero")) {
             genero = getIntent().getStringExtra("genero");
         }
 
         if (getIntent().hasExtra("latitude") && getIntent().hasExtra("longitude")) {
             latitude = getIntent().getStringExtra("latitude");
             longitude = getIntent().getStringExtra("longitude");
+
+            Log.e("start latitude ---->", ""+latitude);
+            Log.e("start longitude ---->", ""+longitude);
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -87,7 +95,7 @@ public class EspetaculosActivity extends AppCompatActivity {
                 toolbar.setBackgroundColor(getResources().getColor(R.color.red_compreingressos));
                 getWindow().setStatusBarColor(getResources().getColor(R.color.red_status_bar));
                 toolbar.setTitleTextColor(getResources().getColor(R.color.white));
-            }else{
+            } else {
                 toolbar.setTitleTextColor(getResources().getColor(R.color.red_compreingressos));
             }
 
@@ -101,7 +109,6 @@ public class EspetaculosActivity extends AppCompatActivity {
         mTracker.setScreenName(ConstantsGoogleAnalytics.ESPETACULOS.replace("<#>", genero));
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
-
         retryConnectionView = (LinearLayout) findViewById(R.id.retry_connection);
         recyclerView = (RecyclerViewCustom) findViewById(R.id.recycler_view_espetaculos);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
@@ -113,17 +120,39 @@ public class EspetaculosActivity extends AppCompatActivity {
 
         showRecyclerEspetaculosView();
 
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try {
+            gpsTracker.stopGPSTracker();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void showRecyclerEspetaculosView() {
+
+        gpsTracker = new GPSTracker(EspetaculosActivity.this);
+        if (gpsTracker.canGetLocation()){
+            latitude = String.valueOf(gpsTracker.getLatitude());
+            longitude = String.valueOf(gpsTracker.getLongitude());
+        }
+
+
         if (ConnectionUtils.isInternetOn(EspetaculosActivity.this)) {
             progressBar.setVisibility(View.VISIBLE);
             retryConnectionView.setVisibility(View.GONE);
 
             startRequest();
 
-        }else{
+        } else {
             retryConnectionView.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }
@@ -190,11 +219,11 @@ public class EspetaculosActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) EspetaculosActivity.this.findViewById(android.R.id.content)).getChildAt(0);
                 Snackbar.make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG).show();
-                if (error instanceof TimeoutError){
+                if (error instanceof TimeoutError) {
                     Crashlytics.logException(error);
-                }else if (error instanceof NetworkError){
+                } else if (error instanceof NetworkError) {
                     Crashlytics.logException(error);
-                }else if (error instanceof NoConnectionError){
+                } else if (error instanceof NoConnectionError) {
                     Crashlytics.logException(error);
                 }
             }
@@ -236,8 +265,11 @@ public class EspetaculosActivity extends AppCompatActivity {
         }
     }
 
-
     public void onClickRetryListener(View view) {
         showRecyclerEspetaculosView();
     }
+
+
 }
+
+
