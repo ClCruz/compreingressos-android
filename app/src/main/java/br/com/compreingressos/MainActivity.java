@@ -27,13 +27,18 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -54,10 +59,17 @@ import br.com.compreingressos.utils.DatabaseManager;
 import br.com.compreingressos.utils.Dialogs;
 import br.com.compreingressos.widget.RecyclerViewCustom;
 
-public class MainActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
 
     public static final String URL_VISORES = "http://tokecompre-ci.herokuapp.com/visores/lista.json";
+
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    private static final String REQUESTING_LOCATION_UPDATES_KEY = "REQUESTING_LOCATION_UPDATES_KEY";
+
+    private static final String LAST_UPDATED_TIME_STRING_KEY = "LAST_UPDATED_TIME_STRING_KEY";
+
+    private static final String LOCATION_KEY = "LOCATION_KEY";
 
     private Toolbar toolbar;
 
@@ -80,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     private double latitude;
     private double longitude;
 
+    boolean mRequestingLocationUpdates =false;
+    private String mLastUpdateTime;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +114,12 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        Log.e(LOG_TAG, "" + GooglePlayServicesUtil.isGooglePlayServicesAvailable(this));
+        Log.e(LOG_TAG, "" + GooglePlayServicesUtil.getErrorString(GooglePlayServicesUtil.isGooglePlayServicesAvailable(this)));
+
+
         buildGoogleApiClient();
+
 
         DatabaseManager.init(this);
 
@@ -107,11 +127,15 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
         mRecyclerView = (RecyclerViewCustom) findViewById(R.id.recycler_view_generos);
         showRecyclerHomeView();
+
+        updateValuesFromBundle(savedInstanceState);
     }
 
     @Override
     protected void onStart() {
-        mGoogleApiClient.connect();
+        if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) == 0){
+            mGoogleApiClient.connect();
+        }
 
         if (ConnectionUtils.getTypeNameConnection(MainActivity.this) != "?" && ConnectionUtils.getTypeNameConnection(MainActivity.this) != "-") {
             startRequest();
@@ -141,6 +165,24 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) == 0){
+            stopLocationUpdates();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle saveInstanceState) {
+        saveInstanceState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY, mRequestingLocationUpdates);
+        saveInstanceState.putString(LAST_UPDATED_TIME_STRING_KEY, mLastUpdateTime);
+        saveInstanceState.putParcelable(LOCATION_KEY, mLastLocation);
+        super.onSaveInstanceState(saveInstanceState);
+    }
+
+
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -162,8 +204,6 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     }
 
     private void showRecyclerHomeView() {
-
-
         mListGeneros = initGeneros();
         if (adapter == null) {
             adapter = new GeneroAdapter(this, mListGeneros);
@@ -291,14 +331,13 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
                 .build();
     }
 
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mLastLocation != null) {
-            longitude = mLastLocation.getLongitude();
-            latitude = mLastLocation.getLatitude();
-            geocoderToSaveOnParseChannel(latitude, longitude);
-        }
+    protected LocationRequest createLocationRequest(){
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(1000 * 60 * 1);
+        locationRequest.setFastestInterval(500);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+        return locationRequest;
     }
 
     private void geocoderToSaveOnParseChannel(Double lat, Double lon) {
@@ -325,6 +364,30 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         }
     }
 
+    protected void startLocationUpdates(){
+       LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, createLocationRequest(), this);
+    }
+
+    protected  void stopLocationUpdates(){
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+        mRequestingLocationUpdates = false;
+    }
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mRequestingLocationUpdates){
+            startLocationUpdates();
+            mRequestingLocationUpdates = true;
+        }
+
+        if (mLastLocation != null) {
+            longitude = mLastLocation.getLongitude();
+            latitude = mLastLocation.getLatitude();
+            geocoderToSaveOnParseChannel(latitude, longitude);
+        }
+    }
+
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         Log.i(LOG_TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
@@ -348,5 +411,39 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
         return generos;
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+        mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+    }
 
+    private void updateValuesFromBundle(Bundle savedInstanceState) {
+        if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) == 0){
+            if (savedInstanceState != null) {
+                // Update the value of mRequestingLocationUpdates from the Bundle, and
+                // make sure that the Start Updates and Stop Updates buttons are
+                // correctly enabled or disabled.
+                if (savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)) {
+                    mRequestingLocationUpdates = savedInstanceState.getBoolean(
+                            REQUESTING_LOCATION_UPDATES_KEY);
+                }
+
+                // Update the value of mCurrentLocation from the Bundle and update the
+                // UI to show the correct latitude and longitude.
+                if (savedInstanceState.keySet().contains(LOCATION_KEY)) {
+                    // Since LOCATION_KEY was found in the Bundle, we can be sure that
+                    // mCurrentLocationis not null.
+                    mLastLocation = savedInstanceState.getParcelable(LOCATION_KEY);
+                }
+
+                // Update the value of mLastUpdateTime from the Bundle and update the UI.
+                if (savedInstanceState.keySet().contains(LAST_UPDATED_TIME_STRING_KEY)) {
+                    mLastUpdateTime = savedInstanceState.getString(
+                            LAST_UPDATED_TIME_STRING_KEY);
+                }
+            }
+        }
+
+        showRecyclerHomeView();
+    }
 }
