@@ -14,7 +14,15 @@ import android.util.Log;
 public class GPSTracker {
 
     private static final String LOG_TAG = GPSTracker.class.getSimpleName();
+
     private static final int TWO_MINUTES = 1000 * 60 * 2;
+
+    // Minima distancia para fazer update (em metros)
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
+
+    // Minima tempo entre as atualizações (em milisegundos)
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+
     private final Context context;
 
     boolean isGPSEnable = false;
@@ -24,13 +32,7 @@ public class GPSTracker {
     Location location;
     Double latitude;
     Double longitude;
-
-    // Minima distancia para fazer update (em metros)
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-
-    // Minima tempo entre as atualizações (em milisegundos)
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
-
+    
     protected LocationManager locationManager;
 
     private LocationListener locationListener;
