@@ -44,6 +44,7 @@ import br.com.compreingressos.interfaces.WebAppInterfaceListener;
 import br.com.compreingressos.model.Order;
 import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.WebAppInterface;
+import io.fabric.sdk.android.services.common.Crash;
 
 
 public class CompreIngressosActivity extends AppCompatActivity {
@@ -351,25 +352,31 @@ public class CompreIngressosActivity extends AppCompatActivity {
         String cookies = CookieManager.getInstance().getCookie(url);
         Log.e(LOG_TAG, "getCookies --> + " + CookieManager.getInstance().getCookie(url));
         Map<String, String> mapCookies = new HashMap<>();
-        if (mapCookies != null) {
-            if (cookies.contains(";")) {
-                String[] arrayCookies = cookies.split(";");
-                for (int i = 0; i < arrayCookies.length; i++) {
-                    String[] temp = arrayCookies[i].split("=");
-                    if (arrayCookies != null) {
-                        if (temp.length > 1) {
-                            mapCookies.put(temp[0], temp[1]);
+        try{
+            if (mapCookies != null) {
+                if (cookies.contains(";")) {
+                    String[] arrayCookies = cookies.split(";");
+                    for (int i = 0; i < arrayCookies.length; i++) {
+                        String[] temp = arrayCookies[i].split("=");
+                        if (arrayCookies != null) {
+                            if (temp.length > 1) {
+                                mapCookies.put(temp[0], temp[1]);
+                            }
                         }
                     }
                 }
-            }
 
-            for (Object o : mapCookies.keySet()) {
-                if (o.toString().contains("user")) {
-                    UserHelper.saveUserIdOnSharedPreferences(CompreIngressosActivity.this, mapCookies.get(o.toString()));
+                for (Object o : mapCookies.keySet()) {
+                    if (o.toString().contains("user")) {
+                        UserHelper.saveUserIdOnSharedPreferences(CompreIngressosActivity.this, mapCookies.get(o.toString()));
+                    }
                 }
             }
+        }catch (Exception e ){
+            Crashlytics.logException(e);
+            Crashlytics.log( "-> " + cookies);
         }
+
 
     }
 
