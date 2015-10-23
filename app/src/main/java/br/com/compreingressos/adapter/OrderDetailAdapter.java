@@ -104,18 +104,21 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             AztecWriter write = new AztecWriter();
 
             try {
-                BitMatrix bitMatrix  = write.encode(ingresso.getQrcode(), BarcodeFormat.AZTEC, AndroidUtils.getDPI(128, dm), AndroidUtils.getDPI(128 ,dm));
-                int width = bitMatrix.getWidth();
-                int height = bitMatrix.getHeight();
+                if (ingresso.getQrcode() != null || ingresso.getQrcode().length() > 0){
+                    BitMatrix bitMatrix  = write.encode(ingresso.getQrcode(), BarcodeFormat.AZTEC, AndroidUtils.getDPI(128, dm), AndroidUtils.getDPI(128 ,dm));
+                    int width = bitMatrix.getWidth();
+                    int height = bitMatrix.getHeight();
 
-                Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                for (int x = 0; x < width; x++) {
-                    for (int y = 0; y < height; y++) {
-                        bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                    Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
+                        }
                     }
+
+                    ((ViewHolderItem) viewHolder).qrcodeView.setImageBitmap(bmp);
                 }
 
-                ((ViewHolderItem) viewHolder).qrcodeView.setImageBitmap(bmp);
 
             }catch (IllegalArgumentException e){
                 Crashlytics.log("ingresso.getQrcode() => " + ingresso.getQrcode() + ", BarcodeFormat.AZTEC => " +  BarcodeFormat.AZTEC +", (width)AndroidUtils.getDPI(128, dm)=> "+ AndroidUtils.getDPI(128, dm) + ", (height)AndroidUtils.getDPI(128 ,dm) => " +AndroidUtils.getDPI(128 ,dm));
