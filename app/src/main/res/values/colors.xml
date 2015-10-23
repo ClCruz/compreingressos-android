@@ -4,4 +4,6 @@
     <color name="red_compreingressos">#d0112b</color>
     <color name="red_status_bar">#a60e22</color>
     <color name="font_history_orders">#636465</color>
+
+    <color name="green_500">#4caf50</color>
 </resources>
