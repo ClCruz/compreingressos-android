@@ -303,16 +303,25 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
     private void geocoderToSaveOnParseChannel(Double lat, Double lon) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        List<Address> addressList = new ArrayList<>();
+        String temp[] = new String[0];
         try {
-            List<Address> addressList = geocoder.getFromLocation(lat, lon, 1);
+            addressList = geocoder.getFromLocation(lat, lon, 1);
             if (addressList.size() > 0){
-                String temp[] = addressList.get(0).getAddressLine(1).split("-");
+                temp = addressList.get(0).getAddressLine(1).split("-");
                 if (temp.length > 0)
                     ParseHelper.setSubscribeParseChannelToLocation(temp[1].trim());
             }
 
         } catch (IOException e) {
             e.printStackTrace();
+            Crashlytics.log("addressList -> " + addressList);
+            Crashlytics.logException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Crashlytics.log("addressList -> " + addressList);
+            Crashlytics.log("temp -> " + temp);
+            Crashlytics.logException(e);
         }
     }
 
