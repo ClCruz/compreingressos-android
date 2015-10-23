@@ -36,7 +36,6 @@ public class EspetaculoDeserializer implements JsonDeserializer<Espetaculo> {
         try {
             date = dateFormat.parse(obj.get("data").getAsString());
         }catch (ParseException e){
-            e.printStackTrace();
             date =  null;
         }
 
