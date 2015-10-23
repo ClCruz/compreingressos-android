@@ -1,6 +1,8 @@
 package br.com.compreingressos;
 
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -44,13 +46,14 @@ import br.com.compreingressos.widget.RecyclerViewCustom;
 /**
  * Created by luiszacheu on 01/04/15.
  */
-public class EspetaculosActivity extends AppCompatActivity {
+public class EspetaculosActivity extends AppCompatActivity implements LocationListener{
 
     public static final String URL = "http://tokecompre-ci.herokuapp.com/espetaculos.json";
     private static final String OBJ_LIST = "OBJ_LIST";
 
     // Numero de colunas a ser mostrada na recyclerView
     public static final int COLUMN_NUMBER = 2;
+    private static final String LOG_TAG = EspetaculosActivity.class.getSimpleName();
 
     private Toolbar toolbar;
     private RecyclerViewCustom recyclerView;
@@ -139,7 +142,7 @@ public class EspetaculosActivity extends AppCompatActivity {
 
     private void showRecyclerEspetaculosView() {
 
-        gpsTracker = new GPSTracker(EspetaculosActivity.this);
+        gpsTracker = new GPSTracker(EspetaculosActivity.this, this);
         if (gpsTracker.canGetLocation()){
             latitude = String.valueOf(gpsTracker.getLatitude());
             longitude = String.valueOf(gpsTracker.getLongitude());
@@ -270,6 +273,39 @@ public class EspetaculosActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.e(LOG_TAG, "lat -> " + location.getLatitude());
+        Log.e(LOG_TAG, "log -> " + location.getLongitude());
+        if (gpsTracker.fixLocation(location)){
+            final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
+                    .findViewById(android.R.id.content)).getChildAt(0);
+            Snackbar.make(viewGroup, R.string.message_text_update_location, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.snackbar_text_button_location, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            showRecyclerEspetaculosView();
+                        }
+                    })
+                    .setActionTextColor(getResources().getColor(R.color.green_500))
+                    .show();
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
 }
 
 
