@@ -114,10 +114,6 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        Log.e(LOG_TAG, "" + GooglePlayServicesUtil.isGooglePlayServicesAvailable(this));
-        Log.e(LOG_TAG, "" + GooglePlayServicesUtil.getErrorString(GooglePlayServicesUtil.isGooglePlayServicesAvailable(this)));
-
-
         buildGoogleApiClient();
 
 
@@ -168,7 +164,8 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     protected void onPause() {
         super.onPause();
         if (GooglePlayServicesUtil.isGooglePlayServicesAvailable(this) == 0){
-            stopLocationUpdates();
+            if (mGoogleApiClient.isConnected())
+                stopLocationUpdates();
         }
     }
 
@@ -354,10 +351,12 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
         } catch (IOException e) {
             e.printStackTrace();
+            Crashlytics.log("lat -> " + lat + "long -> " + lon);
             Crashlytics.log("addressList -> " + addressList);
             Crashlytics.logException(e);
         } catch (Exception e) {
             e.printStackTrace();
+            Crashlytics.log("lat -> " + lat + "long -> " + lon);
             Crashlytics.log("addressList -> " + addressList);
             Crashlytics.log("temp -> " + temp);
             Crashlytics.logException(e);

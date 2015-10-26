@@ -55,7 +55,7 @@ public class SplashScreenActivity extends Activity {
 
 
     private void checkForceUpdate(){
-        Dialogs.showDialogForceUpdate(this, SplashScreenActivity.this, getString(R.string.force_update_dialog_text), getString(R.string.force_update_dialog_title), getApplicationContext().getPackageName());
+        Dialogs.showDialogForceUpdate(getApplicationContext(), SplashScreenActivity.this, getString(R.string.force_update_dialog_text), getString(R.string.force_update_dialog_title), getApplicationContext().getPackageName());
     }
 
 

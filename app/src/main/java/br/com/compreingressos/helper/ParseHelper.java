@@ -121,7 +121,6 @@ public class ParseHelper {
         states.put("TO", "TOCANTINS");
 
         if (state.length() == 2){
-            Log.e("Log", "--> entrou no state.length == 2");
             if (!checkClientSubscribeParseChannel(states.get(state))){
                 setSubscribeParseChannel(states.get(state));
             }

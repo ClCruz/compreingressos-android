@@ -143,10 +143,17 @@ public class EspetaculosActivity extends AppCompatActivity implements LocationLi
     private void showRecyclerEspetaculosView() {
 
         gpsTracker = new GPSTracker(EspetaculosActivity.this, this);
-        if (gpsTracker.canGetLocation()){
-            latitude = String.valueOf(gpsTracker.getLatitude());
-            longitude = String.valueOf(gpsTracker.getLongitude());
+
+        try {
+            if (gpsTracker.canGetLocation()){
+                latitude =  gpsTracker != null ? Double.toString(gpsTracker.getLatitude()) : "0.0";
+                longitude = gpsTracker != null ? Double.toString(gpsTracker.getLongitude()) : "0.0";
+            }
+        }catch (Exception e){
+            Crashlytics.logException(e);
+            Crashlytics.log("lat " + gpsTracker.getLatitude() + "long " + gpsTracker.getLongitude());
         }
+
 
 
         if (ConnectionUtils.isInternetOn(EspetaculosActivity.this)) {
