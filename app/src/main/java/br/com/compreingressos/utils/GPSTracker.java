@@ -42,7 +42,6 @@ public class GPSTracker {
         this.context = context;
         this.locationListener = listener;
         getLocation();
-        Log.e("initialize gsptracker", "initialize gsptracker");
     }
 
     public Location getLocation() {
@@ -51,11 +50,9 @@ public class GPSTracker {
 
             //Habilita provider de GPS
             isGPSEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            Log.e(LOG_TAG, "isGPSEnable -> " + isGPSEnable);
 
             //Habilita provider de Network
             isNetworkEnable = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            Log.e(LOG_TAG, "isNetworkEnable -> " + isNetworkEnable);
 
             if (isGPSEnable && isNetworkEnable) {
                 this.canGetLocation = true;

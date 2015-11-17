@@ -9,7 +9,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -84,9 +83,6 @@ public class EspetaculosActivity extends AppCompatActivity implements LocationLi
         if (getIntent().hasExtra("latitude") && getIntent().hasExtra("longitude")) {
             latitude = getIntent().getStringExtra("latitude");
             longitude = getIntent().getStringExtra("longitude");
-
-            Log.e("start latitude ---->", ""+latitude);
-            Log.e("start longitude ---->", ""+longitude);
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -282,8 +278,6 @@ public class EspetaculosActivity extends AppCompatActivity implements LocationLi
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.e(LOG_TAG, "lat -> " + location.getLatitude());
-        Log.e(LOG_TAG, "log -> " + location.getLongitude());
         if (gpsTracker.fixLocation(location)){
             final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
                     .findViewById(android.R.id.content)).getChildAt(0);

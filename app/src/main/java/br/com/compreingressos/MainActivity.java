@@ -251,8 +251,6 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
         String con = "";
 
-
-
         try {
             if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")) {
                 con = "&con=wifi";
