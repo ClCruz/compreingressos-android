@@ -142,15 +142,13 @@ public class EspetaculosActivity extends AppCompatActivity implements LocationLi
 
         try {
             if (gpsTracker.canGetLocation()){
-                latitude =  gpsTracker != null ? Double.toString(gpsTracker.getLatitude()) : "0.0";
-                longitude = gpsTracker != null ? Double.toString(gpsTracker.getLongitude()) : "0.0";
+                latitude =  gpsTracker != null ? String.valueOf(gpsTracker.getLatitude()) : "0.0";
+                longitude = gpsTracker != null ? String.valueOf(gpsTracker.getLongitude()) : "0.0";
             }
         }catch (Exception e){
             CrashlyticsLogger.logException(e);
             CrashlyticsLogger.log("lat " + gpsTracker.getLatitude() + "long " + gpsTracker.getLongitude());
         }
-
-
 
         if (ConnectionUtils.isInternetOn(EspetaculosActivity.this)) {
             progressBar.setVisibility(View.VISIBLE);
