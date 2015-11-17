@@ -5,23 +5,18 @@ package br.com.compreingressos.adapter;
  */
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.database.DataSetObserver;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 
-import com.crashlytics.android.Crashlytics;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import br.com.compreingressos.fragment.BannerFragment;
+import br.com.compreingressos.logger.CrashlyticsLogger;
 import br.com.compreingressos.model.Banner;
 
 public class PageViewAdapter extends FragmentStatePagerAdapter {
@@ -40,7 +35,7 @@ public class PageViewAdapter extends FragmentStatePagerAdapter {
         try {
             return BannerFragment.newInstance(mListBanners.get(position % mListBanners.size()));
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            CrashlyticsLogger.logException(e);
             e.printStackTrace();
             return null;
         }

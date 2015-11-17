@@ -23,7 +23,6 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
@@ -41,10 +40,10 @@ import br.com.compreingressos.dao.OrderDao;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.interfaces.WebAppInterfaceListener;
+import br.com.compreingressos.logger.CrashlyticsLogger;
 import br.com.compreingressos.model.Order;
 import br.com.compreingressos.utils.AndroidUtils;
 import br.com.compreingressos.utils.WebAppInterface;
-import io.fabric.sdk.android.services.common.Crash;
 
 
 public class CompreIngressosActivity extends AppCompatActivity {
@@ -138,8 +137,8 @@ public class CompreIngressosActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                     }
                 } catch (Exception exception) {
-                    Crashlytics.log(Log.ERROR, CompreIngressosActivity.class.getSimpleName()+"(onPageFinished)", url);
-                    Crashlytics.logException(exception);
+                    CrashlyticsLogger.log(Log.ERROR, CompreIngressosActivity.class.getSimpleName()+"(onPageFinished)", url);
+                    CrashlyticsLogger.logException(exception);
                     exception.printStackTrace();
                 }
 
@@ -224,8 +223,8 @@ public class CompreIngressosActivity extends AppCompatActivity {
                     try {
                         webSettings.setDisplayZoomControls(false);
                     } catch (NoSuchMethodError e) {
-                        Crashlytics.log(Log.ERROR, CompreIngressosActivity.class.getSimpleName()+"(onPageFinished)", url);
-                        Crashlytics.logException(e);
+                        CrashlyticsLogger.log(Log.ERROR, CompreIngressosActivity.class.getSimpleName()+"(onPageFinished)", url);
+                        CrashlyticsLogger.logException(e);
                         hasSupportPinch = false;
                         e.printStackTrace();
                     }
@@ -373,8 +372,8 @@ public class CompreIngressosActivity extends AppCompatActivity {
                 }
             }
         }catch (Exception e ){
-            Crashlytics.logException(e);
-            Crashlytics.log( "-> " + cookies);
+            CrashlyticsLogger.logException(e);
+            CrashlyticsLogger.log( "-> " + cookies);
         }
 
 

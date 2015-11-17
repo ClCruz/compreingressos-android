@@ -7,10 +7,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+
+import br.com.compreingressos.logger.CrashlyticsLogger;
 
 /**
  * Created by luiszacheu on 27/04/15.
@@ -39,8 +39,8 @@ public class PassWalletHelper {
                         strReferrer = "&referrer=" + strEncodedURL;
 
                     }catch (UnsupportedEncodingException e){
-                        Crashlytics.logException(e);
-                        Crashlytics.log(Log.ERROR, PassWalletHelper.class.getSimpleName(), "url encode -> " + uri.toString());
+                        CrashlyticsLogger.logException(e);
+                        CrashlyticsLogger.log(Log.ERROR, PassWalletHelper.class.getSimpleName(), "url encode -> " + uri.toString());
                         e.printStackTrace();
                         strReferrer = "";
                     }
@@ -49,7 +49,7 @@ public class PassWalletHelper {
                         intent.setData(Uri.parse("market://details?id=" + stringPackageName + strReferrer));
                         context.startActivity(intent);
                     }catch (ActivityNotFoundException e){
-                        Crashlytics.logException(e);
+                        CrashlyticsLogger.logException(e);
                         intent.setData(Uri.parse("http://play.google.com/store/apps/details?id=" + stringPackageName + strReferrer));
                         context.startActivity(intent);
                     }

@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 import com.parse.Parse;
 
@@ -41,6 +40,7 @@ public class CompreIngressosApplication extends Application{
     public void onCreate() {
         super.onCreate();
         if (BuildConfig.ENABLE_CRASHLYTICS){
+            
             Fabric.with(this, new Crashlytics());
         }
         Parse.initialize(this, YOUR_APP_ID, YOUR_CLIENT_KEY);

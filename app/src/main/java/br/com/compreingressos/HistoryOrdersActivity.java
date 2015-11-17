@@ -24,7 +24,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -41,6 +40,7 @@ import br.com.compreingressos.dao.OrderDao;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.UserHelper;
 import br.com.compreingressos.interfaces.OnItemClickListener;
+import br.com.compreingressos.logger.CrashlyticsLogger;
 import br.com.compreingressos.model.Order;
 import br.com.compreingressos.toolbox.GsonRequest;
 import br.com.compreingressos.toolbox.VolleySingleton;
@@ -113,7 +113,7 @@ public class HistoryOrdersActivity extends AppCompatActivity {
             orderDao = new OrderDao(databaseHelper.getConnectionSource());
             orders = orderDao.queryForAll();
         } catch (SQLException e) {
-            Crashlytics.logException(e);
+            CrashlyticsLogger.logException(e);
             e.printStackTrace();
         }
 
@@ -254,8 +254,8 @@ public class HistoryOrdersActivity extends AppCompatActivity {
             try {
                 orderDao.delete(orderDao.queryForAll());
             } catch (SQLException e) {
-                Crashlytics.log(Log.ERROR, HistoryOrdersActivity.class.getSimpleName() + "(doInBackground)", params.toString());
-                Crashlytics.logException(e);
+                CrashlyticsLogger.log(Log.ERROR, HistoryOrdersActivity.class.getSimpleName() + "(doInBackground)", params.toString());
+                CrashlyticsLogger.logException(e);
                 e.printStackTrace();
                 return false;
             }
@@ -264,8 +264,8 @@ public class HistoryOrdersActivity extends AppCompatActivity {
                 try {
                     orderDao.create(params[i]);
                 } catch (SQLException e) {
-                    Crashlytics.log(Log.ERROR, HistoryOrdersActivity.class.getSimpleName() + "(doInBackground)", params[i].toString());
-                    Crashlytics.logException(e);
+                    CrashlyticsLogger.log(Log.ERROR, HistoryOrdersActivity.class.getSimpleName() + "(doInBackground)", params[i].toString());
+                    CrashlyticsLogger.logException(e);
                     e.printStackTrace();
                     return false;
                 }

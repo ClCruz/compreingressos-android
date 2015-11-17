@@ -24,7 +24,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -35,6 +34,7 @@ import java.util.Map;
 import br.com.compreingressos.adapter.EspetaculosAdapter;
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.interfaces.OnItemClickListener;
+import br.com.compreingressos.logger.CrashlyticsLogger;
 import br.com.compreingressos.model.Espetaculo;
 import br.com.compreingressos.model.Espetaculos;
 import br.com.compreingressos.toolbox.GsonRequest;
@@ -150,8 +150,8 @@ public class EspetaculosActivity extends AppCompatActivity implements LocationLi
                 longitude = gpsTracker != null ? Double.toString(gpsTracker.getLongitude()) : "0.0";
             }
         }catch (Exception e){
-            Crashlytics.logException(e);
-            Crashlytics.log("lat " + gpsTracker.getLatitude() + "long " + gpsTracker.getLongitude());
+            CrashlyticsLogger.logException(e);
+            CrashlyticsLogger.log("lat " + gpsTracker.getLatitude() + "long " + gpsTracker.getLongitude());
         }
 
 
@@ -230,11 +230,11 @@ public class EspetaculosActivity extends AppCompatActivity implements LocationLi
                 final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) EspetaculosActivity.this.findViewById(android.R.id.content)).getChildAt(0);
                 Snackbar.make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG).show();
                 if (error instanceof TimeoutError) {
-                    Crashlytics.logException(error);
+                    CrashlyticsLogger.logException(error);
                 } else if (error instanceof NetworkError) {
-                    Crashlytics.logException(error);
+                    CrashlyticsLogger.logException(error);
                 } else if (error instanceof NoConnectionError) {
-                    Crashlytics.logException(error);
+                    CrashlyticsLogger.logException(error);
                 }
             }
         };

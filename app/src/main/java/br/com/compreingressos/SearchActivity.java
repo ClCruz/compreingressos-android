@@ -28,7 +28,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -40,6 +39,7 @@ import br.com.compreingressos.adapter.EspetaculosAdapter;
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.decoration.DividerItemDecoration;
 import br.com.compreingressos.interfaces.OnItemClickListener;
+import br.com.compreingressos.logger.CrashlyticsLogger;
 import br.com.compreingressos.model.Espetaculo;
 import br.com.compreingressos.model.Espetaculos;
 import br.com.compreingressos.toolbox.GsonRequest;
@@ -150,7 +150,7 @@ public class SearchActivity extends AppCompatActivity {
 
 
         }catch (Exception e){
-            Crashlytics.logException(e);
+            CrashlyticsLogger.logException(e);
             e.printStackTrace();
         }
 
@@ -224,11 +224,11 @@ public class SearchActivity extends AppCompatActivity {
                 Snackbar.make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG).show();
 
                 if (error instanceof TimeoutError){
-                    Crashlytics.logException(error);
+                    CrashlyticsLogger.logException(error);
                 }else if (error instanceof NetworkError){
-                    Crashlytics.logException(error);
+                    CrashlyticsLogger.logException(error);
                 }else if (error instanceof NoConnectionError){
-                    Crashlytics.logException(error);
+                    CrashlyticsLogger.logException(error);
                 }
 
             }

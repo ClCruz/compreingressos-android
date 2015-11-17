@@ -22,7 +22,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.crashlytics.android.Crashlytics;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.aztec.AztecWriter;
 import com.google.zxing.common.BitMatrix;
@@ -37,6 +36,7 @@ import java.util.List;
 import br.com.compreingressos.R;
 import br.com.compreingressos.helper.OrderHelper;
 import br.com.compreingressos.helper.PassWalletHelper;
+import br.com.compreingressos.logger.CrashlyticsLogger;
 import br.com.compreingressos.model.Ingresso;
 import br.com.compreingressos.model.Order;
 import br.com.compreingressos.toolbox.VolleySingleton;
@@ -121,8 +121,8 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
             }catch (IllegalArgumentException e){
-                Crashlytics.log("ingresso.getQrcode() => " + ingresso.getQrcode() + ", BarcodeFormat.AZTEC => " +  BarcodeFormat.AZTEC +", (width)AndroidUtils.getDPI(128, dm)=> "+ AndroidUtils.getDPI(128, dm) + ", (height)AndroidUtils.getDPI(128 ,dm) => " +AndroidUtils.getDPI(128 ,dm));
-                Crashlytics.logException(e);
+                CrashlyticsLogger.log("ingresso.getQrcode() => " + ingresso.getQrcode() + ", BarcodeFormat.AZTEC => " + BarcodeFormat.AZTEC + ", (width)AndroidUtils.getDPI(128, dm)=> " + AndroidUtils.getDPI(128, dm) + ", (height)AndroidUtils.getDPI(128 ,dm) => " + AndroidUtils.getDPI(128, dm));
+                CrashlyticsLogger.logException(e);
             }
 
 
@@ -190,8 +190,8 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 PassWalletHelper.launchPassWallet(context, Uri.parse( context.getString(R.string.url_mpassbook) + strNamePkPassresponse), true);
 
                             } catch (JSONException e) {
-                                Crashlytics.logException(e);
-                                Crashlytics.log(Log.ERROR, OrderDetailAdapter.class.getSimpleName(), "json -> " + response.toString());
+                                CrashlyticsLogger.logException(e);
+                                CrashlyticsLogger.log(Log.ERROR, OrderDetailAdapter.class.getSimpleName(), "json -> " + response.toString());
                                 progressDialog.dismiss();
                                 e.printStackTrace();
                                 Toast.makeText(context, context.getString(R.string.message_erro_envio_passwallet), Toast.LENGTH_LONG).show();

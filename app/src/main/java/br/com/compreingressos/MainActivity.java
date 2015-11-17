@@ -23,7 +23,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.common.ConnectionResult;
@@ -49,6 +48,7 @@ import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.decoration.DividerItemDecoration;
 import br.com.compreingressos.fragment.MainBannerFragment;
 import br.com.compreingressos.helper.ParseHelper;
+import br.com.compreingressos.logger.CrashlyticsLogger;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
 import br.com.compreingressos.toolbox.GsonRequest;
@@ -251,14 +251,17 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
         String con = "";
 
+
+
         try {
             if (ConnectionUtils.getTypeNameConnection(MainActivity.this).equals("WIFI")) {
                 con = "&con=wifi";
             } else if (ConnectionUtils.getTypeNameConnection(MainActivity.this) != "?" && ConnectionUtils.getTypeNameConnection(MainActivity.this) != "-") {
                 con = "&con=wwan";
             }
+
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            CrashlyticsLogger.logException(e);
             final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
             Snackbar.make(viewGroup, R.string.snackbar_text, Snackbar.LENGTH_LONG).show();
         }
@@ -351,15 +354,15 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
         } catch (IOException e) {
             e.printStackTrace();
-            Crashlytics.log("lat -> " + lat + "long -> " + lon);
-            Crashlytics.log("addressList -> " + addressList);
-            Crashlytics.logException(e);
+            CrashlyticsLogger.log("lat -> " + lat + "long -> " + lon);
+            CrashlyticsLogger.log("addressList -> " + addressList);
+            CrashlyticsLogger.logException(e);
         } catch (Exception e) {
             e.printStackTrace();
-            Crashlytics.log("lat -> " + lat + "long -> " + lon);
-            Crashlytics.log("addressList -> " + addressList);
-            Crashlytics.log("temp -> " + temp);
-            Crashlytics.logException(e);
+            CrashlyticsLogger.log("lat -> " + lat + "long -> " + lon);
+            CrashlyticsLogger.log("addressList -> " + addressList);
+            CrashlyticsLogger.log("temp -> " + temp);
+            CrashlyticsLogger.logException(e);
         }
     }
 

@@ -16,7 +16,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -33,6 +32,7 @@ import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.dao.OrderDao;
 import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.helper.ParseHelper;
+import br.com.compreingressos.logger.CrashlyticsLogger;
 import br.com.compreingressos.model.Order;
 import br.com.compreingressos.toolbox.VolleySingleton;
 
@@ -95,7 +95,7 @@ public class PaymentFinishedActivity extends AppCompatActivity {
             order.setIngressos(new ArrayList<>(order.getIngressosCollection()));
 
         } catch (SQLException e) {
-            Crashlytics.logException(e);
+            CrashlyticsLogger.logException(e);
             e.printStackTrace();
         }
 
@@ -112,8 +112,8 @@ public class PaymentFinishedActivity extends AppCompatActivity {
             }
 
         } catch (JSONException e) {
-            Crashlytics.logException(e);
-            Crashlytics.log(Log.ERROR, PaymentFinishedActivity.class.getSimpleName(), "order -> " + order.toString());
+            CrashlyticsLogger.logException(e);
+            CrashlyticsLogger.log(Log.ERROR, PaymentFinishedActivity.class.getSimpleName(), "order -> " + order.toString());
             e.printStackTrace();
         }
 

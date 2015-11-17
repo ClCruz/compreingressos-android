@@ -3,9 +3,7 @@ package br.com.compreingressos.broadcast;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.parse.ParseAnalytics;
 import com.parse.ParsePushBroadcastReceiver;
 

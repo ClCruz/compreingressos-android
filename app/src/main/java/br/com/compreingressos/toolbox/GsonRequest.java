@@ -9,7 +9,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -21,6 +20,7 @@ import java.util.Map;
 
 import br.com.compreingressos.deserializer.EspetaculoDeserializer;
 import br.com.compreingressos.deserializer.OrderDeserializer;
+import br.com.compreingressos.logger.CrashlyticsLogger;
 import br.com.compreingressos.model.Espetaculo;
 import br.com.compreingressos.model.Order;
 
@@ -103,16 +103,16 @@ public class GsonRequest<T> extends Request<T> {
 
             return Response.success(gson.fromJson(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
         } catch (UnsupportedEncodingException e) {
-            Crashlytics.logException(e);
-            Crashlytics.log(Log.ERROR, "GsonRequest(UnsupportedEncodingException)", "json -> " + json);
+            CrashlyticsLogger.logException(e);
+            CrashlyticsLogger.log(Log.ERROR, "GsonRequest(UnsupportedEncodingException)", "json -> " + json);
             return Response.error(new ParseError(e));
         } catch (JsonSyntaxException e) {
-            Crashlytics.log(Log.ERROR, "GsonRequest(JsonSyntaxException)", "json -> " + json);
-            Crashlytics.logException(e);
+            CrashlyticsLogger.log(Log.ERROR, "GsonRequest(JsonSyntaxException)", "json -> " + json);
+            CrashlyticsLogger.logException(e);
             return Response.error(new ParseError(e));
         } catch (Exception e) {
-            Crashlytics.log(Log.ERROR, "GsonRequest(Exception)", "json -> " + json);
-            Crashlytics.logException(e);
+            CrashlyticsLogger.log(Log.ERROR, "GsonRequest(Exception)", "json -> " + json);
+            CrashlyticsLogger.logException(e);
             return Response.error(new ParseError(e));
         }
     }

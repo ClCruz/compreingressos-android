@@ -4,8 +4,6 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-import com.crashlytics.android.Crashlytics;
-
 /**
  * Created by zaca on 6/17/15.
  */
