@@ -215,8 +215,9 @@ public class CompreIngressosActivity extends AppCompatActivity {
 
                 if (CompreIngressosApplication.isRunnigOnEnvironmentDevelopment() == true) {
                     if (Uri.parse(url).getHost().equals("compra.compreingressos.com"))
-                        url = "http://186.237.201.150:8081/compreingressos2/comprar/etapa1.php?apresentacao=61565";
+                        url = "http://186.237.201.150:8081/compreingressos2/comprar/etapa1.php?apresentacao=95150";
                 }
+
                 if (url.contains("etapa1.php")) {
                     WebSettings webSettings = view.getSettings();
                     webSettings.setBuiltInZoomControls(true);
@@ -246,7 +247,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
                 }
 
                 if (url.contains("etapa3.php")){
-                    Log.e(LOG_TAG, "injeta cookie");
                     Map<String, String> headers = new HashMap<>();
                     headers.put("Cookie", "user=kt898Benfy9gPvwXoIhgwj1NNflwI28AuMNxhC8OibY; PHPSESSID=k8j0bnutctbcafdtokl8dkctm1;domain=compreingressos.com.br;path=/comprar;Expires=Thu, 2 Aug 2021 20:47:11 UTC;");
                     view.loadUrl(url, headers);
@@ -349,7 +349,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
 
     private void getCookies(String url) {
         String cookies = CookieManager.getInstance().getCookie(url);
-        Log.e(LOG_TAG, "getCookies --> + " + CookieManager.getInstance().getCookie(url));
         Map<String, String> mapCookies = new HashMap<>();
         try{
             if (mapCookies != null) {
@@ -527,7 +526,7 @@ public class CompreIngressosActivity extends AppCompatActivity {
             product.setId(elements[1]);
             product.setName(elements[2]);
             product.setCategory(elements[3]);
-            product.setPrice(Integer.parseInt(elements[4]));
+            product.setPrice(Double.parseDouble(elements[4].replace(",", ".")));
             product.setQuantity(Integer.parseInt(elements[5]));
 
             products.add(product);

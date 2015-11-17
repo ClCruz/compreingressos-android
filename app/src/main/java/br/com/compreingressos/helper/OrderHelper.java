@@ -1,5 +1,7 @@
 package br.com.compreingressos.helper;
 
+import android.util.Log;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,7 +25,6 @@ public class OrderHelper {
 
     public static Order loadOrderFromJSON(String jsonString) {
         GsonBuilder gsonBuilder = new GsonBuilder();
-
         gsonBuilder.registerTypeAdapter(Order.class, new OrderDeserializer());
         Gson gson = gsonBuilder.create();
 

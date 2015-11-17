@@ -1,13 +1,10 @@
 package br.com.compreingressos.dao;
 
-import android.util.Log;
-
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
 
-import br.com.compreingressos.helper.DatabaseHelper;
 import br.com.compreingressos.model.Ingresso;
 import br.com.compreingressos.model.Order;
 
