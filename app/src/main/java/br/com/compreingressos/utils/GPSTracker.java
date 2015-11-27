@@ -118,17 +118,25 @@ public class GPSTracker {
     public double getLatitude(){
         if (location != null){
             latitude = location.getLatitude();
+
+            return latitude;
+        }else{
+            return 0;
         }
 
-        return latitude;
+
     }
 
     public double getLongitude(){
         if (location != null){
             longitude = location.getLongitude();
+
+            return longitude;
+        }else{
+            return 0;
         }
 
-        return longitude;
+
     }
 
     public boolean canGetLocation(){
