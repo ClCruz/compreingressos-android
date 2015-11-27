@@ -17,6 +17,8 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -129,7 +131,23 @@ public class CompreIngressosActivity extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient() {
 
             @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+
+                if (Build.VERSION.SDK_INT >= 21) {
+                    if (request.getUrl().toString().equals("http://assets.chat.freshdesk.com/js/visitor.js")){
+                        WebResourceResponse response = new WebResourceResponse("", "", null);
+
+                        return response;
+                    }
+                }
+
+
+                return super.shouldInterceptRequest(view, request);
+            }
+
+            @Override
             public void onPageFinished(WebView view, String url) {
+                view.loadUrl("javascript:$(\"script[src*='visitor.js']\").remove();");
 
                 try {
                     if (progressBar.isShown()) {
@@ -263,8 +281,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
-
-
                 if (url.contains("espetaculos")) {
                     webView.setVisibility(View.VISIBLE);
                 } else {
@@ -315,6 +331,7 @@ public class CompreIngressosActivity extends AppCompatActivity {
             }
 
 
+
             @Override
             public void onLoadResource(WebView view, String url) {
                 view.loadUrl("javascript:$(\"#menu_topo\").hide();$('.aba' && '.fechado').hide();$(\"#footer\").hide();$(\"#selos\").hide();");
@@ -336,7 +353,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
 
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-
             }
         });
 
@@ -344,6 +360,7 @@ public class CompreIngressosActivity extends AppCompatActivity {
             webView.loadUrl(getUrlFromTokecompre(url));
         } else {
             webView.loadUrl(getIntent().getStringExtra("url_flux_webview"));
+
         }
     }
 
@@ -550,5 +567,7 @@ public class CompreIngressosActivity extends AppCompatActivity {
 
 
     }
+
+
 
 }
