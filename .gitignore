@@ -29,5 +29,4 @@ Thumbs.db.gradle
 /build
 .idea/gradle.xml
 
-*.jar
 /libraries
