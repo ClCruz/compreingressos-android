@@ -31,7 +31,7 @@ import java.util.Map;
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.dao.OrderDao;
 import br.com.compreingressos.helper.DatabaseHelper;
-import br.com.compreingressos.helper.ParseHelper;
+//import br.com.compreingressos.helper.ParseHelper;
 import br.com.compreingressos.logger.CrashlyticsLogger;
 import br.com.compreingressos.model.Order;
 import br.com.compreingressos.toolbox.VolleySingleton;
@@ -99,11 +99,11 @@ public class PaymentFinishedActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        if (!ParseHelper.getIsClient(PaymentFinishedActivity.this)){
-            ParseHelper.setIsClient(PaymentFinishedActivity.this);
-            ParseHelper.setUnSubscribeParseChannel("prospect");
-            ParseHelper.setSubscribeParseChannel("client");
-        }
+//        if (!ParseHelper.getIsClient(PaymentFinishedActivity.this)){
+//            ParseHelper.setIsClient(PaymentFinishedActivity.this);
+//            ParseHelper.setUnSubscribeParseChannel("prospect");
+//            ParseHelper.setSubscribeParseChannel("client");
+//        }
 
         requestQueue = VolleySingleton.getInstance(PaymentFinishedActivity.this).getRequestQueue();
         try {

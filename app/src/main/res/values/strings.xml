@@ -32,4 +32,9 @@
     <string name="message_text_update_location">Por favor sua localizacao pode ter alterado!</string>
     <string name="snackbar_text_button_location">Atualizar</string>
 
+    <string name="txt_login">Login</string>
+    <string name="txt_senha">Senha</string>
+    <string name="btn_login">Entrar</string>
+    <string name="message_login_fail">Usuário ou Senha inválidos.</string>
+
 </resources>

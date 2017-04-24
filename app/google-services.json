@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "941400984856",
+    "firebase_url": "https://compreingressos-61e03.firebaseio.com",
+    "project_id": "compreingressos-61e03",
+    "storage_bucket": "compreingressos-61e03.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941400984856:android:a58bf6ccb3c524b0",
+        "android_client_info": {
+          "package_name": "br.com.compreingressos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "941400984856-25t1lli6eov9anmlc18avlohppe01svv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnn2auz2iLaPBR38lx2UMO4YOvOEoG13w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

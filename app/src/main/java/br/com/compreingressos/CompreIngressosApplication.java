@@ -5,9 +5,9 @@ import android.app.Application;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.parse.Parse;
+//import com.parse.Parse;
 
-import br.com.compreingressos.helper.ParseHelper;
+//import br.com.compreingressos.helper.ParseHelper;
 import io.fabric.sdk.android.Fabric;
 
 /**
@@ -42,11 +42,11 @@ public class CompreIngressosApplication extends Application{
         if (BuildConfig.ENABLE_CRASHLYTICS){
             Fabric.with(this, new Crashlytics());
         }
-        Parse.initialize(this, YOUR_APP_ID, YOUR_CLIENT_KEY);
-
-        if (!ParseHelper.getIsClient(this)){
-            ParseHelper.setSubscribeParseChannel("prospect");
-        }
+//        Parse.initialize(this, YOUR_APP_ID, YOUR_CLIENT_KEY);
+//
+//        if (!ParseHelper.getIsClient(this)){
+//            ParseHelper.setSubscribeParseChannel("prospect");
+//        }
     }
 
     public static boolean isRunnigOnEnvironmentDevelopment(){

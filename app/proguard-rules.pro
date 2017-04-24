@@ -140,3 +140,6 @@
 
 -dontwarn com.parse.**
 -keep class com.parse.** { *; }
+
+#Page Indicator
+-dontwarn com.viewpagerindicator.**

@@ -47,7 +47,7 @@ import br.com.compreingressos.adapter.GeneroAdapter;
 import br.com.compreingressos.contants.ConstantsGoogleAnalytics;
 import br.com.compreingressos.decoration.DividerItemDecoration;
 import br.com.compreingressos.fragment.MainBannerFragment;
-import br.com.compreingressos.helper.ParseHelper;
+//import br.com.compreingressos.helper.ParseHelper;
 import br.com.compreingressos.logger.CrashlyticsLogger;
 import br.com.compreingressos.model.Banner;
 import br.com.compreingressos.model.Genero;
@@ -346,8 +346,8 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
             addressList = geocoder.getFromLocation(lat, lon, 1);
             if (addressList.size() > 0){
                 temp = addressList.get(0).getAddressLine(1).split("-");
-                if (temp.length > 0)
-                    ParseHelper.setSubscribeParseChannelToLocation(temp[1].trim());
+//                if (temp.length > 0)
+//                    ParseHelper.setSubscribeParseChannelToLocation(temp[1].trim());
             }
 
         } catch (IOException e) {
@@ -365,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
     }
 
     protected void startLocationUpdates(){
-       LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, createLocationRequest(), this);
+//       LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, createLocationRequest(), this);
     }
 
     protected  void stopLocationUpdates(){
@@ -375,17 +375,17 @@ public class MainActivity extends AppCompatActivity implements ConnectionCallbac
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        if (mRequestingLocationUpdates){
-            startLocationUpdates();
-            mRequestingLocationUpdates = true;
-        }
-
-        if (mLastLocation != null) {
-            longitude = mLastLocation.getLongitude();
-            latitude = mLastLocation.getLatitude();
-            geocoderToSaveOnParseChannel(latitude, longitude);
-        }
+//        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+//        if (mRequestingLocationUpdates){
+//            startLocationUpdates();
+//            mRequestingLocationUpdates = true;
+//        }
+//
+//        if (mLastLocation != null) {
+//            longitude = mLastLocation.getLongitude();
+//            latitude = mLastLocation.getLatitude();
+//            geocoderToSaveOnParseChannel(latitude, longitude);
+//        }
     }
 
     @Override
