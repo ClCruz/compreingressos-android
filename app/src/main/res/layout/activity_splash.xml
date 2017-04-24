@@ -10,18 +10,12 @@
         android:id="@+id/imageCompreIngressos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ci" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageNtk"
-        android:src="@drawable/ntk"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"/>
+        android:scaleType="fitXY"
 
+
+        android:src="@drawable/banner_abertura"
+
+       />
 
 </RelativeLayout>

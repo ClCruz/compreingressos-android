@@ -5,15 +5,14 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar"></include>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
 
         <ImageView
@@ -43,7 +42,7 @@
             android:layout_below="@+id/txt_titulo_obrigado"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
-            android:text="Compra efetuada com sucesso!"
+            android:text="Compra efetuada com sucesso."
             android:textSize="18sp" />
 
 
@@ -51,13 +50,12 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/textView2"
             android:gravity="center"
             android:padding="2dp"
-            android:text="Basta apresentar seus ingressos na entrada do evento."
-            android:textSize="18sp" />
+            android:text="Basta apresentar seus ingressos\n na entrada do evento."
+            android:textSize="18sp"
+            android:layout_below="@+id/textView2"
+            android:layout_centerHorizontal="true" />
 
         <Button
             android:id="@+id/btn_ver_ingressos"
@@ -75,7 +73,7 @@
 
         <ImageView
             android:id="@+id/toolbar_title"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/cast_intro_overlay_title_margin_top"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
@@ -87,12 +85,32 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btn_ver_ingressos"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
             android:gravity="center"
-            android:text="Seus ingressos estão disponiveis na área 'Meus ingressos' na tela inicial. E também no seu e-mail \n(Verifique sua caixa de spam)"
-            android:textSize="18sp" />
+            android:text="Seus ingressos estão disponiveis \n em 'Meus Ingressos' na tela \n inicial e também por e-mail."
+            android:textSize="18sp"
+            android:layout_above="@+id/img_atencao"
+            android:layout_alignStart="@+id/textView3"
+            android:layout_marginBottom="13dp" />
+
+        <ImageView
+            android:id="@+id/img_atencao"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+
+            android:src="@drawable/ic_atencao"
+            android:layout_above="@+id/textView5"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="(Verifique sua caixa de spam, Tira-Teima\n do UOL e demais bloqueadores)"
+            android:textSize="12sp"
+            android:layout_above="@+id/toolbar_title"
+            android:layout_centerHorizontal="true" />
+
 
 
     </RelativeLayout>
