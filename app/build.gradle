@@ -17,14 +17,14 @@ repositories {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '25.0.0'
 
     defaultConfig {
         applicationId "br.com.compreingressos"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 76
-        versionName "1.4.8"
+        versionCode 77
+        versionName "1.4.9"
         multiDexEnabled true
     }
     buildTypes {
@@ -41,7 +41,7 @@ android {
         }
 
         development {
-            applicationId "br.com.compreingressos.dev"
+            applicationId "br.com.compreingressos"
             buildConfigField 'boolean', 'ENABLE_CRASHLYTICS', 'false'
         }
 

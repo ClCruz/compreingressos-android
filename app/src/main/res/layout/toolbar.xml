@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_width="@dimen/cast_intro_overlay_title_margin_top"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:src="@drawable/logo_toolbar"
         android:layout_gravity="left"

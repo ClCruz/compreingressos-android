@@ -61,14 +61,12 @@
             android:id="@+id/btn_ver_ingressos"
             android:layout_width="120dp"
             android:layout_height="30dp"
-            android:layout_alignEnd="@+id/toolbar_title"
-            android:layout_alignRight="@+id/toolbar_title"
-            android:layout_below="@+id/textView3"
-            android:layout_marginTop="15dp"
             android:background="@color/red_compreingressos"
             android:text="Ver Ingressos"
             android:textColor="@color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
 
 
         <ImageView
