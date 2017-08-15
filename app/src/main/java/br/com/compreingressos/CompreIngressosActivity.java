@@ -31,6 +31,12 @@ import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.j256.ormlite.stmt.QueryBuilder;
 
+import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,47 +107,32 @@ public class CompreIngressosActivity extends AppCompatActivity {
                 getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_action_close));
             }
 
-
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-
         btnAvancar = (Button) findViewById(R.id.btn_avancar);
-
         webView = (WebView) findViewById(R.id.webview);
 
-        webView.setWebChromeClient(new WebChromeClient());
+//        webView.setWebChromeClient(new WebChromeClient());
 
         final WebSettings webSettings = webView.getSettings();
-
         webSettings.setJavaScriptEnabled(true);
-
         webSettings.setLoadWithOverviewMode(true);
-
         webSettings.setUseWideViewPort(true);
-
         webSettings.setGeolocationEnabled(true);
+        webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
         webAppInterface = new WebAppInterface(this);
-
-
         webView.addJavascriptInterface(webAppInterface, "Android");
-
         webView.setWebViewClient(new WebViewClient() {
-
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-
                 if (Build.VERSION.SDK_INT >= 21) {
                     if (request.getUrl().toString().equals("http://assets.chat.freshdesk.com/js/visitor.js")){
-                        WebResourceResponse response = new WebResourceResponse("", "", null);
-
-                        return response;
+                        return new WebResourceResponse("", "", null);
                     }
                 }
-
-
                 return super.shouldInterceptRequest(view, request);
             }
 
@@ -220,18 +211,15 @@ public class CompreIngressosActivity extends AppCompatActivity {
 
             }
 
-
             @Override
             public boolean shouldOverrideKeyEvent(WebView view, KeyEvent event) {
-
                 return super.shouldOverrideKeyEvent(view, event);
             }
 
             @TargetApi(Build.VERSION_CODES.HONEYCOMB)
             @Override
             public boolean shouldOverrideUrlLoading(final WebView view, String url) {
-
-                if (CompreIngressosApplication.isRunnigOnEnvironmentDevelopment() == true) {
+                if (CompreIngressosApplication.isRunnigOnEnvironmentDevelopment()) {
                     if (Uri.parse(url).getHost().equals("compra.compreingressos.com"))
                         url = "http://186.237.201.150:8081/compreingressos2/comprar/etapa1.php?apresentacao=95150";
                 }
@@ -239,6 +227,7 @@ public class CompreIngressosActivity extends AppCompatActivity {
                 if (url.contains("etapa1.php")) {
                     WebSettings webSettings = view.getSettings();
                     webSettings.setBuiltInZoomControls(true);
+
                     try {
                         webSettings.setDisplayZoomControls(false);
                     } catch (NoSuchMethodError e) {
@@ -270,7 +259,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
                     view.loadUrl(url, headers);
                 }
                 return true;
-
             }
 
             @Override
@@ -289,7 +277,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
 
                 hideNextButton();
-
 
                 if (url.contains("etapa1.php")) {
                     trackScreenNameOnGA(ConstantsGoogleAnalytics.WEBVIEW_SEUINGRESSO);
@@ -330,8 +317,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
 
             }
 
-
-
             @Override
             public void onLoadResource(WebView view, String url) {
                 view.loadUrl("javascript:$(\"#menu_topo\").hide();$('.aba' && '.fechado').hide();$(\"#footer\").hide();$(\"#selos\").hide();");
@@ -353,6 +338,12 @@ public class CompreIngressosActivity extends AppCompatActivity {
 
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                if(error.toString().contains("CN=*.siteblindado.com")) {
+                    Log.d("CompreIngressos", "onReceivedSslError: " + error.toString());
+                    handler.proceed();
+                } else {
+                    handler.cancel();
+                }
             }
         });
 
@@ -360,7 +351,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
             webView.loadUrl(getUrlFromTokecompre(url));
         } else {
             webView.loadUrl(getIntent().getStringExtra("url_flux_webview"));
-
         }
     }
 
@@ -488,7 +478,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
         return stringBuilder.toString();
     }
 
-
     private void showNextButton() {
         if (AndroidUtils.isKitKatOrNewer()) {
             if (!btnAvancar.isShown()) {
@@ -510,7 +499,6 @@ public class CompreIngressosActivity extends AppCompatActivity {
         urlResult.appendQueryParameter("app", "tokecompre");
         return urlResult.toString();
     }
-
 
     public void trackScreenNameOnGA(String screenName) {
         mTracker.setScreenName(screenName);
