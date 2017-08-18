@@ -338,12 +338,7 @@ public class CompreIngressosActivity extends AppCompatActivity {
 
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                if(error.toString().contains("CN=*.siteblindado.com")) {
-                    Log.d("CompreIngressos", "onReceivedSslError: " + error.toString());
-                    handler.proceed();
-                } else {
-                    handler.cancel();
-                }
+                handler.cancel();
             }
         });
 
