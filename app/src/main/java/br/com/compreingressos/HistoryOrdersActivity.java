@@ -237,7 +237,7 @@ public class HistoryOrdersActivity extends AppCompatActivity {
             Map<String, String> headers = new HashMap<String, String>();
             headers.put("Content-Type", "application/json");
 
-            GsonRequest<Order[]> jsonObjRequest = new GsonRequest<>(Request.Method.GET, "http://tokecompre-ci.herokuapp.com/tickets.json?os=android" + envHomol + "&client_id=" + clientId, Order[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
+            GsonRequest<Order[]> jsonObjRequest = new GsonRequest<Order[]>(Request.Method.GET, "https://tokecompre-ci.herokuapp.com/tickets.json?os=android" + envHomol + "&client_id=" + clientId, Order[].class, headers, this.createSuccessListener(), this.createErrorListener(), null);
             jsonObjRequest.setRetryPolicy(new DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             this.requestQueue.add(jsonObjRequest);
         }
